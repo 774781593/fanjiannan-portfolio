@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("/assets/fonts/PingFangSC/PingFang-Heavy.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Druk Wide";
+  src: url("/assets/fonts/Druk/Druk-Wide-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-ExtraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Demibold.woff2") format("woff2");
+  font-weight: 650;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/assets/fonts/MiSans/MiSans-Heavy.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --background: #030303;
+  --foreground: #f5f5f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "MiSans", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+img {
+  display: block;
+  image-rendering: auto;
+}
+
+::selection {
+  background: rgba(109, 225, 30, 0.28);
+}
+
+.container-grid {
+  width: min(100% - 40px, 1440px);
+  margin-inline: auto;
+}
+
+.hairline {
+  border-color: rgba(245, 245, 242, 0.18);
+}
+
+.noise-bg {
+  background:
+    radial-gradient(circle at 52% 12%, rgba(255, 255, 255, 0.16), transparent 18%),
+    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.09), transparent 34%),
+    #030303;
+}
+
+.figma-dash {
+  border: 2px dashed rgba(245, 245, 242, 0.72);
+}
+
+.handle {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #f5f5f2;
+}
+
+.handle-tl { left: -10px; top: -10px; }
+.handle-tm { left: 50%; top: -10px; transform: translateX(-50%); }
+.handle-tr { right: -10px; top: -10px; }
+.handle-ml { left: -10px; top: 50%; transform: translateY(-50%); }
+.handle-mr { right: -10px; top: 50%; transform: translateY(-50%); }
+.handle-bl { left: -10px; bottom: -10px; }
+.handle-bm { left: 50%; bottom: -10px; transform: translateX(-50%); }
+.handle-br { right: -10px; bottom: -10px; }
+
+@media (max-width: 720px) {
+  .container-grid {
+    width: min(100% - 24px, 1440px);
+  }
+}

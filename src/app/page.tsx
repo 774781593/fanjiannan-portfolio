@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 const S = "/assets/slices";
 const F = "/assets/figma-dev/home";
@@ -107,6 +108,90 @@ const projects: ProjectItem[] = [
 
 const px = (value: number) => `${value}px`;
 
+const homeText = {
+  nav: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "20px",
+    fontStyle: "normal",
+    fontWeight: 305,
+    lineHeight: "normal",
+    letterSpacing: "-0.8px",
+    color: "#ffffff"
+  },
+  navMuted: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "20px",
+    fontStyle: "normal",
+    fontWeight: 305,
+    lineHeight: "normal",
+    color: "rgba(255, 255, 255, 0.75)"
+  },
+  command: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "24px",
+    fontStyle: "normal",
+    fontWeight: 380,
+    lineHeight: "normal",
+    color: "#ffffff"
+  },
+  aboutTitle: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "96px",
+    fontStyle: "normal",
+    fontWeight: 630,
+    lineHeight: "100.055%",
+    color: "#ffffff"
+  },
+  aboutRole: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "36px",
+    fontStyle: "normal",
+    fontWeight: 450,
+    lineHeight: "normal",
+    color: "#ffffff"
+  },
+  aboutBody: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "32px",
+    fontStyle: "normal",
+    fontWeight: 450,
+    lineHeight: "66px",
+    color: "rgba(255, 255, 255, 0.95)"
+  },
+  contentsTitle: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "96px",
+    fontStyle: "normal",
+    fontWeight: 630,
+    lineHeight: "100.055%",
+    color: "#ffffff"
+  },
+  contentsSub: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "40px",
+    fontStyle: "normal",
+    fontWeight: 380,
+    lineHeight: "100.055%",
+    color: "#cdcdcd"
+  },
+  projectNumber: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "128px",
+    fontStyle: "normal",
+    fontWeight: 520,
+    lineHeight: "100.055%",
+    color: "#565656"
+  },
+  projectLabel: {
+    fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+    fontSize: "48px",
+    fontStyle: "normal",
+    fontWeight: 520,
+    lineHeight: "100.055%",
+    color: "#ffffff"
+  }
+} satisfies Record<string, CSSProperties>;
+
 export default function Home() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-black">
@@ -125,10 +210,10 @@ export default function Home() {
             <span className="block size-[16px] rounded-full bg-white/65" />
             <span className="block size-[16px] rounded-full border border-white/45" />
           </div>
-          <p className="absolute left-[105px] top-[23px] m-0 whitespace-nowrap text-[20px] font-normal leading-normal tracking-[-0.8px]">
+          <p className="absolute left-[105px] top-[23px] m-0 whitespace-nowrap" style={homeText.nav}>
             Collections 2022-2025
           </p>
-          <p className="absolute left-[1673.12px] top-[29px] m-0 whitespace-nowrap text-[20px] font-normal leading-normal text-white/75">
+          <p className="absolute left-[1673.12px] top-[29px] m-0 whitespace-nowrap" style={homeText.navMuted}>
             ↘&nbsp;&nbsp;774781593@qq.com
           </p>
 
@@ -151,24 +236,24 @@ export default function Home() {
             className="absolute left-[460px] top-[838.06px] h-[40px] w-[278px] max-w-none object-contain"
           />
           <div className="absolute left-[1179.27px] top-[834.96px] h-[40.552px] w-[125.234px] bg-[#3f3e3f]" />
-          <p className="absolute left-[1213.85px] top-[838.58px] m-0 h-[40.552px] w-[57.25px] text-[24px] font-medium leading-normal">
+          <p className="absolute left-[1213.85px] top-[838.58px] m-0 h-[40.552px] w-[57.25px]" style={homeText.command}>
             取消
           </p>
           <div className="absolute left-[1371.29px] top-[834.96px] h-[40.552px] w-[125.234px] bg-[#262526]" />
-          <p className="absolute left-[1405.88px] top-[838.58px] m-0 h-[40.552px] w-[57.25px] text-[24px] font-medium leading-normal">
+          <p className="absolute left-[1405.88px] top-[838.58px] m-0 h-[40.552px] w-[57.25px]" style={homeText.command}>
             生成
           </p>
 
           <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[#030304]" />
           <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[#030304]" />
 
-          <h1 className="absolute left-[158px] top-[1385px] m-0 whitespace-nowrap text-[96px] font-bold leading-[100.055%] text-white">
+          <h1 className="absolute left-[158px] top-[1385px] m-0 whitespace-nowrap" style={homeText.aboutTitle}>
             范健男
           </h1>
-          <p className="absolute left-[158px] top-[1511px] m-0 w-[602.1px] text-[36px] font-semibold leading-normal text-white">
+          <p className="absolute left-[158px] top-[1511px] m-0 w-[602.1px]" style={homeText.aboutRole}>
             UI / UX Designer
           </p>
-          <div className="absolute left-[163px] top-[1628px] w-[888px] text-[32px] font-semibold leading-[66px] text-white/95">
+          <div className="absolute left-[163px] top-[1628px] w-[888px]" style={homeText.aboutBody}>
             <p className="m-0">专注方向：</p>
             <ul className="m-0 list-disc pl-[48px]">
               <li className="m-0">3年互联网产品B端设计经验</li>
@@ -207,9 +292,9 @@ export default function Home() {
             </div>
           </div>
 
-          <h2 className="absolute left-[139px] top-[2317px] m-0 whitespace-nowrap font-bold uppercase leading-[100.055%]">
-            <span className="text-[96px]">目录</span>
-            <span className="text-[40px] font-medium text-[#cdcdcd]">/CONTENTS</span>
+          <h2 className="absolute left-[139px] top-[2317px] m-0 whitespace-nowrap uppercase">
+            <span style={homeText.contentsTitle}>目录</span>
+            <span style={homeText.contentsSub}>/CONTENTS</span>
           </h2>
 
           <div className="absolute left-[157px] top-[2497px] h-[516px] w-[1605px] border-2 border-dashed border-white" />
@@ -224,14 +309,14 @@ export default function Home() {
           {projects.map((project) => (
             <Link key={project.number} href={project.href} className="contents text-white">
               <span
-                className="absolute whitespace-nowrap text-[128px] font-semibold uppercase leading-[100.055%] text-[#565656]"
-                style={{ left: px(project.x), top: px(project.y) }}
+                className="absolute whitespace-nowrap uppercase"
+                style={{ ...homeText.projectNumber, left: px(project.x), top: px(project.y) }}
               >
                 {project.number}
               </span>
               <span
-                className="absolute whitespace-nowrap text-[48px] font-semibold uppercase leading-[100.055%] text-white"
-                style={{ left: px(project.labelX), top: px(project.labelY) }}
+                className="absolute whitespace-nowrap uppercase"
+                style={{ ...homeText.projectLabel, left: px(project.labelX), top: px(project.labelY) }}
               >
                 {project.label}
               </span>

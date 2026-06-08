@@ -13,6 +13,8 @@ type ImageLayer = {
   opacity?: number;
   cover?: boolean;
   radius?: number;
+  border?: string;
+  borderWidth?: number;
 };
 
 type TextLayer = {
@@ -28,6 +30,7 @@ type TextLayer = {
   lineHeight?: number;
   letterSpacing?: number;
   family?: string;
+  style?: string;
 };
 
 type RectLayer = {
@@ -38,11 +41,14 @@ type RectLayer = {
   color?: string;
   background?: string;
   radius?: number;
+  radiusCss?: string;
   z?: number;
   opacity?: number;
   border?: string;
   borderWidth?: number;
   borderStyle?: string;
+  borderTop?: string;
+  borderTopWidth?: number;
 };
 
 type Frame = {
@@ -66,6 +72,123 @@ type Frame = {
 const S = "/assets/slices";
 
 const px = (value: number) => `${value}px`;
+
+const bSpecRects = [
+  { x: 0, y: 0, w: 330, h: 104, fill: "#2f51ff" },
+  { x: 330, y: 0, w: 330, h: 104, fill: "#2f51ff" },
+  { x: 660, y: 0, w: 330, h: 78, fill: "#ffffff" },
+  { x: 660, y: 0, w: 330, h: 78, fill: "#000000", opacity: 0.88 },
+  { x: 990, y: 0, w: 330, h: 78, fill: "#ffffff" },
+  { x: 990, y: 0, w: 330, h: 78, fill: "#000000", opacity: 0.15 },
+  { x: 1320, y: 0, w: 330, h: 156, fill: "#d9d9d9" },
+  { x: 660, y: 78, w: 330, h: 78, fill: "#ffffff" },
+  { x: 660, y: 78, w: 330, h: 78, fill: "#000000", opacity: 0.65 },
+  { x: 990, y: 78, w: 330, h: 78, fill: "#ffffff" },
+  { x: 990, y: 78, w: 330, h: 78, fill: "#000000", opacity: 0.06 },
+  { x: 0, y: 104, w: 330, h: 104, fill: "#506dff" },
+  { x: 330, y: 104, w: 330, h: 104, fill: "#e6e8eb" },
+  { x: 660, y: 156, w: 330, h: 78, fill: "#ffffff" },
+  { x: 660, y: 156, w: 330, h: 78, fill: "#000000", opacity: 0.45 },
+  { x: 990, y: 156, w: 330, h: 78, fill: "#ffffff" },
+  { x: 990, y: 156, w: 330, h: 78, fill: "#000000", opacity: 0.04 },
+  { x: 1320, y: 156, w: 330, h: 156, fill: "rgba(240,240,240,0.9411764740943909)" },
+  { x: 0, y: 208, w: 330, h: 104, fill: "#2744d6" },
+  { x: 330, y: 208, w: 165, h: 104, fill: "#d4d6d9" },
+  { x: 495, y: 208, w: 165, h: 104, fill: "#e8edff" },
+  { x: 660, y: 234, w: 330, h: 78, fill: "#ffffff" },
+  { x: 660, y: 234, w: 330, h: 78, fill: "#000000", opacity: 0.25 },
+  { x: 990, y: 234, w: 330, h: 78, fill: "#ffffff" },
+  { x: 990, y: 234, w: 330, h: 78, fill: "#000000", opacity: 0.02 },
+  { x: 0, y: 312, w: 550, h: 104, fill: "#fa8c16" },
+  { x: 550, y: 312, w: 550, h: 104, fill: "#15ba0c" },
+  { x: 1100, y: 312, w: 550, h: 104, fill: "#f6222f" },
+  { x: 0, y: 416, w: 330, h: 104, fill: "#ffa940" },
+  { x: 330, y: 416, w: 220, h: 104, fill: "#fed591" },
+  { x: 550, y: 416, w: 330, h: 104, fill: "#39c62c" },
+  { x: 880, y: 416, w: 220, h: 104, fill: "#89e078" },
+  { x: 1100, y: 416, w: 330, h: 104, fill: "#ff4d50" },
+  { x: 1430, y: 416, w: 220, h: 104, fill: "#ffa39e" },
+  { x: 0, y: 520, w: 330, h: 104, fill: "#d46b08" },
+  { x: 330, y: 520, w: 110, h: 104, fill: "#ffe7ba" },
+  { x: 440, y: 520, w: 110, h: 104, fill: "#fff7e6" },
+  { x: 550, y: 520, w: 330, h: 104, fill: "#049402" },
+  { x: 880, y: 520, w: 110, h: 104, fill: "#b4eda8" },
+  { x: 990, y: 520, w: 110, h: 104, fill: "#e6fae1" },
+  { x: 1100, y: 520, w: 330, h: 104, fill: "#ce1322" },
+  { x: 1430, y: 520, w: 110, h: 104, fill: "#ffccc7" },
+  { x: 1540, y: 520, w: 110, h: 104, fill: "#fff2f0" }
+];
+
+const bSpecTexts = [
+  { text: "主题色", x: 23, y: 16, size: 24, weight: 380 },
+  { text: "#2F51FF", x: 23, y: 58, size: 20 },
+  { text: "悬停", x: 23, y: 123, size: 24, weight: 380 },
+  { text: "#506DFF", x: 23, y: 165, size: 20 },
+  { text: "按压", x: 23, y: 225, size: 24, weight: 380 },
+  { text: "#2744D6", x: 23, y: 267, size: 20 },
+  { text: "警告色", x: 23, y: 329, size: 24, weight: 380 },
+  { text: "#FA8C16", x: 23, y: 371, size: 20 },
+  { text: "悬停", x: 23, y: 433, size: 24, weight: 380 },
+  { text: "#FFA940", x: 23, y: 475, size: 20 },
+  { text: "按压", x: 23, y: 537, size: 24, weight: 380 },
+  { text: "#D46B08", x: 23, y: 579, size: 20 },
+  { text: "禁用", x: 351, y: 123, size: 24, weight: 380, color: "#3054ca" },
+  { text: "#E6E8EB", x: 351, y: 165, size: 20, color: "#3054ca" },
+  { text: "边框", x: 351, y: 225, size: 24, weight: 380, color: "#3054ca" },
+  { text: "#D4D6D9", x: 351, y: 267, size: 20, color: "#3054ca" },
+  { text: "填充", x: 516, y: 225, size: 24, weight: 380, color: "#3054ca" },
+  { text: "#E8EDFF", x: 516, y: 267, size: 20, color: "#3054ca" },
+  { text: "禁用", x: 345, y: 435, size: 24, weight: 380, color: "#d46b08" },
+  { text: "#FED591", x: 345, y: 477, size: 20, color: "#d46b08" },
+  { text: "边框", x: 345, y: 537, size: 24, weight: 380, color: "#d46b08" },
+  { text: "#FFE7BA", x: 345, y: 579, size: 20, color: "#d46b08" },
+  { text: "填充", x: 454, y: 537, size: 24, weight: 380, color: "#d46b08" },
+  { text: "#FFF7E6", x: 454, y: 579, size: 20, color: "#d46b08" },
+  { text: "成功色", x: 573, y: 329, size: 24, weight: 380 },
+  { text: "#15BA0C", x: 573, y: 371, size: 20 },
+  { text: "悬停", x: 573, y: 433, size: 24, weight: 380 },
+  { text: "#39C62C", x: 573, y: 475, size: 20 },
+  { text: "按压", x: 573, y: 537, size: 24, weight: 380 },
+  { text: "#049402", x: 573, y: 579, size: 20 },
+  { text: "禁用", x: 895, y: 435, size: 24, weight: 380, color: "#049402" },
+  { text: "#89E078", x: 895, y: 477, size: 20, color: "#049402" },
+  { text: "边框", x: 895, y: 537, size: 24, weight: 380, color: "#049402" },
+  { text: "#B4EDA8", x: 895, y: 579, size: 20, color: "#049402" },
+  { text: "填充", x: 1004, y: 537, size: 24, weight: 380, color: "#049402" },
+  { text: "#E6FAE1", x: 1004, y: 579, size: 20, color: "#049402" },
+  { text: "错误色", x: 1123, y: 329, size: 24, weight: 380 },
+  { text: "#F6222F", x: 1123, y: 371, size: 20 },
+  { text: "悬停", x: 1123, y: 433, size: 24, weight: 380 },
+  { text: "#FF4D50", x: 1123, y: 475, size: 20 },
+  { text: "按压", x: 1123, y: 537, size: 24, weight: 380 },
+  { text: "#CE1322", x: 1123, y: 579, size: 20 },
+  { text: "禁用", x: 1445, y: 435, size: 24, weight: 380, color: "#ce1322" },
+  { text: "#FFA39E", x: 1445, y: 477, size: 20, color: "#ce1322" },
+  { text: "边框", x: 1445, y: 537, size: 24, weight: 380, color: "#ce1322" },
+  { text: "#FFCCC7", x: 1445, y: 579, size: 20, color: "#ce1322" },
+  { text: "填充", x: 1554, y: 537, size: 24, weight: 380, color: "#ce1322" },
+  { text: "#FFF2F0", x: 1554, y: 579, size: 20, color: "#ce1322" },
+  { text: "#000\n88%", x: 922, y: 18, size: 16 },
+  { text: "#000\n65%", x: 922, y: 96, size: 16 },
+  { text: "#000\n45%", x: 922, y: 174, size: 16 },
+  { text: "#000\n25%", x: 922, y: 252, size: 16 },
+  { text: "#000\n15%", x: 1252, y: 18, size: 16, color: "#000000", opacity: 0.88 },
+  { text: "#000\n6%", x: 1252, y: 96, size: 16, color: "#000000", opacity: 0.88 },
+  { text: "#000\n4%", x: 1252, y: 174, size: 16, color: "#000000", opacity: 0.88 },
+  { text: "#000\n2%", x: 1252, y: 252, size: 16, color: "#000000", opacity: 0.88 },
+  { text: "一级文本", x: 689, y: 23, size: 24, weight: 380 },
+  { text: "二级文本", x: 689, y: 101, size: 24, weight: 380 },
+  { text: "三级文本", x: 689, y: 179, size: 24, weight: 380 },
+  { text: "四级文本", x: 689, y: 257, size: 24, weight: 380 },
+  { text: "一级填充", x: 1019, y: 23, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "二级填充", x: 1019, y: 101, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "三级填充", x: 1019, y: 179, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "四级填充", x: 1019, y: 257, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "一级边框", x: 1349, y: 23, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "#D9D9D9", x: 1349, y: 60, size: 20, color: "#000000", opacity: 0.88 },
+  { text: "二级边框", x: 1349, y: 179, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+  { text: "#F0F0F0", x: 1349, y: 216, size: 20, color: "#000000", opacity: 0.88 }
+];
 
 const moveArrow: ImageLayer = {
   src: `${S}/4214_1.png`,
@@ -195,9 +318,9 @@ const bSystemFrames: Frame[] = [
       { x: 180, y: 2095, w: 122, h: 45, radius: 67, color: "transparent", border: "#333333", borderWidth: 1, z: 3 },
       { x: 327, y: 2095, w: 143, h: 45, radius: 67, color: "transparent", border: "#333333", borderWidth: 1, z: 3 },
       { x: 180, y: 2156, w: 178, h: 45, radius: 67, color: "transparent", border: "#333333", borderWidth: 1, z: 3 },
-      { x: 137, y: 3944, w: 714, h: 480, radius: 28, color: "#252525", border: "rgba(255,255,255,0.35)", borderWidth: 2, borderStyle: "dashed" },
-      { x: 880, y: 3896, w: 714, h: 450, radius: 28, color: "#252525", border: "rgba(255,255,255,0.35)", borderWidth: 2, borderStyle: "dashed" },
-      { x: 1620, y: 3784, w: 714, h: 500, radius: 28, color: "#252525", border: "rgba(255,255,255,0.35)", borderWidth: 2, borderStyle: "dashed" },
+      { x: 135, y: 3922, w: 536, h: 346, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1, borderStyle: "dashed" },
+      { x: 693, y: 3850, w: 536, h: 417, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1, borderStyle: "dashed" },
+      { x: 1251, y: 3762, w: 536, h: 505, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1, borderStyle: "dashed" },
       { x: 135, y: 2576, w: 1650, h: 252, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1 },
       { x: 135, y: 2920, w: 1213, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
       { x: 1369, y: 2920, w: 1213, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
@@ -205,29 +328,35 @@ const bSystemFrames: Frame[] = [
       { x: 838, y: 3071, w: 974, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
       { x: 29, y: 3222, w: 974, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
       { x: 1024, y: 3222, w: 974, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
-      { x: 133, y: 6720, w: 330, h: 104, color: "rgba(255,255,255,0.08)" },
-      { x: 133, y: 6824, w: 330, h: 104, color: "rgba(47,81,255,0.95)" },
-      { x: 133, y: 6928, w: 330, h: 104, color: "rgba(80,109,255,0.95)" },
-      { x: 133, y: 7032, w: 550, h: 104, color: "rgba(255,255,255,0.08)" },
-      { x: 683, y: 7032, w: 550, h: 104, color: "rgba(255,255,255,0.08)" },
-      { x: 1233, y: 7032, w: 550, h: 104, color: "rgba(255,255,255,0.08)" },
       { x: 1833, y: 3071, w: 974, h: 127, radius: 24, color: "#202020", border: "#515151", borderWidth: 1 },
-      { x: 1413, y: 2643, w: 115, h: 115, radius: 999, color: "transparent", border: "#81c478", borderWidth: 7, z: 8 },
-      { x: 1465, y: 2643, w: 115, h: 115, radius: 999, color: "transparent", border: "#3bbca6", borderWidth: 7, z: 7 },
-      { x: 1517, y: 2643, w: 115, h: 115, radius: 999, color: "transparent", border: "#7d78c4", borderWidth: 7, z: 6 },
-      { x: 1569, y: 2643, w: 115, h: 115, radius: 999, color: "#2c2c2c", border: "#6a6879", borderWidth: 7, z: 5 },
-      { x: 1632, y: 2766, w: 101, h: 35, color: "#81c478", z: 9 },
+      { x: 1632, y: 2766, w: 101, h: 35, color: "#81c478", radiusCss: "0 50px 50px 12px", z: 9 },
+      { x: 133, y: 6720, w: 330, h: 104, color: "#2f51ff", radiusCss: "24px 0 0 0" },
       { x: 463, y: 6720, w: 330, h: 104, color: "#2f51ff" },
+      { x: 793, y: 6720, w: 330, h: 78, color: "#1f1f1f" },
+      { x: 1123, y: 6720, w: 330, h: 78, color: "#d9d9d9" },
+      { x: 1453, y: 6720, w: 330, h: 156, color: "#d9d9d9", radiusCss: "0 24px 0 0" },
+      { x: 793, y: 6798, w: 330, h: 78, color: "#595959" },
+      { x: 1123, y: 6798, w: 330, h: 78, color: "#f0f0f0" },
+      { x: 133, y: 6824, w: 330, h: 104, color: "#506dff" },
       { x: 463, y: 6824, w: 330, h: 104, color: "#e6e8eb" },
+      { x: 793, y: 6876, w: 330, h: 78, color: "#8c8c8c" },
+      { x: 1123, y: 6876, w: 330, h: 78, color: "#f5f5f5" },
+      { x: 1453, y: 6876, w: 330, h: 156, color: "rgba(240,240,240,0.9411764740943909)" },
+      { x: 133, y: 6928, w: 330, h: 104, color: "#2744d6" },
       { x: 463, y: 6928, w: 165, h: 104, color: "#d4d6d9" },
       { x: 628, y: 6928, w: 165, h: 104, color: "#e8edff" },
+      { x: 793, y: 6954, w: 330, h: 78, color: "#bfbfbf" },
+      { x: 1123, y: 6954, w: 330, h: 78, color: "#fafafa" },
+      { x: 133, y: 7032, w: 550, h: 104, color: "#fa8c16" },
+      { x: 683, y: 7032, w: 550, h: 104, color: "#15ba0c" },
+      { x: 1233, y: 7032, w: 550, h: 104, color: "#f6222f" },
       { x: 133, y: 7136, w: 330, h: 104, color: "#ffa940" },
       { x: 463, y: 7136, w: 220, h: 104, color: "#fed591" },
       { x: 683, y: 7136, w: 330, h: 104, color: "#39c62c" },
       { x: 1013, y: 7136, w: 220, h: 104, color: "#89e078" },
       { x: 1233, y: 7136, w: 330, h: 104, color: "#ff4d50" },
       { x: 1563, y: 7136, w: 220, h: 104, color: "#ffa39e" },
-      { x: 133, y: 7240, w: 330, h: 104, color: "#d46b08" },
+      { x: 133, y: 7240, w: 330, h: 104, color: "#d46b08", radiusCss: "0 0 0 24px" },
       { x: 463, y: 7240, w: 110, h: 104, color: "#ffe7ba" },
       { x: 573, y: 7240, w: 110, h: 104, color: "#fff7e6" },
       { x: 683, y: 7240, w: 330, h: 104, color: "#049402" },
@@ -235,28 +364,10 @@ const bSystemFrames: Frame[] = [
       { x: 1123, y: 7240, w: 110, h: 104, color: "#e6fae1" },
       { x: 1233, y: 7240, w: 330, h: 104, color: "#ce1322" },
       { x: 1563, y: 7240, w: 110, h: 104, color: "#ffccc7" },
-      { x: 1673, y: 7240, w: 110, h: 104, color: "#fff2f0" },
-      { x: 793, y: 6720, w: 330, h: 78, color: "#ffffff" },
-      { x: 793, y: 6720, w: 330, h: 78, color: "#000000", opacity: 0.88 },
-      { x: 793, y: 6798, w: 330, h: 78, color: "#ffffff" },
-      { x: 793, y: 6798, w: 330, h: 78, color: "#000000", opacity: 0.65 },
-      { x: 793, y: 6876, w: 330, h: 78, color: "#ffffff" },
-      { x: 793, y: 6876, w: 330, h: 78, color: "#000000", opacity: 0.45 },
-      { x: 793, y: 6954, w: 330, h: 78, color: "#ffffff" },
-      { x: 793, y: 6954, w: 330, h: 78, color: "#000000", opacity: 0.25 },
-      { x: 1123, y: 6720, w: 330, h: 78, color: "#ffffff" },
-      { x: 1123, y: 6720, w: 330, h: 78, color: "#000000", opacity: 0.15 },
-      { x: 1123, y: 6798, w: 330, h: 78, color: "#ffffff" },
-      { x: 1123, y: 6798, w: 330, h: 78, color: "#000000", opacity: 0.06 },
-      { x: 1123, y: 6876, w: 330, h: 78, color: "#ffffff" },
-      { x: 1123, y: 6876, w: 330, h: 78, color: "#000000", opacity: 0.04 },
-      { x: 1123, y: 6954, w: 330, h: 78, color: "#ffffff" },
-      { x: 1123, y: 6954, w: 330, h: 78, color: "#000000", opacity: 0.02 },
-      { x: 1453, y: 6720, w: 330, h: 156, color: "#d9d9d9" },
-      { x: 1453, y: 6876, w: 330, h: 156, color: "rgba(240,240,240,0.94)" },
-      { x: 138, y: 7397, w: 497, h: 227, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1 },
-      { x: 138, y: 7650, w: 497, h: 227, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1 },
-      { x: 661, y: 7397, w: 1122, h: 49, color: "#242424", border: "#8c8c8c", borderWidth: 1 },
+      { x: 1673, y: 7240, w: 110, h: 104, color: "#fff2f0", radiusCss: "0 0 24px 0" },
+      { x: 138, y: 7397, w: 497, h: 227, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1, borderStyle: "dashed" },
+      { x: 138, y: 7650, w: 497, h: 227, radius: 24, color: "#242424", border: "#8c8c8c", borderWidth: 1, borderStyle: "dashed" },
+      { x: 661, y: 7397, w: 1122, h: 49, color: "#242424", radiusCss: "12px 12px 0 0", borderTop: "#8c8c8c", borderTopWidth: 1 },
       { x: 661, y: 7518, w: 1122, h: 1, color: "#515151" },
       { x: 661, y: 7590, w: 1122, h: 1, color: "#515151" },
       { x: 661, y: 7662, w: 1122, h: 1, color: "#515151" },
@@ -268,10 +379,10 @@ const bSystemFrames: Frame[] = [
       { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
       { src: `${S}/5555_1.png`, x: 599, y: 1301, w: 198, h: 135, z: 3 },
       { src: `${S}/图片扩图_1.png`, x: -55, y: 1022, w: 2340, h: 1132 },
-      { src: `${S}/Ellipse 1051.png`, x: 1413, y: 2643, w: 115, h: 115, z: 4 },
-      { src: `${S}/Ellipse 1050.png`, x: 1465, y: 2643, w: 115, h: 115, z: 3 },
-      { src: `${S}/Ellipse 1049.png`, x: 1517, y: 2643, w: 115, h: 115, z: 2 },
-      { src: `${S}/Ellipse 1052.png`, x: 1569, y: 2643, w: 115, h: 115, z: 1 },
+      { src: `${S}/Ellipse 1051.png`, x: 1413, y: 2643, w: 115, h: 115, z: 13, radius: 999, border: "#81c478", borderWidth: 7 },
+      { src: `${S}/Ellipse 1050.png`, x: 1465, y: 2643, w: 115, h: 115, z: 12, radius: 999, border: "#3bbca6", borderWidth: 7 },
+      { src: `${S}/Ellipse 1049.png`, x: 1517, y: 2643, w: 115, h: 115, z: 11, radius: 999, border: "#7d78c4", borderWidth: 7 },
+      { src: `${S}/Ellipse 1052.png`, x: 1569, y: 2643, w: 115, h: 115, z: 10, radius: 999, border: "#6a6879", borderWidth: 7 },
       { src: `${S}/Ellipse 1053.png`, x: 190, y: 2947, w: 74, h: 74 },
       { src: `${S}/Ellipse 1054.png`, x: 1425, y: 2947, w: 74, h: 74 },
       { src: `${S}/Ellipse 1055.png`, x: -45, y: 3098, w: 74, h: 74 },
@@ -279,34 +390,36 @@ const bSystemFrames: Frame[] = [
       { src: `${S}/Ellipse 1057.png`, x: 84, y: 3249, w: 74, h: 74 },
       { src: `${S}/Ellipse 1058.png`, x: 1085, y: 3249, w: 74, h: 74 },
       { src: `${S}/Group 1940698317.png`, x: 1146, y: 4752, w: 569, h: 441 },
+      { src: `${S}/Arrow 2.png`, x: 1766, y: 4712, w: 35, h: 496 },
       { src: `${S}/4214_1.png`, x: 1783, y: 4267, w: 59, h: 65 },
       { src: `${S}/image_1.png`, x: 133, y: 5653, w: 1648, h: 674 },
-      { src: `${S}/选框.png`, x: 125, y: 6710, w: 1710, h: 636, opacity: 0.55 }
+      { src: `${S}/Group 1940698322.png`, x: 135, y: 8138, w: 1311, h: 940 }
     ],
     texts: [
-      { text: "INDUSTRIAL DESIGN", x: 134, y: 1144, size: 18, color: "rgba(255,255,255,0.5)" },
-      { text: "Publication date\nOctober 2023", x: 1644, y: 1144, size: 16, lineHeight: 24, color: "rgba(255,255,255,0.5)" },
-      { text: "中微EMS能源管理系统", x: 133, y: 1325, size: 48, weight: 400 },
-      { text: "Zhongwei EMS Energy Management System", x: 133, y: 1384, size: 18, color: "rgba(255,255,255,0.5)" },
+      { text: "Industrial Design", x: 134, y: 1144, size: 18, weight: 330, lineHeight: 24, color: "rgba(255,255,255,0.5)" },
+      { text: "Publication date\nOctober 2023", x: 1644, y: 1144, size: 18, weight: 330, lineHeight: 24, color: "rgba(255,255,255,0.5)" },
+      { text: "中微EMS能源管理系统", x: 133, y: 1325, size: 48, weight: 330, lineHeight: 51.56 },
+      { text: "Zhongwei EMS Energy Management System", x: 133, y: 1384, size: 18, weight: 330, lineHeight: 24, color: "rgba(255,255,255,0.5)" },
       {
         text: "随着企业数字化与“双碳”战略的推进，传统能源管理方式逐渐暴露出数据分散、监控滞后、能耗分析困难以及人工统计效率低等问题。为了提升企业能源使用效率与设备运维能力，我参与开发了 EMS 能源管理平台。该平台围绕“能源数据统一接入、实时监控、智能分析”展开建设，通过整合电、水、气等多类型能源数据，实现企业能耗的可视化管理与精细化运营，为节能降耗和智慧运维提供数据支撑。",
         x: 134,
         y: 1468,
         width: 852,
         size: 20,
+        weight: 250,
         lineHeight: 30
       },
-      { text: "任务协同", x: 160, y: 1691, size: 20, color: "rgba(255,255,255,0.7)", z: 3 },
-      { text: "系统监控", x: 310, y: 1691, size: 20, color: "rgba(255,255,255,0.7)", z: 3 },
-      { text: "能源管理", x: 160, y: 1752, size: 20, color: "rgba(255,255,255,0.7)", z: 3 },
-      { text: "数据可视化", x: 314, y: 1752, size: 20, color: "rgba(255,255,255,0.7)", z: 3 },
-      { text: "目标人群", x: 180, y: 2019, size: 24, weight: 500, color: "#333333", lineHeight: 30, z: 3 },
+      { text: "任务协同", x: 160, y: 1691, size: 20, weight: 305, lineHeight: 27, color: "rgba(255,255,255,0.7)", z: 3 },
+      { text: "系统监控", x: 310, y: 1691, size: 20, weight: 305, lineHeight: 27, color: "rgba(255,255,255,0.7)", z: 3 },
+      { text: "能源管理", x: 160, y: 1752, size: 20, weight: 305, lineHeight: 27, color: "rgba(255,255,255,0.7)", z: 3 },
+      { text: "数据可视化", x: 314, y: 1752, size: 20, weight: 305, lineHeight: 27, color: "rgba(255,255,255,0.7)", z: 3 },
+      { text: "目标人群", x: 180, y: 2019, size: 24, weight: 380, color: "#333333", lineHeight: 30, z: 3 },
       { text: "管理员", x: 211, y: 2103, size: 20, color: "#333333", lineHeight: 30, z: 4 },
       { text: "运维人员", x: 358, y: 2103, size: 20, color: "#333333", lineHeight: 30, z: 4 },
       { text: "数据监控人员", x: 209, y: 2164, size: 20, color: "#333333", lineHeight: 30, z: 4 },
-      { text: "核心痛点", x: 579, y: 2019, size: 24, weight: 500, color: "#333333", lineHeight: 30, z: 3 },
+      { text: "核心痛点", x: 579, y: 2019, size: 24, weight: 380, color: "#333333", lineHeight: 30, z: 3 },
       { text: "数据查看效率低不突出\n信息层级混乱\n告警不突出\n多系统切换复杂", x: 579, y: 2080, width: 281, size: 20, color: "#333333", lineHeight: 30, z: 3 },
-      { text: "我的职责", x: 978, y: 2019, size: 24, weight: 500, lineHeight: 30, z: 3 },
+      { text: "我的职责", x: 978, y: 2019, size: 24, weight: 380, lineHeight: 30, z: 3 },
       {
         text: "负责 EMS 能源管理平台整体 UI 视觉设计与界面风格制定\n参与前期需求分析与产品功能梳理，输出页面信息架构与交互逻辑\n负责后台管理系统、数据可视化页面设计\n根据业务场景设计图表、数据卡片、状态组件等可视化模块，提升数据展示效率\n制定统一的设计规范与组件库，保证产品视觉一致性与开发协作效率\n输出高保真设计稿、交互动效及开发标注，并与前端协同完成设计落地\n持续优化用户体验与界面细节，提升系统易用性与整体视觉品质",
         x: 978,
@@ -316,8 +429,8 @@ const bSystemFrames: Frame[] = [
         lineHeight: 30,
         z: 3
       },
-      { text: "需求调研", x: 133, y: 2438, size: 36, weight: 500 },
-      { text: "Requirement Investigation", x: 133, y: 2485, size: 20, color: "rgba(255,255,255,0.5)" },
+      { text: "需求调研", x: 133, y: 2438, size: 36, weight: 380, lineHeight: 38.67 },
+      { text: "Requirement Investigation", x: 133, y: 2485, size: 20, weight: 305, lineHeight: 21.48, color: "rgba(255,255,255,0.5)" },
       {
         text: "通过对企业能源管理流程、用户角色及实际业务场景进行调研，梳理能源数据统一管理、设备实时监控、能耗统计分析、异常告警、数据可视化展示、报表管理及权限管理等核心需求，为 EMS 能源管理平台的功能规划、信息架构与 UI 设计提供依据。",
         x: 190,
@@ -342,42 +455,44 @@ const bSystemFrames: Frame[] = [
       { text: "希望系统能够自动进行异常告警，减少人工巡检压力", x: 2030, y: 3116, size: 32 },
       { text: "希望系统操作更加高效流畅，提升日常运维体验", x: 223, y: 3267, size: 32 },
       { text: "希望数据展示更加直观，方便快速查看重点信息", x: 1224, y: 3267, size: 32 },
-      { text: "目标人群", x: 1650, y: 2774, size: 16, weight: 400, lineHeight: 19.2, z: 10 },
-      { text: "产品目标", x: 133, y: 3482, size: 36, weight: 500 },
-      { text: "Product Objectives", x: 133, y: 3529, size: 20, color: "rgba(255,255,255,0.5)" },
+      { text: "目标人群", x: 1650, y: 2774, size: 16, weight: 305, lineHeight: 19.2, z: 10 },
+      { text: "产品目标", x: 133, y: 3482, size: 36, weight: 380, lineHeight: 38.67 },
+      { text: "Product Objectives", x: 133, y: 3529, size: 20, weight: 305, lineHeight: 21.48, color: "rgba(255,255,255,0.5)" },
       { text: "产品目标与价值主要是为企业达成降本、增效、提准三方面的问题。为企业的智能化管理护航。", x: 133, y: 3620, width: 840, size: 20 },
-      { text: "降本", x: 135, y: 3864, size: 48, weight: 700, color: "#81d828" },
-      { text: "增效", x: 882, y: 3780, size: 48, weight: 700, color: "#81d828" },
-      { text: "提准", x: 1628, y: 3704, size: 48, weight: 700, color: "#81d828" },
+      { text: "降本", x: 135, y: 3864, size: 36, weight: 630, color: "#81d828", lineHeight: 38.7 },
+      { text: "增效", x: 694, y: 3780, size: 36, weight: 630, color: "#81d828", lineHeight: 38.7 },
+      { text: "提准", x: 1252, y: 3704, size: 36, weight: 630, color: "#81d828", lineHeight: 38.7 },
       {
         text: "通过 EMS 能源管理平台对企业电、水、气等能源数据进行统一采集与集中管理，帮助企业实时掌握各区域、各设备的能耗情况，及时发现异常能耗与资源浪费问题。\n系统通过能耗趋势分析、峰谷用电分析及异常告警等功能，辅助企业优化能源使用策略，减少不必要的能源消耗，从而降低整体运营成本与人工巡检成本。",
-        x: 248,
-        y: 4020,
-        width: 520,
-        size: 30,
-        lineHeight: 48,
-        color: "rgba(255,255,255,0.86)"
+        x: 182,
+        y: 3970,
+        width: 443,
+        size: 20,
+        lineHeight: 30,
+        color: "#ffffff"
       },
       {
         text: "传统能源管理依赖人工记录与线下巡检，存在数据更新不及时、处理效率低等问题。EMS 平台通过实时监控、自动告警、数据可视化及报表自动生成等功能，提高企业日常管理效率与运维响应速度。\n管理人员可通过平台快速查看关键数据与设备运行状态，减少重复操作与人工统计流程，提升整体协同效率。",
-        x: 948,
-        y: 3970,
-        width: 570,
-        size: 30,
-        lineHeight: 48,
-        color: "rgba(255,255,255,0.86)"
+        x: 742,
+        y: 3920,
+        width: 443,
+        size: 20,
+        lineHeight: 30,
+        color: "#ffffff"
       },
       {
         text: "平台通过统一的数据标准与可视化分析能力，对能源数据进行实时采集、统计与分析，减少人工统计误差，提高数据准确性与可靠性。\n同时，通过多维度数据分析与历史趋势对比，帮助企业更精准地识别高能耗问题与设备异常情况，为节能优化与运营决策提供可靠的数据支撑。",
-        x: 1692,
-        y: 3864,
-        width: 520,
-        size: 30,
-        lineHeight: 48,
-        color: "rgba(255,255,255,0.86)"
+        x: 1300,
+        y: 3835,
+        width: 443,
+        size: 20,
+        lineHeight: 30,
+        color: "#ffffff"
       },
+      { text: "设计目标", x: 135, y: 4431, size: 36, weight: 380, lineHeight: 38.67 },
+      { text: "Design Objectives", x: 135, y: 4478, size: 20, weight: 305, lineHeight: 21.48, color: "rgba(255,255,255,0.5)" },
       { text: "设计目标与价值主要是从用户体验五要素中的表现层、框架层、结构层出发，最大化增强用户体验，辅助提升产品力。", x: 133, y: 4540, width: 1040, size: 20 },
-      { text: "表现层", x: 135, y: 4661, size: 32, weight: 500, color: "#81d828" },
+      { text: "表现层", x: 135, y: 4661, size: 32, weight: 380, color: "#81d828" },
       {
         text: "视觉设计:统一视觉规范、提升视觉体验\n遵循简约高效设计原则，视觉及降噪，统一设计规范和组件，向用户清晰高效的传达信息",
         x: 135,
@@ -387,7 +502,7 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 36
       },
-      { text: "框架层", x: 135, y: 4849, size: 32, weight: 500, color: "#81d828" },
+      { text: "框架层", x: 135, y: 4849, size: 32, weight: 380, color: "#81d828" },
       {
         text: "框架、布局、界面设计:统一组件规范、交互友好高效\n梳理审核人员的审核操作流程，与任务操作习惯，合理布局页面信息与操作按钮，以提供高效的任务处理方案",
         x: 135,
@@ -397,7 +512,7 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 36
       },
-      { text: "结构层", x: 135, y: 5073, size: 32, weight: 500, color: "#81d828" }
+      { text: "结构层", x: 135, y: 5073, size: 32, weight: 380, color: "#81d828" }
       ,
       {
         text: "信息设计、产品功能设计:用户体验增强，制定交互规则\n从业务角度梳理核心用户需求，组织&规划产品设计，通过功能架构构建用户体验。建立层级关系制定交互规则。",
@@ -408,76 +523,84 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 36
       },
-      { text: "功能架构", x: 135, y: 5378, size: 36, weight: 500 },
+      { text: "功能架构", x: 135, y: 5378, size: 36, weight: 380, lineHeight: 38.67 },
       { text: "Functional Architecture", x: 135, y: 5425, size: 20, color: "rgba(255,255,255,0.5)" },
       { text: "支持能源数据监测、设备运行管理、能耗分析统计、异常告警、能源流向分析、报表管理、数据可视化及系统配置等功能。", x: 133, y: 5516, width: 1080, size: 20 },
-      { text: "设计规范", x: 135, y: 6460, size: 36, weight: 500 },
+      { text: "设计规范", x: 135, y: 6460, size: 36, weight: 380, lineHeight: 38.67 },
       { text: "Design Specification", x: 135, y: 6507, size: 20, color: "rgba(255,255,255,0.5)" },
-      { text: "通过避循设计规范、使用组件库，以确保项目的用户界面和用户体验在整个平台中是一致的，提高用户对产品的认知和使用便捷性", x: 133, y: 6598, width: 1140, size: 20 },
-      { text: "主题色", x: 156, y: 6736, size: 24, weight: 500 },
+      { text: "通过遵循设计规范、使用组件库，以确保项目的用户界面和用户体验在整个平台中是一致的，提高用户对产品的认知和使用便捷性", x: 133, y: 6598, width: 1140, size: 20 },
+      { text: "主题色", x: 156, y: 6736, size: 24, weight: 380 },
       { text: "#2F51FF", x: 156, y: 6778, size: 20 },
-      { text: "悬停", x: 156, y: 6843, size: 24, weight: 500 },
+      { text: "悬停", x: 156, y: 6843, size: 24, weight: 380 },
       { text: "#506DFF", x: 156, y: 6885, size: 20 },
-      { text: "按压", x: 156, y: 6945, size: 24, weight: 500 },
+      { text: "按压", x: 156, y: 6945, size: 24, weight: 380 },
       { text: "#2744D6", x: 156, y: 6987, size: 20 },
-      { text: "警告色", x: 156, y: 7049, size: 24, weight: 500 },
+      { text: "警告色", x: 156, y: 7049, size: 24, weight: 380 },
       { text: "#FA8C16", x: 156, y: 7091, size: 20 },
-      { text: "悬停", x: 156, y: 7153, size: 24, weight: 500 },
+      { text: "悬停", x: 156, y: 7153, size: 24, weight: 380 },
       { text: "#FFA940", x: 156, y: 7195, size: 20 },
-      { text: "按压", x: 156, y: 7257, size: 24, weight: 500 },
+      { text: "按压", x: 156, y: 7257, size: 24, weight: 380 },
       { text: "#D46B08", x: 156, y: 7299, size: 20 },
-      { text: "禁用", x: 484, y: 6843, size: 24, weight: 500, color: "#3054ca" },
+      { text: "禁用", x: 484, y: 6843, size: 24, weight: 380, color: "#3054ca" },
       { text: "#E6E8EB", x: 484, y: 6885, size: 20, color: "#3054ca" },
-      { text: "边框", x: 484, y: 6945, size: 24, weight: 500, color: "#3054ca" },
+      { text: "边框", x: 484, y: 6945, size: 24, weight: 380, color: "#3054ca" },
       { text: "#D4D6D9", x: 484, y: 6987, size: 20, color: "#3054ca" },
-      { text: "填充", x: 649, y: 6945, size: 24, weight: 500, color: "#3054ca" },
+      { text: "填充", x: 649, y: 6945, size: 24, weight: 380, color: "#3054ca" },
       { text: "#E8EDFF", x: 649, y: 6987, size: 20, color: "#3054ca" },
-      { text: "禁用", x: 478, y: 7155, size: 24, weight: 500, color: "#d46b08" },
+      { text: "禁用", x: 478, y: 7155, size: 24, weight: 380, color: "#d46b08" },
       { text: "#FED591", x: 478, y: 7197, size: 20, color: "#d46b08" },
-      { text: "边框", x: 478, y: 7257, size: 24, weight: 500, color: "#d46b08" },
+      { text: "边框", x: 478, y: 7257, size: 24, weight: 380, color: "#d46b08" },
       { text: "#FFE7BA", x: 478, y: 7299, size: 20, color: "#d46b08" },
-      { text: "填充", x: 587, y: 7257, size: 24, weight: 500, color: "#d46b08" },
+      { text: "填充", x: 587, y: 7257, size: 24, weight: 380, color: "#d46b08" },
       { text: "#FFF7E6", x: 587, y: 7299, size: 20, color: "#d46b08" },
-      { text: "成功色", x: 706, y: 7049, size: 24, weight: 500 },
+      { text: "成功色", x: 706, y: 7049, size: 24, weight: 380 },
       { text: "#15BA0C", x: 706, y: 7091, size: 20 },
-      { text: "悬停", x: 706, y: 7153, size: 24, weight: 500 },
+      { text: "悬停", x: 706, y: 7153, size: 24, weight: 380 },
       { text: "#39C62C", x: 706, y: 7195, size: 20 },
-      { text: "按压", x: 706, y: 7257, size: 24, weight: 500 },
+      { text: "按压", x: 706, y: 7257, size: 24, weight: 380 },
       { text: "#049402", x: 706, y: 7299, size: 20 },
-      { text: "禁用", x: 1028, y: 7155, size: 24, weight: 500, color: "#049402" },
+      { text: "禁用", x: 1028, y: 7155, size: 24, weight: 380, color: "#049402" },
       { text: "#89E078", x: 1028, y: 7197, size: 20, color: "#049402" },
-      { text: "边框", x: 1028, y: 7257, size: 24, weight: 500, color: "#049402" },
+      { text: "边框", x: 1028, y: 7257, size: 24, weight: 380, color: "#049402" },
       { text: "#B4EDA8", x: 1028, y: 7299, size: 20, color: "#049402" },
-      { text: "填充", x: 1137, y: 7257, size: 24, weight: 500, color: "#049402" },
+      { text: "填充", x: 1137, y: 7257, size: 24, weight: 380, color: "#049402" },
       { text: "#E6FAE1", x: 1137, y: 7299, size: 20, color: "#049402" },
-      { text: "错误色", x: 1256, y: 7049, size: 24, weight: 500 },
+      { text: "错误色", x: 1256, y: 7049, size: 24, weight: 380 },
       { text: "#F6222F", x: 1256, y: 7091, size: 20 },
-      { text: "悬停", x: 1256, y: 7153, size: 24, weight: 500 },
+      { text: "悬停", x: 1256, y: 7153, size: 24, weight: 380 },
       { text: "#FF4D50", x: 1256, y: 7195, size: 20 },
-      { text: "按压", x: 1256, y: 7257, size: 24, weight: 500 },
+      { text: "按压", x: 1256, y: 7257, size: 24, weight: 380 },
       { text: "#CE1322", x: 1256, y: 7299, size: 20 },
-      { text: "禁用", x: 1578, y: 7155, size: 24, weight: 500, color: "#ce1322" },
+      { text: "禁用", x: 1578, y: 7155, size: 24, weight: 380, color: "#ce1322" },
       { text: "#FFA39E", x: 1578, y: 7197, size: 20, color: "#ce1322" },
-      { text: "边框", x: 1578, y: 7257, size: 24, weight: 500, color: "#ce1322" },
+      { text: "边框", x: 1578, y: 7257, size: 24, weight: 380, color: "#ce1322" },
       { text: "#FFCCC7", x: 1578, y: 7299, size: 20, color: "#ce1322" },
-      { text: "填充", x: 1687, y: 7257, size: 24, weight: 500, color: "#ce1322" },
+      { text: "填充", x: 1687, y: 7257, size: 24, weight: 380, color: "#ce1322" },
       { text: "#FFF2F0", x: 1687, y: 7299, size: 20, color: "#ce1322" },
-      { text: "一级文本", x: 822, y: 6743, size: 24, weight: 500 },
-      { text: "二级文本", x: 822, y: 6821, size: 24, weight: 500 },
-      { text: "三级文本", x: 822, y: 6899, size: 24, weight: 500 },
-      { text: "四级文本", x: 822, y: 6977, size: 24, weight: 500 },
-      { text: "一级填充", x: 1152, y: 6743, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
-      { text: "二级填充", x: 1152, y: 6821, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
-      { text: "三级填充", x: 1152, y: 6899, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
-      { text: "四级填充", x: 1152, y: 6977, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
-      { text: "一级边框", x: 1482, y: 6743, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
+      { text: "#000\n88%", x: 1055, y: 6738, size: 16, weight: 305 },
+      { text: "#000\n65%", x: 1055, y: 6816, size: 16, weight: 305 },
+      { text: "#000\n45%", x: 1055, y: 6894, size: 16, weight: 305 },
+      { text: "#000\n25%", x: 1055, y: 6972, size: 16, weight: 305 },
+      { text: "#000\n15%", x: 1385, y: 6738, size: 16, weight: 305, color: "#000000", opacity: 0.88 },
+      { text: "#000\n6%", x: 1385, y: 6816, size: 16, weight: 305, color: "#000000", opacity: 0.88 },
+      { text: "#000\n4%", x: 1385, y: 6894, size: 16, weight: 305, color: "#000000", opacity: 0.88 },
+      { text: "#000\n2%", x: 1385, y: 6972, size: 16, weight: 305, color: "#000000", opacity: 0.88 },
+      { text: "一级文本", x: 822, y: 6743, size: 24, weight: 380 },
+      { text: "二级文本", x: 822, y: 6821, size: 24, weight: 380 },
+      { text: "三级文本", x: 822, y: 6899, size: 24, weight: 380 },
+      { text: "四级文本", x: 822, y: 6977, size: 24, weight: 380 },
+      { text: "一级填充", x: 1152, y: 6743, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+      { text: "二级填充", x: 1152, y: 6821, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+      { text: "三级填充", x: 1152, y: 6899, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+      { text: "四级填充", x: 1152, y: 6977, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
+      { text: "一级边框", x: 1482, y: 6743, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
       { text: "#D9D9D9", x: 1482, y: 6780, size: 20, color: "#000000", opacity: 0.88 },
-      { text: "二级边框", x: 1482, y: 6899, size: 24, weight: 500, color: "#000000", opacity: 0.88 },
+      { text: "二级边框", x: 1482, y: 6899, size: 24, weight: 380, color: "#000000", opacity: 0.88 },
       { text: "#F0F0F0", x: 1482, y: 6936, size: 20, color: "#000000", opacity: 0.88 },
-      { text: "中文", x: 188, y: 7438, size: 24, weight: 500 },
-      { text: "PingFangSC", x: 188, y: 7489, size: 64, weight: 500, family: "PingFang SC" },
-      { text: "数字", x: 188, y: 7691, size: 24, weight: 500 },
-      { text: "MiSans", x: 188, y: 7742, size: 64, weight: 500, family: "MiSans" },
+      { text: "中文", x: 188, y: 7438, size: 24, weight: 380, opacity: 0.65 },
+      { text: "PingFangSC", x: 188, y: 7489, size: 64, weight: 380, family: "PingFang SC", opacity: 0.88 },
+      { text: "数字", x: 188, y: 7691, size: 24, weight: 380, opacity: 0.65 },
+      { text: "MiSans", x: 188, y: 7742, size: 64, weight: 380, family: "MiSans", opacity: 0.88 },
       { text: "名称", x: 682, y: 7406, size: 24 },
       { text: "字号", x: 902, y: 7406, size: 24 },
       { text: "行高", x: 1122, y: 7406, size: 24 },
@@ -512,7 +635,9 @@ const bSystemFrames: Frame[] = [
       { text: "12px", x: 902, y: 7826, size: 24 },
       { text: "20px", x: 1119, y: 7826, size: 24 },
       { text: "Regular", x: 1342, y: 7826, size: 24 },
-      { text: "提示文本", x: 1562, y: 7826, size: 24 }
+      { text: "提示文本", x: 1562, y: 7826, size: 24 },
+      { text: "组件库", x: 135, y: 8010, size: 36, weight: 380, lineHeight: 38.7 },
+      { text: "Component Library", x: 135, y: 8057, size: 20, color: "rgba(255,255,255,0.5)", lineHeight: 21.5 }
     ]
   },
   {
@@ -525,11 +650,11 @@ const bSystemFrames: Frame[] = [
       { src: `${S}/Mask group.png`, x: 137, y: 5017, w: 1646, h: 1306 }
     ],
     texts: [
-      { text: "登录页", x: 138, y: 48, size: 36, weight: 500 },
+      { text: "登录页", x: 138, y: 48, size: 36, weight: 380 },
       { text: "Login Page", x: 138, y: 95, size: 20, color: "rgba(255,255,255,0.5)" },
-      { text: "首页", x: 138, y: 1388, size: 36, weight: 500 },
+      { text: "首页", x: 138, y: 1388, size: 36, weight: 380 },
       { text: "Home Page", x: 138, y: 1435, size: 20, color: "rgba(255,255,255,0.5)" },
-      { text: "整体设计理念", x: 1036, y: 1550, size: 32, weight: 500, color: "#81d828" },
+      { text: "整体设计理念", x: 1036, y: 1550, size: 32, weight: 380, color: "#81d828" },
       {
         text: "页面以“能源数据集中监控”为核心，通过园区总览、能耗分析、趋势变化及功能导航等模块，帮助用户快速掌握整体能源运行状态。\n设计上采用后台管理系统常见的「左侧导航 + 中心内容 + 数据分析」布局结构，强化信息层级与数据可读性，提升企业能源管理效率。",
         x: 1036,
@@ -539,7 +664,7 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 30
       },
-      { text: "左侧导航区", x: 1036, y: 1788, size: 32, weight: 500, color: "#81d828" },
+      { text: "左侧导航区", x: 1036, y: 1788, size: 32, weight: 380, color: "#81d828" },
       {
         text: "建立清晰的信息层级\n采用树状菜单结构，将复杂功能分类归纳，降低后台系统的信息复杂度。\n\n提升高频操作效率\n高频功能常驻左侧，减少用户频繁跳转，提高运维人员日常使用效率。\n\n强化工业平台稳定感\n整体采用浅灰背景与线性图标设计，减少视觉干扰，突出数据内容本身。",
         x: 1036,
@@ -549,16 +674,17 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 29
       },
-      { text: "核心视觉区", x: 138, y: 2085, size: 32, weight: 500, color: "#81d828" },
+      { text: "核心视觉区", x: 138, y: 2085, size: 32, weight: 380, color: "#81d828" },
       {
         text: "场景化能源监控\n通过园区实景图结合设备定位，将抽象数据转化为可视化场景，提高用户对园区整体运行状态的理解效率。\n\n强化空间感知\n用户能够快速定位不同区域与设备状态，提升异常问题排查效率。\n\n提升平台科技感\n采用大图展示与场景化设计，增强平台视觉冲击力与数字化体验。",
         x: 138,
         y: 2141,
         width: 811,
         size: 20,
+        color: "rgba(255,255,255,0.8)",
         lineHeight: 29
       },
-      { text: "数据分析可视化模块", x: 1036, y: 2136, size: 32, weight: 500, color: "#81d828" },
+      { text: "数据分析可视化模块", x: 1036, y: 2136, size: 32, weight: 380, color: "#81d828" },
       {
         text: "通过图表化与数据可视化设计，将复杂的能源数据转化为更加直观的信息展示方式，帮助用户快速了解园区整体能耗情况、能源变化趋势以及设备运行状态。\n页面采用环形图、柱状图与折线图等多种图表形式，对不同区域、不同时间维度的数据进行分类展示，方便用户快速识别高能耗区域与异常波动情况，提升数据分析效率与管理决策能力。\n通过数据可视化与模块化布局设计，将复杂能源数据更直观地呈现给用户，提升数据分析效率、异常问题识别能力以及整体能源管理体验。",
         x: 1036,
@@ -568,13 +694,13 @@ const bSystemFrames: Frame[] = [
         color: "rgba(255,255,255,0.8)",
         lineHeight: 30
       },
-      { text: "能耗分析页", x: 138, y: 2535, size: 36, weight: 500 },
+      { text: "能耗分析页", x: 138, y: 2535, size: 36, weight: 380 },
       { text: "Energy Analysis Page", x: 138, y: 2582, size: 20, color: "rgba(255,255,255,0.5)" },
       { text: "工业能源管理系统的能耗分析功能可直观展示能源消耗数据，帮助企业发现节能潜力，优化能源使用效率，降低运营成本，支持科学决策和可持续发展目标的实现。", x: 138, y: 2673, width: 1645, size: 20 },
-      { text: "光伏发电页", x: 138, y: 3699, size: 36, weight: 500 },
+      { text: "光伏发电页", x: 138, y: 3699, size: 36, weight: 380 },
       { text: "Photovoltaic Power Page", x: 138, y: 3746, size: 20, color: "rgba(255,255,255,0.5)" },
       { text: "光伏发电模块使用柱状图可以直观展示不同类别数据的数值大小，便于快速比较差异；清晰呈现数据之间的关系和趋势", x: 138, y: 3837, width: 1645, size: 20 },
-      { text: "页面展示", x: 138, y: 4848, size: 36, weight: 500 },
+      { text: "页面展示", x: 138, y: 4848, size: 36, weight: 380 },
       { text: "Page Display", x: 138, y: 4895, size: 20, color: "rgba(255,255,255,0.5)" }
     ]
   }
@@ -850,13 +976,22 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
   return (
     <>
       <SelectionFrame />
-      <p className="absolute whitespace-nowrap font-['MiSans'] text-[150px] font-semibold uppercase leading-none text-[#86df2a]" style={{ left: px(hero.titleX), top: px(hero.titleY) }}>
+      <p
+        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+        style={{ left: px(hero.titleX), top: px(hero.titleY), fontSize: px(150), fontWeight: 520, lineHeight: px(150.08), color: "#86df2a" }}
+      >
         {hero.title}
       </p>
-      <p className="absolute whitespace-nowrap font-['MiSans'] text-[24px] font-semibold uppercase leading-none text-white" style={{ left: px(hero.descAX), top: px(hero.descAY) }}>
+      <p
+        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+        style={{ left: px(hero.descAX), top: px(hero.descAY), fontSize: px(24), fontWeight: 520, lineHeight: px(24.01), color: "#ffffff" }}
+      >
         {hero.descA}
       </p>
-      <p className="absolute whitespace-nowrap font-['MiSans'] text-[24px] font-normal uppercase leading-none text-white/80" style={{ left: px(hero.descBX), top: px(hero.descBY) }}>
+      <p
+        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+        style={{ left: px(hero.descBX), top: px(hero.descBY), fontSize: px(24), fontWeight: 330, lineHeight: px(24.01), color: "rgba(255,255,255,0.8)" }}
+      >
         {hero.descB}
       </p>
       {images?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
@@ -880,26 +1015,32 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         zIndex: image.z,
         opacity: image.opacity,
         transform: image.rotate ? `rotate(${image.rotate}deg)` : undefined,
-        borderRadius: image.radius ? px(image.radius) : undefined
+        borderRadius: image.radius ? px(image.radius) : undefined,
+        border: image.border ? `${image.borderWidth ?? 1}px solid ${image.border}` : undefined,
+        boxSizing: image.border ? "border-box" : undefined
       }}
     />
   );
 }
 
 function RectLayerView({ rect }: { rect: RectLayer }) {
+  const seamBleed = 0;
+
   return (
     <div
       className="absolute"
       style={{
         left: px(rect.x),
         top: px(rect.y),
-        width: px(rect.w),
-        height: px(rect.h),
+        width: px(rect.w + seamBleed),
+        height: px(rect.h + seamBleed),
         background: rect.background ?? rect.color,
-        borderRadius: rect.radius ? px(rect.radius) : undefined,
+        borderRadius: rect.radiusCss ?? (rect.radius ? px(rect.radius) : undefined),
         zIndex: rect.z,
         opacity: rect.opacity,
-        border: rect.border ? `${rect.borderWidth ?? 1}px ${rect.borderStyle ?? "solid"} ${rect.border}` : undefined
+        border: rect.border ? `${rect.borderWidth ?? 1}px ${rect.borderStyle ?? "solid"} ${rect.border}` : undefined,
+        borderTop: rect.borderTop ? `${rect.borderTopWidth ?? 1}px solid ${rect.borderTop}` : undefined,
+        boxSizing: rect.border || rect.borderTop ? "border-box" : undefined
       }}
     />
   );
@@ -908,14 +1049,15 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
 function TextLayerView({ text }: { text: TextLayer }) {
   return (
     <p
-      className="absolute m-0 whitespace-pre-wrap font-['MiSans']"
+      className={`absolute m-0 font-['MiSans'] ${text.width ? "whitespace-pre-wrap" : "whitespace-nowrap"}`}
       style={{
         left: px(text.x),
         top: px(text.y),
         width: text.width ? px(text.width) : undefined,
         fontFamily: text.family ?? "MiSans",
         fontSize: px(text.size),
-        fontWeight: text.weight ?? 400,
+        fontStyle: text.style ?? "normal",
+        fontWeight: text.weight ?? 305,
         color: text.color ?? "#ffffff",
         opacity: text.opacity,
         zIndex: text.z,
@@ -925,6 +1067,62 @@ function TextLayerView({ text }: { text: TextLayer }) {
     >
       {text.text}
     </p>
+  );
+}
+
+function BSystemSpecTable() {
+  return (
+    <div
+      className="pointer-events-none absolute overflow-hidden"
+      style={{ left: px(133), top: px(6720), width: px(1650), height: px(624), borderRadius: px(24), zIndex: 80 }}
+    >
+      <svg
+        className="absolute inset-0"
+        width="1650"
+        height="624"
+        viewBox="0 0 1650 624"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+      >
+        <defs>
+          <clipPath id="b-spec-table-clip">
+            <rect x="0" y="0" width="1650" height="624" rx="24" ry="24" />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#b-spec-table-clip)">
+          {bSpecRects.map((rect) => (
+            <rect
+              key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}-${rect.fill}-${rect.opacity ?? 1}`}
+              x={rect.x}
+              y={rect.y}
+              width={rect.w}
+              height={rect.h}
+              fill={rect.fill}
+              opacity={rect.opacity}
+            />
+          ))}
+        </g>
+      </svg>
+      {bSpecTexts.map((text) => (
+        <p
+          key={`${text.text}-${text.x}-${text.y}`}
+          className="absolute m-0 whitespace-pre-line"
+          style={{
+            left: px(text.x),
+            top: px(text.y),
+            fontFamily: "MiSans",
+            fontSize: px(text.size),
+            fontStyle: "normal",
+            fontWeight: text.weight ?? 305,
+            lineHeight: "normal",
+            color: text.color ?? "#ffffff",
+            opacity: text.opacity
+          }}
+        >
+          {text.text}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -972,6 +1170,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
               {frame.rects?.map((rect) => <RectLayerView key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`} rect={rect} />)}
               {frame.hero ? <Hero hero={frame.hero} images={frame.images} /> : frame.images?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
               {frame.texts?.map((text) => <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} />)}
+              {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
             </div>
           </div>
         </section>
@@ -979,3 +1178,4 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     </main>
   );
 }
+

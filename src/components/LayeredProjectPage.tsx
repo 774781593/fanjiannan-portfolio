@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CarouselSwiper } from "./CarouselSwiper";
 
 type ImageLayer = {
   src: string;
@@ -15,22 +16,36 @@ type ImageLayer = {
   radius?: number;
   border?: string;
   borderWidth?: number;
+  shadow?: string;
+  imageX?: number;
+  imageY?: number;
+  imageW?: number;
+  imageH?: number;
+  crop?: {
+    top: string;
+    height: string;
+  };
 };
 
 type TextLayer = {
   text: string;
+  parts?: Array<{ text: string; color?: string; weight?: number }>;
   x: number;
   y: number;
   size: number;
   weight?: number;
   z?: number;
   color?: string;
+  gradient?: string;
   opacity?: number;
   width?: number;
+  height?: number;
   lineHeight?: number;
   letterSpacing?: number;
   family?: string;
   style?: string;
+  align?: "left" | "center" | "right";
+  wrap?: boolean;
 };
 
 type RectLayer = {
@@ -38,6 +53,7 @@ type RectLayer = {
   y: number;
   w: number;
   h: number;
+  kind?: "rect" | "triangle" | "source-arrow" | "diagonal-arrow" | "selection-box" | "connector-right" | "connector-left" | "connector-cap-right" | "connector-cap-left";
   color?: string;
   background?: string;
   radius?: number;
@@ -53,6 +69,8 @@ type RectLayer = {
 
 type Frame = {
   height: number;
+  background?: string;
+  fullImageSrc?: string;
   images?: ImageLayer[];
   texts?: TextLayer[];
   rects?: RectLayer[];
@@ -60,12 +78,18 @@ type Frame = {
     title: string;
     titleX: number;
     titleY: number;
+    titleW?: number;
+    titleH?: number;
+    titleAlign?: "left" | "center" | "right";
     descA: string;
     descAX: number;
     descAY: number;
     descB: string;
     descBX: number;
     descBY: number;
+    descAWeight?: number;
+    descBWeight?: number;
+    subtitle?: TextLayer;
   };
 };
 
@@ -198,6 +222,14 @@ const moveArrow: ImageLayer = {
   h: 64.8
 };
 
+const appGalleryCards = [
+  { src: `${S}/首页.png`, alt: "首页", width: 1434, height: 897, radius: 24 },
+  { src: `${S}/记忆.png`, alt: "记忆", width: 1438, height: 900, radius: 26 },
+  { src: `${S}/wifi.png`, alt: "wifi", width: 1434, height: 897, radius: 26 }
+] as const;
+
+const appGalleryImageSources = new Set<string>(appGalleryCards.map((card) => card.src));
+
 const appFrames: Frame[] = [
   {
     height: 1080,
@@ -215,18 +247,18 @@ const appFrames: Frame[] = [
     images: [moveArrow]
   },
   {
-    height: 11725,
+    height: 9825,
     rects: [
-      { x: 0, y: 2003, w: 1920, h: 9722, color: "#090a0f" },
+      { x: 0, y: 2003, w: 1920, h: 7822, color: "#090a0f" },
       { x: 102.5, y: 2424, w: 1715, h: 919, radius: 84, background: "linear-gradient(180deg, #2e4fb8 0%, #090a0f 100%)" },
       { x: 102.25, y: 3653, w: 848, h: 1006, radius: 60, background: "linear-gradient(180deg, #0b1834 0%, #16274c 100%)" },
       { x: 969.25, y: 3653, w: 847, h: 1006, radius: 60, background: "linear-gradient(180deg, #13203e 0%, #354c79 100%)" },
       { x: 102.25, y: 4678, w: 848, h: 1006, radius: 60, background: "linear-gradient(180deg, #000000 0%, #274cc4 100%)" },
-      { x: 969.25, y: 4678, w: 847, h: 201.2, radius: 60, color: "#ffffff" },
+      { x: 969.25, y: 4678, w: 847, h: 201.2, radiusCss: "60px 60px 0 0", color: "#ffffff" },
       { x: 969.25, y: 4879, w: 847, h: 201.2, color: "#d8d8d8" },
       { x: 969.25, y: 5080, w: 847, h: 201.2, color: "#000000" },
       { x: 969.25, y: 5281, w: 847, h: 201.2, color: "#7e3385" },
-      { x: 969.25, y: 5482, w: 847, h: 201.2, radius: 60, color: "#264bc1" },
+      { x: 969.25, y: 5482, w: 847, h: 201.2, radiusCss: "0 0 60px 60px", color: "#264bc1" },
       { x: 102, y: 7093, w: 848, h: 848, radius: 60, background: "linear-gradient(180deg, #000000 0%, #274cc4 100%)" },
       { x: 968, y: 7093, w: 848, h: 848, radius: 60, background: "linear-gradient(180deg, #000000 0%, #0f2671 100%)" }
       ,
@@ -242,53 +274,58 @@ const appFrames: Frame[] = [
       { src: `${S}/资源_1_2.png`, x: 748, y: 249, w: 423, h: 93 },
       { src: `${S}/资源_1_2.png`, x: 1289, y: 2140, w: 423, h: 93 },
       { src: `${S}/1_310053792.png`, x: 1010, y: 2313, w: 665, h: 1030 },
-      { src: `${S}/注射.png`, x: 245, y: 6044, w: 1428, h: 893, radius: 24 },
-      { src: `/assets/figma-dev/app/essence-open.png`, x: 316, y: 7287, w: 102, h: 102 },
-      { src: `/assets/figma-dev/app/hyaluronic.png`, x: 603, y: 7275, w: 138, h: 138 },
-      { src: `/assets/figma-dev/app/resource-management.png`, x: 335, y: 7594, w: 92, h: 92 },
-      { src: `/assets/figma-dev/app/medicine-library.png`, x: 625, y: 7589, w: 102, h: 102 },
-      { src: `${S}/wifi.png`, x: -86, y: 8619, w: 1120, h: 701, opacity: 0.2 },
-      { src: `${S}/记忆.png`, x: 882, y: 8622, w: 1116, h: 698, opacity: 0.2 },
-      { src: `${S}/首页.png`, x: 239, y: 8521, w: 1434, h: 897, radius: 24 },
-      { src: `${S}/首页.png`, x: 892, y: 9639, w: 1106, h: 692, radius: 24, opacity: 0.2 },
-      { src: `${S}/记忆.png`, x: 241, y: 9536, w: 1438, h: 900, radius: 26 },
-      { src: `${S}/记忆.png`, x: -86, y: 10657, w: 1109, h: 694, radius: 26, opacity: 0.2 },
-      { src: `${S}/wifi.png`, x: 239, y: 10554, w: 1434, h: 897, radius: 26 }
+      { src: `${S}/注射.png`, x: 245, y: 6044, w: 1428, h: 893, radius: 24, border: "#363636", borderWidth: 1 },
+      { src: `/assets/figma-dev/app/essence-open.svg`, x: 316, y: 7287, w: 102, h: 102 },
+      { src: `/assets/figma-dev/app/hyaluronic.svg`, x: 603, y: 7275, w: 138, h: 138 },
+      { src: `/assets/figma-dev/app/resource-management.svg`, x: 335, y: 7594, w: 92, h: 92 },
+      { src: `/assets/figma-dev/app/medicine-library.svg`, x: 625, y: 7589, w: 102, h: 102 },
+      { src: `${S}/资源_1_2.png`, x: 1112, y: 7456, w: 561, h: 123 },
+      { src: `${S}/wifi.png`, x: -86, y: 8619, w: 1120, h: 701, opacity: 0.2, z: 1 },
+      { src: `${S}/记忆.png`, x: 882, y: 8622, w: 1116, h: 698, opacity: 0.2, z: 1 },
+      { src: `${S}/首页.png`, x: 239, y: 8521, w: 1434, h: 897, radius: 24, z: 2 },
+      { src: `${S}/首页.png`, x: 892, y: 9639, w: 1106, h: 692, radius: 24, opacity: 0.2, z: 1 },
+      { src: `${S}/wifi.png`, x: -86, y: 9634, w: 1120, h: 701, opacity: 0.2, z: 1 },
+      { src: `${S}/记忆.png`, x: 241, y: 9536, w: 1438, h: 900, radius: 26, z: 2 },
+      { src: `${S}/记忆.png`, x: -86, y: 10657, w: 1109, h: 694, radius: 26, opacity: 0.2, z: 1 },
+      { src: `${S}/首页.png`, x: 892, y: 10657, w: 1106, h: 692, radius: 24, opacity: 0.2, z: 1 },
+      { src: `${S}/wifi.png`, x: 239, y: 10554, w: 1434, h: 897, radius: 26, z: 2 }
     ],
     texts: [
       { text: "2024", x: 77, y: 53, size: 24 },
       { text: "UX/UI", x: 1779, y: 53, size: 24 },
-      { text: "颜层美容针界面设计", x: 528, y: 388, size: 96, weight: 600 },
-      { text: "项目背调", x: 207, y: 2140, size: 64, weight: 500 },
-      { text: "设计规范", x: 207, y: 3480, size: 64, weight: 500 },
-      { text: "参数设置页面", x: 207, y: 5821, size: 64, weight: 500 },
-      { text: "其他页面", x: 207, y: 8266, size: 64, weight: 500 },
-      { text: "让肌肤重焕光彩", x: 207, y: 2740, size: 48, weight: 500 },
+      { text: "颜层美容针界面设计", x: 528, y: 388, size: 96, weight: 450 },
+      { text: "项目背调", x: 207, y: 2140, size: 64, weight: 380 },
+      { text: "设计规范", x: 207, y: 3480, size: 64, weight: 380 },
+      { text: "参数设置页面", x: 207, y: 5821, size: 64, weight: 380 },
+      { text: "其他页面", x: 207, y: 8266, size: 64, weight: 380 },
+      { text: "让肌肤重焕光彩", x: 207, y: 2740, size: 48, weight: 380 },
       {
         text: "颜层是一款现代美容仪器，它将美容针通过科学注射方式将营养成分输送到皮肤深层，能够有效实现补水保湿、减少皱纹、提亮肤色、紧致提升和改善肤质等多重美容效果。",
         x: 207,
         y: 2875,
         width: 637,
         size: 24,
-        weight: 300,
+        weight: 250,
         lineHeight: 36
       },
-      { text: "主要字体", x: 239, y: 3753, size: 32 },
-      { text: "辅助字体", x: 1112, y: 3753, size: 32 },
-      { text: "PingFang\nSans SC", x: 207, y: 3833, size: 64 },
-      { text: "Arial", x: 1080, y: 3833, size: 128 },
-      { text: "#000000", x: 207, y: 4742, size: 48, weight: 300 },
-      { text: "#274CC4", x: 207, y: 5559, size: 48, weight: 300 },
-      { text: "#FFFFFF", x: 1080, y: 4744, size: 48, weight: 300, color: "#000000" },
-      { text: "#D8D8D8", x: 1080, y: 4956, size: 48, weight: 300, color: "#000000" },
-      { text: "#000000", x: 1080, y: 5157, size: 48, weight: 300 },
-      { text: "#7E3385", x: 1080, y: 5358, size: 48, weight: 300 },
-      { text: "#274CC4", x: 1080, y: 5557, size: 48, weight: 300 },
-      { text: "精华液", x: 327, y: 7413, size: 36, weight: 500 },
-      { text: "玻尿酸", x: 622, y: 7413, size: 36, weight: 500 },
-      { text: "资源管理", x: 307, y: 7714, size: 36, weight: 500 },
-      { text: "药品库", x: 622, y: 7714, size: 36, weight: 500 },
-      { text: "THANKS", x: 831, y: 11615, size: 64, weight: 500 }
+      { text: "主要字体", x: 239, y: 3753, size: 32, weight: 330 },
+      { text: "辅助字体", x: 1112, y: 3753, size: 32, weight: 330 },
+      { text: "PingFang\nSans SC", x: 207, y: 3833, width: 273, size: 64, weight: 330 },
+      { text: "Arial", x: 1080, y: 3833, width: 266, size: 128, weight: 330 },
+      { text: "abcdefghijklmnopqrstuvwxyz\n!@#$%^?", x: 207, y: 4504, width: 525, size: 24, weight: 250 },
+      { text: "1234567890", x: 1080, y: 4504, width: 652, size: 64, weight: 250 },
+      { text: "#000000", x: 207, y: 4742, size: 48, weight: 250 },
+      { text: "#274CC4", x: 207, y: 5559, size: 48, weight: 250 },
+      { text: "#FFFFFF", x: 1080, y: 4744, size: 48, weight: 250, color: "#000000" },
+      { text: "#D8D8D8", x: 1080, y: 4956, size: 48, weight: 250, color: "#000000" },
+      { text: "#000000", x: 1080, y: 5157, size: 48, weight: 250 },
+      { text: "#7E3385", x: 1080, y: 5358, size: 48, weight: 250 },
+      { text: "#274CC4", x: 1080, y: 5557, size: 48, weight: 250 },
+      { text: "精华液", x: 327, y: 7413, size: 36, weight: 380 },
+      { text: "玻尿酸", x: 622, y: 7413, size: 36, weight: 380 },
+      { text: "资源管理", x: 307, y: 7714, size: 36, weight: 380 },
+      { text: "药品库", x: 622, y: 7714, size: 36, weight: 380 },
+      { text: "THANKS", x: 831, y: 9635, size: 64, weight: 380 }
     ]
   }
 ];
@@ -376,7 +413,7 @@ const bSystemFrames: Frame[] = [
       { x: 661, y: 7877, w: 1122, h: 1, color: "#515151" }
     ],
     images: [
-      { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
+      { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
       { src: `${S}/5555_1.png`, x: 599, y: 1301, w: 198, h: 135, z: 3 },
       { src: `${S}/图片扩图_1.png`, x: -55, y: 1022, w: 2340, h: 1132 },
       { src: `${S}/Ellipse 1051.png`, x: 1413, y: 2643, w: 115, h: 115, z: 13, radius: 999, border: "#81c478", borderWidth: 7 },
@@ -722,90 +759,95 @@ const webFrames: Frame[] = [
     },
     rects: [
       { x: 321, y: 3086, w: 658, h: 792, radius: 24, color: "#086adb" },
-      { x: 1027, y: 3398, w: 573, h: 160, radius: 24, color: "#333333" },
+      { x: 1027, y: 3398, w: 573, h: 160, radiusCss: "24px 0 0 24px", color: "#333333" },
       { x: 1027, y: 3558, w: 573, h: 160, color: "#666666" },
-      { x: 1027, y: 3718, w: 573, h: 160, radius: 24, color: "#ffffff" }
+      { x: 1027, y: 3718, w: 573, h: 160, radiusCss: "0 24px 24px 0", color: "#ffffff" }
     ],
     images: [
       { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
-      { src: `${S}/Image0001_1.png`, x: 1, y: 1080, w: 1920, h: 1223 },
-      { src: `${S}/5555_1.png`, x: 1379, y: 1252, w: 195, h: 133 },
-      { src: `${S}/图层_3.png`, x: 192, y: 4216, w: 1538, h: 775, radius: 24 },
-      { src: `${S}/Snipaste_2025-10-13_14-47-39.png`, x: 192, y: 5041, w: 1538, h: 859, radius: 24 },
-      { src: `${S}/Snipaste_2025-10-13_14-49-01.png`, x: 190, y: 5950, w: 1541, h: 861, radius: 24 },
-      { src: `${S}/Snipaste_2025-10-13_14-48-35.png`, x: 192, y: 6861, w: 1537, h: 860, radius: 24 },
-      { src: `${S}/Snipaste_2025-10-13_14-48-50.png`, x: 191, y: 7771, w: 1540, h: 863, radius: 24 }
+      { src: `${S}/Image0001_1.png`, x: 1, y: 1080, w: 1920, h: 1223, crop: { top: "-6.87%", height: "117.74%" } },
+      { src: `${S}/5555_1.png`, x: 1379, y: 1252, w: 195, h: 133, z: 30 },
+      { src: `${S}/图层_3.png`, x: 192, y: 4216, w: 1538, h: 775, radius: 24, border: "#ffffff", borderWidth: 5 },
+      { src: `${S}/Snipaste_2025-10-13_14-47-39.png`, x: 192, y: 5041, w: 1538, h: 859, radius: 24, border: "#ffffff", borderWidth: 5 },
+      { src: `${S}/Snipaste_2025-10-13_14-49-01.png`, x: 190, y: 5950, w: 1541, h: 861, radius: 24, border: "#ffffff", borderWidth: 5 },
+      { src: `${S}/Snipaste_2025-10-13_14-48-35.png`, x: 192, y: 6861, w: 1537, h: 860, radius: 24, border: "#ffffff", borderWidth: 5 },
+      { src: `${S}/Snipaste_2025-10-13_14-48-50.png`, x: 191, y: 7771, w: 1540, h: 863, radius: 24, border: "#ffffff", borderWidth: 5 }
     ],
     texts: [
-      { text: "信芯网页设计", x: 624, y: 828, size: 24, weight: 600 },
-      { text: "根据用户需求采用商务风格进行设计", x: 912, y: 828, size: 24, color: "rgba(255,255,255,0.8)" },
-      { text: "SOTHIS S20", x: 519, y: 1228, size: 96, weight: 700, family: "Druk Wide" },
-      { text: "页面原型、UI设计制作", x: 801, y: 1364, size: 32, family: "MiSans" },
-      { text: "苹方", x: 320, y: 2607, size: 128, weight: 700, family: "MiSans" },
-      { text: "PingFang Sans", x: 320, y: 2761, size: 32, color: "#a69f9f", family: "MiSans" },
-      { text: "ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789?!@#$%^&*()", x: 320, y: 2829, size: 24, lineHeight: 32, letterSpacing: 5, family: "MiSans" },
-      { text: "标题", x: 1137, y: 2607, size: 48, family: "MiSans" },
-      { text: "副标题", x: 1137, y: 2716, size: 36, family: "MiSans" },
-      { text: "小标题", x: 1137, y: 2809, size: 32, family: "MiSans" },
-      { text: "正文", x: 1137, y: 2896, size: 20, family: "MiSans" },
-      { text: "48px", x: 1526, y: 2630, size: 20 },
-      { text: "36px", x: 1526, y: 2727, size: 20 },
-      { text: "32px", x: 1526, y: 2821, size: 20 },
-      { text: "20px", x: 1526, y: 2896, size: 20 },
+      { text: "信芯网页设计", x: 624, y: 828, size: 24, weight: 520 },
+      { text: "根据用户需求采用商务风格进行设计", x: 912, y: 828, size: 24, weight: 330, color: "rgba(255,255,255,0.8)" },
+      { text: "SOTHIS S20", parts: [{ text: "SOTHIS", color: "#068fff" }, { text: " S20" }], x: 519, y: 1228, size: 96, weight: 700, lineHeight: 96.053, family: "Druk Wide" },
+      { text: "页面原型、UI设计制作", x: 801, y: 1364, size: 32, weight: 330, lineHeight: 32.018, family: "MiSans" },
+      { text: "苹方", x: 320, y: 2607, size: 128, weight: 630, family: "MiSans" },
+      { text: "PingFang Sans", x: 320, y: 2761, size: 32, weight: 330, color: "#a69f9f", family: "MiSans" },
+      { text: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", x: 320, y: 2829, size: 24, weight: 330, lineHeight: 24.013, letterSpacing: 7.44, family: "MiSans" },
+      { text: "abcdefghijklmnopqrstuvwxyz", x: 320, y: 2861, size: 24, weight: 330, lineHeight: 24.013, letterSpacing: 4.96, family: "MiSans" },
+      { text: "0123456789?!@#$%^&*()", x: 320, y: 2893, size: 24, weight: 330, lineHeight: 24.013, letterSpacing: 4.96, family: "MiSans" },
+      { text: "标题", x: 1137, y: 2607, size: 48, weight: 330, family: "MiSans" },
+      { text: "副标题", x: 1137, y: 2716, size: 36, weight: 330, family: "MiSans" },
+      { text: "小标题", x: 1137, y: 2809, size: 32, weight: 330, family: "MiSans" },
+      { text: "正文", x: 1137, y: 2896, size: 20, weight: 330, family: "MiSans" },
+      { text: "48px", x: 1526, y: 2630, size: 20, weight: 330 },
+      { text: "36px", x: 1526, y: 2727, size: 20, weight: 330 },
+      { text: "32px", x: 1526, y: 2821, size: 20, weight: 330 },
+      { text: "20px", x: 1526, y: 2896, size: 20, weight: 330 },
       {
         text: "无衬线字体的应用可以让设计作品更加现代化和具有时代感。它给人一种简洁、现代、科技感强的印象，它的简洁明快的特点可以让用户更快速地获取信息。",
         x: 1139,
         y: 2959,
         width: 461,
         size: 18,
+        weight: 330,
         lineHeight: 28,
         family: "MiSans"
       },
-      { text: "主题色", x: 367, y: 3754, size: 36, weight: 700 },
-      { text: "#086ADB", x: 367, y: 3802, size: 32, color: "rgba(255,255,255,0.8)" },
-      { text: "#333333", x: 1082, y: 3457, size: 32, color: "rgba(255,255,255,0.8)" },
-      { text: "#666666", x: 1082, y: 3617, size: 32, color: "rgba(255,255,255,0.8)" },
-      { text: "#FFFFFF", x: 1082, y: 3781, size: 32, color: "rgba(0,0,0,0.8)" },
-      { text: "页面展示", x: 864, y: 4057, size: 48, weight: 700, family: "MiSans" },
-      { text: "THANKS", x: 840, y: 8821, size: 48, weight: 700 }
+      { text: "主题色", x: 367, y: 3754, size: 36, weight: 630 },
+      { text: "#086ADB", x: 367, y: 3802, size: 32, weight: 330, color: "rgba(255,255,255,0.8)" },
+      { text: "#333333", x: 1082, y: 3457, size: 32, weight: 330, color: "rgba(255,255,255,0.8)" },
+      { text: "#666666", x: 1082, y: 3617, size: 32, weight: 330, color: "rgba(255,255,255,0.8)" },
+      { text: "#FFFFFF", x: 1082, y: 3781, size: 32, weight: 330, color: "rgba(0,0,0,0.8)" },
+      { text: "页面展示", x: 864, y: 4057, size: 48, weight: 630, family: "MiSans" },
+      { text: "THANKS", x: 840, y: 8821, size: 48, weight: 380 }
     ]
   },
   {
     height: 9605,
     rects: [
-      { x: 148, y: 1525, w: 0, h: 147, border: "#ffffff", borderWidth: 2 },
-      { x: 159, y: 6426, w: 0, h: 73, border: "#ffffff", borderWidth: 2 },
-      { x: 1769, y: 8376, w: 0, h: 73, border: "#ffffff", borderWidth: 2 }
+      { x: 148, y: 1525, w: 2, h: 147, color: "#ffffff", z: 20 },
+      { x: 159, y: 6426, w: 2, h: 73, color: "#ffffff", z: 20 },
+      { x: 1769, y: 8376, w: 2, h: 73, color: "#ffffff", z: 20 }
     ],
     images: [
-      { src: `${S}/图层_8.png`, x: -620, y: -344, w: 2896, h: 1827 },
-      { src: `${S}/图层_7.png`, x: 708, y: 534, w: 504, h: 85 },
-      { src: `${S}/FireShot_Capture_011_-_青岛信芯微电子科技股份有限公司-信芯微官网_-_www.hi-image.cn.png`, x: 400, y: 2980, w: 1121, h: 3059 },
-      { src: `${S}/FireShot_Capture_014_-_行业新闻_-_信芯微电子科技有限公司_-_www.hi-image.cn.png`, x: 657, y: 6283, w: 1111, h: 1500 },
-      { src: `${S}/FireShot_Capture_012_-_关于信芯微_-_信芯微电子科技有限公司_-_www.hi-image.cn.png`, x: 120, y: 7217, w: 1225, h: 2026 },
+      { src: `/assets/figma-dev/web-xinxin-bg-bottom.png`, x: -2020, y: 8087, w: 3968, h: 9803 },
+      { src: `/assets/figma-dev/web-xinxin-bg-main.png`, x: -2020, y: 0, w: 3968, h: 9803 },
       { src: `${S}/图层_9.png`, x: 1212, y: 8672, w: 884, h: 815 },
-      { src: `${S}/图层_9_拷贝.png`, x: -213, y: 7680, w: 623, h: 575 }
+      { src: `${S}/图层_9_拷贝.png`, x: -213, y: 7680, w: 623, h: 575 },
+      { src: `${S}/图层_8.png`, x: -620, y: -344, w: 2896, h: 1827 },
+      { src: `${S}/图层_7.png`, x: 708, y: 533.943, w: 504.338, h: 85.115 },
+      { src: `${S}/创_芯引领 智慧生活.png`, x: 410, y: 1012, w: 209, h: 116 },
+      { src: `${S}/FireShot_Capture_011_-_青岛信芯微电子科技股份有限公司-信芯微官网_-_www.hi-image.cn.png`, x: 399.913, y: 2980.415, w: 1121.233, h: 3059.323 },
+      { src: `${S}/FireShot_Capture_014_-_行业新闻_-_信芯微电子科技有限公司_-_www.hi-image.cn.png`, x: 657, y: 6283, w: 1111, h: 1500 },
+      { src: `${S}/FireShot_Capture_012_-_关于信芯微_-_信芯微电子科技有限公司_-_www.hi-image.cn.png`, x: 120, y: 7217, w: 1225, h: 2026 }
     ],
     texts: [
-      { text: "DESIGN", x: 82, y: 55, size: 18, family: "Druk Wide" },
-      { text: "2021", x: 1783, y: 55, size: 18, family: "Druk Wide" },
-      { text: "我们专注于技术创新，并用领先的\n产品推动智慧生活时代快步向前", x: 1064, y: 1012, size: 30, lineHeight: 54, family: "PingFang SC" },
-      { text: "创'芯引领 智慧生活", x: 410, y: 1012, size: 76, weight: 700, family: "PingFang SC" },
-      { text: "FONT", x: 894, y: 1481, size: 48, family: "Druk Wide" },
-      { text: "中文字体—", x: 1309, y: 1637, size: 36, family: "PingFang SC" },
-      { text: "苹方", x: 1310, y: 1703, size: 60, family: "PingFang SC" },
-      { text: "公司专注于液晶面板控制芯片及超高清图\n像处理芯片的开发，并逐渐扩展到所有显示\n相关领域。", x: 1312, y: 1835, size: 24, lineHeight: 36, family: "PingFang SC" },
-      { text: "英文字体—", x: 148, y: 2218, size: 36, family: "PingFang SC" },
-      { text: "DIN", x: 145, y: 2284, size: 60, family: "Druk Wide" },
-      { text: "THE COMPANY FOCUSES ON THE\nDEVELOPMENT OF LCD PANEL\nCONTROL CHIP AND ULTRA-HIGH\nDEFINITION IMAGE PROCESSING CHIP,\nAND GRADUALLY EXPANDS TO ALL\nDISPLAY RELATED FIELDS,", x: 150, y: 2389, size: 24, lineHeight: 29, family: "Druk Wide" },
-      { text: "Aa", x: 775, y: 1803, size: 337, family: "Druk Wide" },
-      { text: "DESGIN", x: 1516, y: 2485, size: 72, family: "Druk Wide" },
-      { text: "首页展示", x: 864, y: 2782, size: 48, family: "PingFang SC" },
-      { text: "HOME PAGE DISPLAY", x: 843, y: 2851, size: 24, family: "Druk Wide" },
-      { text: "新闻中心", x: 148, y: 6278, size: 48, family: "PingFang SC" },
-      { text: "NEWS CENTER", x: 152, y: 6347, size: 24, family: "Druk Wide" },
-      { text: "关于信芯", x: 1579, y: 8247, size: 48, family: "PingFang SC" },
-      { text: "ABOUT XINXIN", x: 1616, y: 8317, size: 24, family: "Druk Wide" }
+      { text: "DESIGN", x: 81.81, y: 55.024, size: 18, weight: 400, family: "Helvetica" },
+      { text: "2021", x: 1782.81, y: 55.024, size: 18, weight: 400, family: "Helvetica" },
+      { text: "我们专注于技术创新，并用领先的\n产品推动智慧生活时代快步向前", x: 1063.568, y: 1012.049, size: 30, weight: 400, lineHeight: 54, family: "PingFang SC" },
+      { text: "FONT", x: 894.094, y: 1481.247, size: 48, weight: 400, family: "Helvetica" },
+      { text: "中文字体—", x: 1309.094, y: 1637.247, size: 36, weight: 400, family: "PingFang SC" },
+      { text: "苹方", x: 1310.094, y: 1703.247, size: 60, weight: 400, family: "PingFang SC" },
+      { text: "公司专注于液晶面板控制芯片及超高清图\n像处理芯片的开发，并逐渐扩展到所有显示\n相关领域。", x: 1311.88, y: 1834.779, size: 24, weight: 400, lineHeight: 36, family: "PingFang SC" },
+      { text: "英文字体—", x: 148.094, y: 2218.247, size: 36, weight: 400, family: "PingFang SC" },
+      { text: "DIN", x: 145.094, y: 2284.247, size: 60, weight: 500, family: "PingFang SC" },
+      { text: "THE COMPANY FOCUSES ON THE\nDEVELOPMENT OF LCD PANEL\nCONTROL CHIP AND ULTRA-HIGH\nDEFINITION IMAGE PROCESSING CHIP,\nAND GRADUALLY EXPANDS TO ALL\nDISPLAY RELATED FIELDS,", x: 150.188, y: 2389.466, size: 24, weight: 400, lineHeight: 29, family: "PingFang SC" },
+      { text: "Aa", x: 774.805, y: 1802.712, size: 337.082, weight: 400, family: "Helvetica" },
+      { text: "DESGIN", x: 1515.732, y: 2485.354, size: 72, weight: 500, family: "PingFang SC" },
+      { text: "首页展示", x: 864.422, y: 2782.478, size: 48, weight: 400, family: "PingFang SC" },
+      { text: "HOME PAGE DISPLAY", x: 843.422, y: 2851.478, size: 24, weight: 500, family: "PingFang SC" },
+      { text: "新闻中心", x: 148.422, y: 6278.478, size: 48, weight: 400, family: "PingFang SC" },
+      { text: "NEWS CENTER", x: 152.422, y: 6347.478, size: 24, weight: 400, family: "PingFang SC" },
+      { text: "关于信芯", x: 1579.422, y: 8247.478, size: 48, weight: 400, family: "PingFang SC" },
+      { text: "ABOUT XINXIN", x: 1616.422, y: 8317.478, size: 24, weight: 400, family: "PingFang SC" }
     ]
   }
 ];
@@ -815,8 +857,11 @@ const dashboardFrames: Frame[] = [
     height: 8916,
     hero: {
       title: "大屏设计",
-      titleX: 660,
-      titleY: 399,
+      titleX: 665,
+      titleY: 406,
+      titleW: 600,
+      titleH: 199,
+      titleAlign: "center",
       descA: "公司数字孪生",
       descAX: 604,
       descAY: 785,
@@ -825,13 +870,23 @@ const dashboardFrames: Frame[] = [
       descBY: 785
     },
     rects: [
+      { x: 281, y: 286, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
       { x: 0, y: 2379, w: 1920, h: 1105, background: "linear-gradient(0deg, #a5b5ca 0%, #202932 100%)" },
       { x: 0, y: 3446, w: 1920, h: 180, color: "#c4d2e6" },
       { x: 0, y: 3446, w: 425, h: 182, color: "#687582" },
+      { x: 0, y: 3626, w: 1920, h: 1128, color: "#ffffff" },
+      { x: 188, y: 3769, w: 21, h: 21, kind: "diagonal-arrow", color: "#ffffff", opacity: 0.75, z: 4 },
+      { x: 158, y: 3739, w: 81, h: 81, radius: 999, color: "#333333", z: 3 },
       { x: 0, y: 4754, w: 1920, h: 2932, color: "#000000" }
     ],
     images: [
-      { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
+      { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
       { src: `${S}/Dim_Light_MacBook_Mockup_1.png`, x: 1, y: 1067, w: 1919, h: 1312 },
       { src: `${S}/Snipaste_2025-10-13_17-11-06.png`, x: 158, y: 2796, w: 1604, h: 650 },
       { src: `${S}/图层_1_5.png`, x: 594, y: 3875, w: 732, h: 594 },
@@ -841,37 +896,76 @@ const dashboardFrames: Frame[] = [
       { src: `${S}/2_26.png`, x: 1, y: 7686, w: 1920, h: 1230 }
     ],
     texts: [
-      { text: "成都易得利数据大屏", x: 532, y: 834, size: 24, weight: 600 },
-      { text: "根据用户需求进行设计", x: 1062, y: 834, size: 24, weight: 400, color: "rgba(255,255,255,0.8)" },
-      { text: "制作背景", x: 864, y: 2517, size: 48, weight: 700 },
+      { text: "成都易得利数据大屏", x: 532, y: 834, size: 24, weight: 520 },
+      { text: "根据用户需求进行设计", x: 1062, y: 834, size: 24, weight: 330, color: "rgba(255,255,255,0.8)" },
+      { text: "制作背景", x: 864, y: 2517, size: 48, weight: 630 },
       {
         text: "在当前数字化转型浪潮中，传统制造业面临着生产效率提升、成本控制、质量优化等多重挑战。数字孪生技术通过构建物理实体的数字化镜像，实现虚实融合的智能管理，为企业提供了全新的解决方案。面对日益激烈的市场竞争和数字化转型的迫切需求，企业亟需通过数字孪生技术\n实现从传统制造向智能制造的转型升级。本项目旨在构建完整的数字孪生解决方案，帮助企业建立物理世界与数字世界的桥梁，实现生产制造的智能化、精细化管理，提升核心竞争力，在工业 4.0 时代占据有利地位。",
-        x: 309,
+        x: 310,
         y: 2625,
         width: 1301,
+        height: 80,
         size: 20,
-        weight: 400,
-        lineHeight: 40
+        weight: 305,
+        align: "center"
       },
-      { text: "用户体验\n设计", x: 158, y: 3495, size: 32, weight: 400 },
-      { text: "2024", x: 1686, y: 3495, size: 32, color: "#333333" },
-      { text: "数字孪生系统", x: 1586, y: 3536, size: 32, color: "#333333" },
-      { text: "AI", x: 883, y: 3495, size: 32, color: "#333333" },
-      { text: "智能制造", x: 886, y: 3536, size: 32, color: "#333333" },
-      { text: "产品目标", x: 158, y: 3842, size: 32, color: "#000000" },
+      { text: "用户体验\n设计", x: 158, y: 3495, size: 32, weight: 305 },
+      { text: "2024", x: 1688, y: 3495, size: 32, weight: 305, color: "#333333" },
+      { text: "数字孪生系统", x: 1570, y: 3536, size: 32, weight: 305, color: "#333333" },
+      { text: "AI", x: 886, y: 3495, size: 32, weight: 305, color: "#333333" },
+      { text: "智能制造", x: 886, y: 3536, size: 32, weight: 305, color: "#333333" },
+      { text: "产品目标", x: 158, y: 3842, size: 32, weight: 305, color: "#000000" },
       {
-        text: "构建楼宇数字孪生智慧生态，实现物理与虚拟空间实时映射。通过 AI 驱动的智能分析和优化决策，推动楼宇管理从经验模式向数据智能转型。打造安全、高效、绿色、智能的现代化楼宇管理新范式，成为行业数字化转型标杆，引领智慧楼宇未来发展方向。",
+        text: "构建楼宇数字孪生智慧生态，实现物理与虚拟空间实时映射。通过 AI 驱动的智能分析和优化决策，推动楼宇管理从经验模式向数据智能转型。打造安全、高效、绿色、智能的现代化楼宇管理新范式，成为行业数字化转型标杆，引领智慧楼宇未来发展方向。\n",
         x: 348,
         y: 4077,
         width: 1224,
+        height: 375,
         size: 36,
         color: "#333333",
-        lineHeight: 54
+        lineHeight: 54,
+        align: "center"
       }
     ]
   },
   {
     height: 12492,
+    fullImageSrc: "/assets/figma/7.png",
+    background: "#ffffff",
+    rects: [
+      { x: 1385, y: 173, w: 206, h: 207, color: "#f3f5f7" },
+      { x: 1178, y: 380, w: 207, h: 206, color: "#f3f5f7" },
+      { x: 1591, y: 380, w: 207, h: 206, color: "#f3f5f7" },
+      { x: 1385, y: 586, w: 206, h: 207, color: "#f3f5f7" },
+      { x: 1798, y: 586, w: 207, h: 207, color: "#f3f5f7" },
+      { x: 1643, y: 153, w: 103, h: 103, radius: 999, color: "#8cccf5", z: 2 },
+      { x: 1666, y: 175, w: 60, h: 60, kind: "source-arrow", color: "#ffffff", z: 3 },
+      { x: -129, y: 840, w: 1307, h: 987, radius: 24, color: "#e5e9ec" },
+      { x: 1350, y: 1279, w: 20, h: 20, radius: 999, color: "#282828", z: 3 },
+      { x: 1367, y: 1289, w: 181, h: 359, kind: "connector-right", color: "#333333", z: 3 },
+      { x: 1548, y: 1627, w: 18.5, h: 20.5, kind: "connector-cap-right", color: "#333333", z: 3 },
+      { x: 738, y: 1965, w: 1307, h: 987, radius: 24, color: "#e5e9ec" },
+      { x: 524.5, y: 2337, w: 20, h: 20, radius: 999, color: "#282828", z: 3 },
+      { x: 507.5, y: 2347, w: 181, h: 359, kind: "connector-left", color: "#333333", z: 3 },
+      { x: 326.5, y: 2685, w: 18.5, h: 20.5, kind: "connector-cap-left", color: "#333333", z: 3 },
+      { x: -129, y: 3113, w: 1307, h: 987, radius: 24, color: "#e5e9ec" },
+      { x: 0, y: 4216, w: 1920, h: 180, color: "#f3f5f7" },
+      { x: 0, y: 4387, w: 1920, h: 2932, color: "#000000" },
+      { x: 1625, y: 4264, w: 86, h: 86, radius: 14, color: "#c3cfda", z: 2 },
+      { x: 1694, y: 4333, w: 52, h: 52, kind: "triangle", color: "#ffffff", z: 3 },
+      { x: 136, y: 9107, w: 60, h: 8, color: "#3271e6", z: 3 },
+      { x: 136, y: 10514, w: 60, h: 8, color: "#3271e6", z: 3 },
+      { x: 0, y: 7319, w: 1920, h: 180, color: "#f3f5f7" },
+      { x: 133, y: 9197, w: 1656, h: 932, color: "#545f6f", opacity: 0.329, z: 2 },
+      { x: 133.5, y: 9196.5, w: 1654, h: 931, color: "transparent", border: "#ffffff", borderWidth: 1, opacity: 0.329, z: 3 },
+      { x: 162, y: 9256, w: 324, h: 191, color: "#4d658a", opacity: 0.6, z: 2 },
+      { x: 162, y: 9465, w: 324, h: 300, color: "#4d658a", opacity: 0.588, z: 2 },
+      { x: 162, y: 9783, w: 324, h: 329, color: "#4d658a", opacity: 0.588, z: 2 },
+      { x: 504, y: 9256, w: 860, h: 473, color: "#4d658a", opacity: 0.588, z: 2 },
+      { x: 504, y: 9747, w: 861, h: 365, color: "#4d658a", opacity: 0.588, z: 2 },
+      { x: 1382, y: 9256, w: 377, h: 395, color: "#4d658a", opacity: 0.588, z: 2 },
+      { x: 1383, y: 9669, w: 377, h: 442, color: "#4d658a", opacity: 0.588, z: 2 }
+    ],
     images: [
       { src: `${S}/Snipaste_2025-10-13_17-12-27.png`, x: -455, y: 867, w: 1601, h: 834 },
       { src: `${S}/Snipaste_2025-10-13_17-12-43.png`, x: 770, y: 1995, w: 1601, h: 836 },
@@ -879,10 +973,48 @@ const dashboardFrames: Frame[] = [
       { src: `${S}/Snipaste_2025-10-13_17-13-51.png`, x: 184, y: 4590, w: 1553, h: 809 },
       { src: `${S}/Snipaste_2025-10-13_17-14-29.png`, x: 184, y: 5449, w: 1552, h: 807 },
       { src: `${S}/Snipaste_2025-10-13_17-15-10.png`, x: 184, y: 6306, w: 1553, h: 809 },
-      { src: `${S}/3213.png`, x: 131, y: 8024, w: 1658, h: 933 },
-      { src: `${S}/Group_210.png`, x: 127, y: 10794, w: 906, h: 471 },
-      { src: `${S}/Group_208.png`, x: 1095, y: 10794, w: 665, h: 629 },
-      { src: `${S}/Group_211_1.png`, x: 136, y: 11493, w: 1626, h: 836 }
+      { src: `/assets/figma-dev/dashboard-vector-bg.png`, x: 0, y: 7499, w: 1920, h: 4993, z: 0 },
+      { src: `/assets/figma-dev/dashboard-clip-left.png`, x: -67, y: 8671, w: 862, h: 1155, z: 1 },
+      { src: `/assets/figma-dev/dashboard-clip-right.png`, x: 2000, y: 10494, w: 849, h: 1155, z: 1 },
+      { src: `/assets/figma-dev/dashboard-layer-1.png`, x: 0, y: 7499, w: 1920, h: 3195, z: 1 },
+      { src: `${S}/组_1.png`, x: -207, y: 10659, w: 1992, h: 141, z: 9 },
+      { src: `${S}/3213.png`, x: 131, y: 8024, w: 1658, h: 933, z: 10 },
+      { src: `${S}/Group_210.png`, x: 127, y: 10794, w: 906, h: 471, z: 20 },
+      { src: `${S}/Group_208.png`, x: 1095, y: 10794, w: 665, h: 629, z: 20 },
+      { src: `${S}/Group_211_1.png`, x: 136, y: 11493, w: 1625.556, h: 836, z: 20 }
+    ],
+    texts: [
+      { text: "数字孪生", x: 158, y: 99, size: 40, weight: 305, lineHeight: 54, color: "#333333" },
+      { text: "数字孪生产线详览", x: 158, y: 173, size: 64, weight: 630, lineHeight: 54, color: "#000000" },
+      {
+        text: "通过点击特定的按钮，你可以看到相应的生产数据。我们使用不同的灯光颜色来指示每个机器当前的状态。",
+        x: 906,
+        y: 544,
+        width: 866,
+        size: 32,
+        weight: 305,
+        lineHeight: 48,
+        color: "#000000"
+      },
+      { text: "按钮点击之前页面", x: 92, y: 1738, size: 40, weight: 305, lineHeight: 48, color: "#000000" },
+      { text: "产线视角", x: 905, y: 2868, size: 40, weight: 305, lineHeight: 48, color: "#000000" },
+      { text: "产线细节展示效果", x: 92, y: 4016, size: 40, weight: 305, lineHeight: 48, color: "#000000" },
+      { text: "数字孪生其他页面", x: 158, y: 4284, size: 48, weight: 380, lineHeight: 48, color: "#000000" },
+      { text: "profect", x: 131, y: 7579.672, size: 18, weight: 400, family: "Arial" },
+      { text: "2025", x: 1750.141, y: 7579.672, size: 18, weight: 400, family: "Arial" },
+      { text: "成都易得利大屏数据可视化", x: 528, y: 7741.848, size: 72, weight: 630 },
+      { text: "LARGE SCREEN DATA VISUALIZATION", x: 713.242, y: 7853.848, size: 30, weight: 400, family: "Segoe UI", color: "#3becf7" },
+      { text: "主界面", x: 136.445, y: 9037.551, size: 36, weight: 400, family: "Yu Gothic UI", z: 4 },
+      { text: "组件", x: 132.445, y: 10444.551, size: 36, weight: 400, family: "Microsoft JhengHei UI", z: 4 },
+      { text: "1085*588", x: 844, y: 9465, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "1085*474", x: 845, y: 9902, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "377*384", x: 234, y: 9920, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "377*354", x: 234, y: 9588, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "377*288", x: 234, y: 9324, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "381*556", x: 1482, y: 9863, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "381*506", x: 1481, y: 9426, size: 48, weight: 400, family: "Arial", z: 4 },
+      { text: "多种尺寸的布局,保证界面规整的同时也兼顾了排版的灵活性", x: 514.68, y: 10210.133, size: 30, weight: 400, family: "Yu Gothic UI", z: 4 },
+      { text: "Thanks", x: 882, y: 7377, size: 48, weight: 380, color: "#000000" }
     ]
   }
 ];
@@ -892,21 +1024,87 @@ const c4dFrames: Frame[] = [
     height: 6775,
     hero: {
       title: "C4D练习",
-      titleX: 598,
+      titleX: 650,
       titleY: 399,
-      descA: "三维视觉练习",
-      descAX: 680,
+      titleW: 620,
+      titleH: 199,
+      descA: "游玩小场景",
+      descAX: 757,
       descAY: 785,
-      descB: "产品质感、空间场景与视觉氛围探索",
-      descBX: 912,
-      descBY: 785
+      descB: "C4D作品练习",
+      descBX: 1019,
+      descBY: 785,
+      subtitle: {
+        text: "游玩小场景                    C4D作品练习",
+        parts: [
+          { text: "游玩小场景                    ", weight: 520, color: "#ffffff" },
+          { text: "C4D作品练习", weight: 330, color: "rgba(255,255,255,0.8)" }
+        ],
+        x: 757,
+        y: 785,
+        size: 24,
+        weight: 520,
+        lineHeight: 24.013,
+        family: "MiSans",
+        wrap: false
+      }
     },
+    rects: [
+      { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 0, y: 1080, w: 1920, h: 5695, color: "#ffffff" },
+      { x: 1758, y: 1261, w: 195, h: 1, color: "#000000" },
+      { x: 160, y: 1264, w: 30, h: 30, radius: 999, color: "#609997" },
+      { x: 165, y: 1229, w: 50, h: 50, radius: 999, color: "#ffba00" },
+      { x: 165, y: 1791, w: 83, h: 83, radius: 999, color: "#ffba00" },
+      { x: 197.5, y: 1741.5, w: 19, h: 19, radius: 999, color: "transparent", border: "#ac7d00", borderWidth: 1 },
+      { x: 197.5, y: 1904.5, w: 19, h: 19, radius: 999, color: "transparent", border: "#ac7d00", borderWidth: 1 },
+      { x: 145, y: 2445, w: 62, h: 62, radius: 999, color: "#609997" },
+      { x: 255, y: 2636, w: 1392, h: 20, radius: 999, color: "#609997" },
+      { x: 255, y: 2706, w: 977, h: 20, radius: 999, color: "#98d89b" },
+      { x: 255, y: 2780, w: 817, h: 20, radius: 999, color: "#f0aa6a" },
+      { x: 165, y: 3469, w: 83, h: 83, radius: 999, color: "#ffba00" },
+      { x: 197.5, y: 3419.5, w: 19, h: 19, radius: 999, color: "transparent", border: "#ac7d00", borderWidth: 1 },
+      { x: 197.5, y: 3582.5, w: 19, h: 19, radius: 999, color: "transparent", border: "#ac7d00", borderWidth: 1 }
+    ],
     images: [
-      { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
-      { src: `${S}/123_拷贝.png`, x: 175, y: 1290, w: 1750, h: 1167 },
+      { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
+      { src: `${S}/5555_1.png`, x: 473, y: 1182, w: 195, h: 133 },
+      { src: `${S}/123_拷贝.png`, x: 527, y: 1389, w: 936, h: 936, radius: 468, shadow: "0 0 84px rgba(87,87,87,0.161)", imageX: 175, imageY: 1290, imageW: 1750.183, imageH: 1166.789 },
       { src: `${S}/圆角矩形_2.png`, x: 457, y: 3114, w: 1303, h: 863 },
+      { src: `${S}/椭圆_5.png`, x: 951, y: 3086, w: 387, h: 387, radius: 194, shadow: "0 0 84px rgba(87,87,87,0.161)" },
+      { src: `${S}/椭圆_5_拷贝_4.png`, x: 1439, y: 3148, w: 313, h: 313, radius: 157, shadow: "0 0 84px rgba(87,87,87,0.161)" },
+      { src: `${S}/椭圆_5_拷贝.png`, x: 1194, y: 3601, w: 453, h: 453, radius: 227, shadow: "0 0 84px rgba(87,87,87,0.161)" },
+      { src: `${S}/椭圆_5_拷贝_2.png`, x: 664, y: 3646, w: 363, h: 363, radius: 182, shadow: "0 0 84px rgba(87,87,87,0.161)" },
+      { src: `${S}/椭圆_5_拷贝_3.png`, x: 494, y: 3270, w: 290, h: 290, radius: 145, shadow: "0 0 84px rgba(87,87,87,0.161)" },
       { src: `${S}/地图.png`, x: 164, y: 4343, w: 1596, h: 898 },
-      { src: `${S}/123_拷贝_1.png`, x: 0, y: 5494, w: 1920, h: 1281 }
+      { src: `${S}/123_拷贝_1.png`, x: 0, y: 5494, w: 1920, h: 1281 },
+      { src: `${S}/地图_拷贝.png`, x: 597, y: 5593, w: 1328, h: 1083 }
+    ],
+    texts: [
+      { text: "游玩小场景作品展示", x: 272.539, y: 1236.504, size: 24, weight: 400, color: "#000000", family: "PingFang SC" },
+      { text: "CINEMA 4D", x: 1555.539, y: 1237.504, size: 36, weight: 380, color: "#000000", family: "MiSans" },
+      { text: "C4D", x: 170, y: 1243, size: 20, weight: 400, family: "Helvetica" },
+      { text: "设计展示", x: 159.539, y: 1381.504, size: 36, weight: 400, color: "#000000", family: "PingFang SC" },
+      { text: "DESIGN CONCEPT", x: 159.539, y: 1435.504, size: 36, weight: 380, color: "#000000", family: "MiSans" },
+      { text: "01", x: 187.984, y: 1809.484, size: 36, weight: 400, family: "Helvetica" },
+      { text: "COLOR DOSPLAY", x: 164.977, y: 2454.547, size: 36, weight: 380, color: "#292929", family: "MiSans" },
+      { text: "颜色展示", x: 164.977, y: 2512.547, size: 36, weight: 400, color: "#292929", family: "PingFang SC" },
+      { text: "#609997", x: 255.094, y: 2601.172, size: 24, weight: 380, color: "#292929", family: "MiSans" },
+      { text: "#98d89b", x: 255.094, y: 2674.172, size: 24, weight: 380, color: "#292929", family: "MiSans" },
+      { text: "#f0aa6a", x: 255.094, y: 2745.172, size: 24, weight: 380, color: "#292929", family: "MiSans" },
+      { text: "细节展示", x: 159.539, y: 2911.508, size: 36, weight: 400, color: "#000000", family: "PingFang SC" },
+      { text: "DETAIL DISPLAY", x: 159.539, y: 2965.508, size: 36, weight: 380, color: "#000000", family: "MiSans" },
+      { text: "02", x: 187.984, y: 3487.484, size: 36, weight: 400, family: "Helvetica" },
+      { text: "白模展示", x: 159.539, y: 4171.5, size: 36, weight: 400, color: "#000000", family: "PingFang SC" },
+      { text: "WHITE FILM DISPLAY", x: 159.539, y: 4225.5, size: 36, weight: 380, color: "#000000", family: "MiSans" },
+      { text: "场景展示", x: 159.539, y: 5373.5, size: 36, weight: 400, color: "#000000", family: "PingFang SC" },
+      { text: "SCENE DISPLAY", x: 159.539, y: 5427.5, size: 36, weight: 380, color: "#000000", family: "MiSans" }
     ]
   }
 ];
@@ -914,33 +1112,91 @@ const c4dFrames: Frame[] = [
 const graphicFrames: Frame[] = [
   {
     height: 9833,
-    hero: {
-      title: "平面设计",
-      titleX: 636,
-      titleY: 399,
-      descA: "Graphic Design",
-      descAX: 700,
-      descAY: 785,
-      descB: "品牌物料、节日海报与视觉实验",
-      descBX: 912,
-      descBY: 785
-    },
+    background: "#ffffff",
+    rects: [
+      { x: 0, y: 1080, w: 1920, h: 1193, color: "#e7f2ff" },
+      { x: 0, y: 2273, w: 1920, h: 1080, color: "#575757" },
+      { x: 0, y: 3353, w: 1920, h: 1080, color: "#fbfbfb" },
+      { x: 1, y: 0, w: 1920, h: 1080, color: "#070709" },
+      { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 0, y: 4433, w: 1920, h: 1080, color: "#ffffff" },
+      { x: 0, y: 5513, w: 1920, h: 1080, color: "#fffbf2" },
+      { x: 0, y: 6593, w: 1920, h: 1080, color: "#efefef" },
+      { x: 985, y: 4869, w: 107, h: 107, radius: 999, color: "#214182" },
+      { x: 1171, y: 4869, w: 107, h: 107, radius: 999, color: "#911e41" },
+      { x: 1357, y: 4869, w: 107, h: 107, radius: 999, color: "#e2cb8f" },
+      { x: 985, y: 5905, w: 107, h: 107, radius: 999, color: "#fff6e2" },
+      { x: 1171, y: 5905, w: 107, h: 107, radius: 999, color: "#8b985b" },
+      { x: 1357, y: 5905, w: 107, h: 107, radius: 999, color: "#ec925f" },
+      { x: 985, y: 6984, w: 107, h: 107, radius: 999, color: "#ff894c" },
+      { x: 1171, y: 6984, w: 107, h: 107, radius: 999, color: "#efefef" },
+      { x: 1357, y: 6984, w: 107, h: 107, radius: 999, color: "#9e2e23" },
+      { x: 0, y: 7673, w: 1920, h: 1080, color: "#c5c5c5" },
+      { x: 0, y: 8753, w: 1920, h: 1080, color: "#ebebeb" },
+      { x: 985, y: 8041, w: 107, h: 107, radius: 999, color: "#333942" },
+      { x: 1171, y: 8041, w: 107, h: 107, radius: 999, color: "#e0e4ea" },
+      { x: 1357, y: 8041, w: 107, h: 107, radius: 999, color: "#7ca7cd" },
+      { x: 985, y: 9135, w: 107, h: 107, radius: 999, color: "#2f3236" },
+      { x: 1171, y: 9135, w: 107, h: 107, radius: 999, color: "#e0e4ea" }
+    ],
     images: [
-      { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
+      { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
+      { src: `${S}/5555_1.png`, x: 1095, y: 1114, w: 195, h: 133 },
       { src: `${S}/Desktop_-_5_1.png`, x: 210, y: 1369, w: 1500, h: 844 },
       { src: `${S}/Desktop_-_3_1.png`, x: 210, y: 2450, w: 1500, h: 843 },
       { src: `${S}/中文版_1.png`, x: 210, y: 3519, w: 1500, h: 844 },
       { src: `${S}/图层_10_1.png`, x: 235, y: 4516, w: 617, h: 864 },
       { src: `${S}/fanbaba_A_picture_of_a_traditional_Chinese_festival_a_little_bo_c_upscayl_4x_realesrgan-x4plus_1_1.png`, x: 227, y: 5575, w: 617, h: 957 },
+      { src: `${S}/32133_2.png`, x: 1171, y: 5702, w: 125, h: 77 },
       { src: `${S}/画板_1_3.png`, x: 266, y: 6654, w: 539, h: 957 },
       { src: `${S}/logo5_1.png`, x: 248, y: 7806, w: 575, h: 767 },
       { src: `${S}/image_2.png`, x: 168, y: 8877, w: 735, h: 813 }
-    ]
-  },
-  {
-    height: 1080,
-    images: [
-      { src: `${S}/Group 1940698330.png`, x: -184, y: -87, w: 2288, h: 1288 }
+    ],
+    texts: [
+      { text: "平面设计", x: 660, y: 399, width: 600, height: 199, size: 150, weight: 520, color: "#86df2a", family: "MiSans" },
+      { text: "2.5d流程图", x: 621, y: 785, size: 24, weight: 520, family: "MiSans" },
+      { text: "海报设计", x: 652, y: 834, size: 24, weight: 520, family: "MiSans" },
+      { text: "使流程清晰化", x: 1062, y: 785, size: 24, weight: 330, color: "rgba(255,255,255,0.8)", family: "MiSans" },
+      { text: "通过AIGC生成节日海报", x: 1062, y: 834, size: 24, weight: 330, color: "rgba(255,255,255,0.8)", family: "MiSans" },
+      { text: "2.5D流程图展示", x: 788, y: 1131, size: 48, weight: 380, color: "#000000", family: "MiSans" },
+      { text: "大米加工工厂2.5D图", x: 740, y: 1246, size: 48, weight: 380, color: "#0078b8", family: "MiSans" },
+      { text: "工业生产2.5D流程图", x: 740, y: 2330, size: 48, weight: 380, color: "#ffce1a", family: "MiSans" },
+      { text: "公司系统间交互图", x: 768, y: 3410, size: 48, weight: 380, color: "#333333", family: "MiSans" },
+      { text: "复旦大学EMBA\n亚马逊云科技创新文化\n交流会设计", parts: [{ text: "复旦大学EMBA\n", color: "#666666", weight: 305 }, { text: "亚马逊云科技创新文化\n交流会设计", color: "#333333", weight: 630 }], x: 985, y: 4617, width: 480, size: 48, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "主题色", x: 1003, y: 4995, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "辅助色", x: 1189, y: 4995, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "点缀色", x: 1375, y: 4995, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "设计理念", x: 985, y: 5110, size: 32, weight: 630, color: "#333333", family: "MiSans" },
+      { text: "采用蓝色和白色为主色调，现代简约风格，带有网格背景和几何图形装饰，\n本次设计以\"科技创新与文化融合\" 为核心主题，旨在打造一个专业、现代且富有\n科技感的交流平台视觉形象。设计目标是通过视觉语言传达亚马逊云科技\n的创新精神与复旦大学的学术底蕴，为企业数字化转型提供思想碰撞的舞台。", x: 985, y: 5171, width: 700, size: 20, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "SOTHIS\n中秋节节日海报设计", parts: [{ text: "SOTHIS\n", color: "#666666", weight: 305 }, { text: "中秋节节日海报设计", color: "#333333", weight: 630 }], x: 985, y: 5715, width: 432, size: 48, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "主题色", x: 1003, y: 6031, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "辅助色", x: 1189, y: 6031, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "点缀色", x: 1375, y: 6031, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "设计理念", x: 985, y: 6125, size: 32, weight: 630, color: "#333333", family: "MiSans" },
+      { text: "这张端午节主题的海报是由AI生成，以 \"端午安康\" 为核心设计理念，巧妙融合了传统文化符号与现代审美表达。画面采用温暖的橙绿配色方案，既体现了端午节的热烈氛围，又传递出自然和谐的意境。构图上，通过环绕的祥龙与竞渡的龙舟形成动静对比，小男孩的天真笑容为传统节日注入了青春活力。背景的山水祥云元素展现了中国传统绘画的意境美，而船上的粽子等传统食品则强化了节日的文化内涵。整体设计既尊重了端午节的历史传统。", x: 987, y: 6186, width: 698, height: 206, size: 20, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "SOTHIS\n父亲节节日海报设计", parts: [{ text: "SOTHIS\n", color: "#666666", weight: 305 }, { text: "父亲节节日海报设计", color: "#333333", weight: 630 }], x: 985, y: 6798, width: 432, size: 48, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "主题色", x: 1003, y: 7110, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "辅助色", x: 1189, y: 7110, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "点缀色", x: 1375, y: 7110, size: 24, weight: 305, color: "#000000", family: "MiSans" },
+      { text: "设计理念", x: 985, y: 7200, size: 32, weight: 630, color: "#333333", family: "MiSans" },
+      { text: "本设计的核心创意将卡通超人形象的头部巧妙替换为 SOTHIS 的产品，形成 \"产品即头部\" 的独特视觉符号。这一创新设计不仅打破了传统父亲节广告的刻板印象，更在深层次上传达了深刻的情感内涵 —— 父亲就像家庭的 \"核心处理器\"，用他们的 \"核心\" 力量默默守护着家人的幸福。普通的产品（代表平凡）与超人的英雄形象（代表伟大）形成强烈对比，完美诠释了 \"爸爸只是一个普通人但他永远是我的超人\" 的深刻主题。", x: 987, y: 7261, width: 698, height: 206, size: 20, weight: 305, color: "#333333", family: "MiSans" },
+      { text: "SOTHIS\nS20产品海报AI设计", parts: [{ text: "SOTHIS\n", color: "#ffffff", weight: 305 }, { text: "S20产品海报AI设计", color: "#ffffff", weight: 630 }], x: 985, y: 7855, width: 433, size: 48, weight: 305, color: "#ffffff", family: "MiSans" },
+      { text: "主题色", x: 1003, y: 8167, size: 24, weight: 305, color: "#ffffff", family: "MiSans" },
+      { text: "辅助色", x: 1189, y: 8167, size: 24, weight: 305, color: "#ffffff", family: "MiSans" },
+      { text: "点缀色", x: 1375, y: 8167, size: 24, weight: 305, color: "#ffffff", family: "MiSans" },
+      { text: "设计理念", x: 985, y: 8257, size: 32, weight: 630, color: "#ffffff", family: "MiSans" },
+      { text: "本项目为索提斯 S20 智能边缘网关打造的官方宣传海报，全程以chatgpt-image2 为核心生产力工具，通过分层式提示词工程、\"文生图打底 + 图生图校准 + 局部重绘\" 的三级控图流程，系统性解决了 AI 生成工业产品时比例失调、细节失真的通病，彻底颠覆了传统 \"棚拍 + 3D 建模\" 的高成本长周期模式，将项目周期从 7 天压缩至 2 天、制作成本降低 85%，实现了媲美影视级 3D 渲染的沉浸式科技视觉效果。", x: 987, y: 8318, width: 698, height: 206, size: 20, weight: 305, color: "#ffffff", family: "MiSans" },
+      { text: "SOTHIS\nS20产品网页首页AI设计", parts: [{ text: "SOTHIS\n", color: "#252525", weight: 305 }, { text: "S20产品网页首页AI设计", color: "#252525", weight: 630 }], x: 985, y: 8949, width: 529, size: 48, weight: 305, color: "#252525", family: "MiSans" },
+      { text: "主题色", x: 1003, y: 9261, size: 24, weight: 305, color: "#252525", family: "MiSans" },
+      { text: "辅助色", x: 1189, y: 9261, size: 24, weight: 305, color: "#252525", family: "MiSans" },
+      { text: "设计理念", x: 985, y: 9351, size: 32, weight: 630, color: "#252525", family: "MiSans" },
+      { text: "索提斯 S20 智能边缘网关官网产品页，全流程 AI 赋能设计。用chatgpt-image2 生成视觉并通过参考图控图实现跨物料统一，AI 辅助撰写全部产品文案与功能描述，解决传统 3D 建模 + 文案撰写成本高、周期长痛点，项目周期从 5 天压缩至 1.5 天、成本降 70%，已上线并沉淀可复用 B 端 AI 设计工作流。", x: 987, y: 9412, width: 698, height: 206, size: 20, weight: 305, color: "#252525", family: "MiSans" }
     ]
   }
 ];
@@ -954,52 +1210,120 @@ const framesBySlug: Record<string, Frame[]> = {
   graphic: graphicFrames
 };
 
-function SelectionFrame() {
-  return (
-    <div className="absolute contents">
-      <div className="absolute border-2 border-dashed border-white/70" style={{ left: px(281.23), top: px(285.95), width: px(1368.474), height: px(439.958) }} />
-      {[
-        [271, 274.86],
-        [1638.62, 274.86],
-        [938.61, 274.86],
-        [271, 714.82],
-        [1638.62, 714.82],
-        [938.61, 714.82]
-      ].map(([x, y]) => (
-        <span key={`${x}-${y}`} className="absolute block bg-white" style={{ left: px(x), top: px(y), width: px(21.316), height: px(21.316) }} />
-      ))}
-    </div>
-  );
-}
-
 function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: ImageLayer[] }) {
+  const heroOverlayImages = images?.filter((image) => image.y < 1000);
+  const heroBodyImages = images?.filter((image) => image.y >= 1000);
+
   return (
     <>
-      <SelectionFrame />
+      {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
       <p
         className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-        style={{ left: px(hero.titleX), top: px(hero.titleY), fontSize: px(150), fontWeight: 520, lineHeight: px(150.08), color: "#86df2a" }}
+        style={{
+          left: px(hero.titleX),
+          top: px(hero.titleY),
+          width: hero.titleW ? px(hero.titleW) : undefined,
+          height: hero.titleH ? px(hero.titleH) : undefined,
+          fontSize: px(150),
+          fontWeight: 520,
+          fontSynthesis: "none",
+          fontVariationSettings: `"wght" 520`,
+          lineHeight: px(150.08),
+          color: "#86df2a",
+          textAlign: hero.titleAlign
+        }}
       >
         {hero.title}
       </p>
-      <p
-        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-        style={{ left: px(hero.descAX), top: px(hero.descAY), fontSize: px(24), fontWeight: 520, lineHeight: px(24.01), color: "#ffffff" }}
-      >
-        {hero.descA}
-      </p>
-      <p
-        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-        style={{ left: px(hero.descBX), top: px(hero.descBY), fontSize: px(24), fontWeight: 330, lineHeight: px(24.01), color: "rgba(255,255,255,0.8)" }}
-      >
-        {hero.descB}
-      </p>
-      {images?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
+      {hero.subtitle ? (
+        <TextLayerView text={hero.subtitle} />
+      ) : (
+        <>
+          <p
+            className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+            style={{ left: px(hero.descAX), top: px(hero.descAY), fontSize: px(24), fontWeight: hero.descAWeight ?? 520, lineHeight: px(24.01), color: "#ffffff" }}
+          >
+            {hero.descA}
+          </p>
+          <p
+            className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+            style={{ left: px(hero.descBX), top: px(hero.descBY), fontSize: px(24), fontWeight: hero.descBWeight ?? 330, lineHeight: px(24.01), color: "rgba(255,255,255,0.8)" }}
+          >
+            {hero.descB}
+          </p>
+        </>
+      )}
+      {heroBodyImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
     </>
   );
 }
 
 function ImageLayerView({ image }: { image: ImageLayer }) {
+  if (image.imageX !== undefined && image.imageY !== undefined && image.imageW !== undefined && image.imageH !== undefined) {
+    return (
+      <div
+        className="absolute overflow-hidden"
+        style={{
+          left: px(image.x),
+          top: px(image.y),
+          width: px(image.w),
+          height: px(image.h),
+          zIndex: image.z,
+          opacity: image.opacity,
+          transform: image.rotate ? `rotate(${image.rotate}deg)` : undefined,
+          borderRadius: image.radius ? px(image.radius) : undefined,
+          border: image.border ? `${image.borderWidth ?? 1}px solid ${image.border}` : undefined,
+          boxSizing: image.border ? "border-box" : undefined,
+          boxShadow: image.shadow
+        }}
+      >
+        <img
+          src={image.src}
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="absolute max-w-none object-fill"
+          style={{
+            left: px(image.imageX - image.x),
+            top: px(image.imageY - image.y),
+            width: px(image.imageW),
+            height: px(image.imageH)
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (image.crop) {
+    return (
+      <div
+        className="absolute overflow-hidden"
+        style={{
+          left: px(image.x),
+          top: px(image.y),
+          width: px(image.w),
+          height: px(image.h),
+          zIndex: image.z,
+          opacity: image.opacity,
+          transform: image.rotate ? `rotate(${image.rotate}deg)` : undefined,
+          borderRadius: image.radius ? px(image.radius) : undefined,
+          border: image.border ? `${image.borderWidth ?? 1}px solid ${image.border}` : undefined,
+          boxSizing: image.border ? "border-box" : undefined,
+          boxShadow: image.shadow
+        }}
+      >
+        <img
+          src={image.src}
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="absolute left-0 max-w-none object-fill"
+          style={{ top: image.crop.top, width: "100%", height: image.crop.height }}
+        />
+      </div>
+    );
+  }
+
   return (
     <img
       src={image.src}
@@ -1017,7 +1341,8 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         transform: image.rotate ? `rotate(${image.rotate}deg)` : undefined,
         borderRadius: image.radius ? px(image.radius) : undefined,
         border: image.border ? `${image.borderWidth ?? 1}px solid ${image.border}` : undefined,
-        boxSizing: image.border ? "border-box" : undefined
+        boxSizing: image.border ? "border-box" : undefined,
+        boxShadow: image.shadow
       }}
     />
   );
@@ -1025,6 +1350,124 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
 
 function RectLayerView({ rect }: { rect: RectLayer }) {
   const seamBleed = 0;
+
+  if (rect.kind === "source-arrow") {
+    return (
+      <svg
+        className="absolute overflow-visible"
+        width={rect.w}
+        height={rect.h}
+        viewBox={`0 0 ${rect.w} ${rect.h}`}
+        style={{ left: px(rect.x), top: px(rect.y), zIndex: rect.z, opacity: rect.opacity }}
+      >
+        <path d={`M ${rect.w / 2} ${rect.h} L ${rect.w / 2} 6`} stroke={rect.color ?? "#ffffff"} strokeWidth="6" strokeLinecap="round" fill="none" />
+        <path d={`M ${rect.w / 2} 0 L ${rect.w / 2 - 10} 14 M ${rect.w / 2} 0 L ${rect.w / 2 + 10} 14`} stroke={rect.color ?? "#ffffff"} strokeWidth="6" strokeLinecap="round" fill="none" />
+      </svg>
+    );
+  }
+
+  if (rect.kind === "diagonal-arrow") {
+    return (
+      <svg
+        className="absolute overflow-visible"
+        width={rect.w}
+        height={rect.h}
+        viewBox="0 0 21 21"
+        style={{ left: px(rect.x), top: px(rect.y), zIndex: rect.z, opacity: rect.opacity }}
+        aria-hidden="true"
+      >
+        <path
+          d="M 21 18.704835217705078 C 21 19.9719726180755 20.054324003837095 21 18.888692188537284 21 L 0.5715866342111087 21 L 0.5715866342111087 16.81044022131345 L 13.95507855720292 16.81044022131345 L 0 2.914842434447919 L 2.916795751272405 0 L 16.946227041380837 13.968005773394275 L 16.946227041380837 0.4445513591532355 L 21 0.4445513591532355 L 21 18.704835217705078 Z"
+          fill={rect.color ?? "#ffffff"}
+        />
+      </svg>
+    );
+  }
+
+  if (rect.kind === "selection-box") {
+    return (
+      <svg
+        className="absolute overflow-visible"
+        width={rect.w}
+        height={rect.h}
+        viewBox={`0 0 ${rect.w} ${rect.h}`}
+        style={{ left: px(rect.x), top: px(rect.y), zIndex: rect.z, opacity: rect.opacity }}
+        aria-hidden="true"
+      >
+        <rect
+          x="1"
+          y="1"
+          width={rect.w - 2}
+          height={rect.h - 2}
+          fill="none"
+          stroke={rect.color ?? "#ffffff"}
+          strokeWidth="2"
+          strokeDasharray="15 15"
+        />
+      </svg>
+    );
+  }
+
+  if (rect.kind === "connector-right" || rect.kind === "connector-left") {
+    const left = rect.kind === "connector-left";
+    return (
+      <svg
+        className="absolute overflow-visible"
+        width={rect.w}
+        height={rect.h}
+        viewBox={`0 0 ${rect.w} ${rect.h}`}
+        style={{ left: px(rect.x), top: px(rect.y), zIndex: rect.z, opacity: rect.opacity }}
+      >
+        <path
+          d={left ? `M ${rect.w} 0 C ${rect.w * 0.62} ${rect.h * 0.35}, ${rect.w * 0.3} ${rect.h * 0.7}, 0 ${rect.h}` : `M 0 0 C ${rect.w * 0.38} ${rect.h * 0.35}, ${rect.w * 0.7} ${rect.h * 0.7}, ${rect.w} ${rect.h}`}
+          stroke={rect.color ?? "#333333"}
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </svg>
+    );
+  }
+
+  if (rect.kind === "connector-cap-right" || rect.kind === "connector-cap-left") {
+    const left = rect.kind === "connector-cap-left";
+    return (
+      <svg
+        className="absolute overflow-visible"
+        width={rect.w}
+        height={rect.h}
+        viewBox={`0 0 ${rect.w} ${rect.h}`}
+        style={{ left: px(rect.x), top: px(rect.y), zIndex: rect.z, opacity: rect.opacity }}
+      >
+        <path
+          d={left ? `M ${rect.w} 0 L 0 ${rect.h / 2} L ${rect.w} ${rect.h}` : `M 0 0 L ${rect.w} ${rect.h / 2} L 0 ${rect.h}`}
+          stroke={rect.color ?? "#333333"}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+    );
+  }
+
+  if (rect.kind === "triangle") {
+    return (
+      <div
+        className="absolute"
+        style={{
+          left: px(rect.x),
+          top: px(rect.y),
+          width: px(rect.w),
+          height: px(rect.h),
+          background: rect.background ?? rect.color,
+          zIndex: rect.z,
+          opacity: rect.opacity,
+          clipPath: "polygon(0 0, 100% 0, 50% 100%)"
+        }}
+      />
+    );
+  }
 
   return (
     <div
@@ -1047,26 +1490,62 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
 }
 
 function TextLayerView({ text }: { text: TextLayer }) {
+  const preserveLineBreaks = text.width || text.text.includes("\n");
+  const whitespaceClass = text.wrap === false ? "whitespace-pre" : preserveLineBreaks ? "whitespace-pre-wrap" : "whitespace-nowrap";
+  const fontFamily = text.family === "Helvetica" ? "Helvetica, Arial, sans-serif" : text.family ?? "MiSans";
+  const fontWeight = text.weight ?? 305;
+
   return (
     <p
-      className={`absolute m-0 font-['MiSans'] ${text.width ? "whitespace-pre-wrap" : "whitespace-nowrap"}`}
+      className={`absolute m-0 font-['MiSans'] ${whitespaceClass}`}
       style={{
         left: px(text.x),
         top: px(text.y),
         width: text.width ? px(text.width) : undefined,
-        fontFamily: text.family ?? "MiSans",
+        height: text.height ? px(text.height) : undefined,
+        fontFamily,
         fontSize: px(text.size),
         fontStyle: text.style ?? "normal",
-        fontWeight: text.weight ?? 305,
+        fontWeight,
+        fontSynthesis: "none",
+        fontVariationSettings: fontFamily.includes("MiSans") ? `"wght" ${fontWeight}` : undefined,
         color: text.color ?? "#ffffff",
+        backgroundImage: text.gradient,
+        WebkitBackgroundClip: text.gradient ? "text" : undefined,
+        backgroundClip: text.gradient ? "text" : undefined,
+        WebkitTextFillColor: text.gradient ? "transparent" : undefined,
         opacity: text.opacity,
         zIndex: text.z,
         lineHeight: text.lineHeight ? px(text.lineHeight) : "normal",
-        letterSpacing: text.letterSpacing ? px(text.letterSpacing) : undefined
+        letterSpacing: text.letterSpacing ? px(text.letterSpacing) : undefined,
+        textAlign: text.align
       }}
     >
-      {text.text}
+      {text.parts ? (
+        text.parts.map((part, index) => (
+          <span
+            key={`${part.text}-${index}`}
+            style={{
+              color: part.color,
+              fontWeight: part.weight,
+              fontVariationSettings: part.weight && fontFamily.includes("MiSans") ? `"wght" ${part.weight}` : undefined
+            }}
+          >
+            {part.text}
+          </span>
+        ))
+      ) : (
+        text.text
+      )}
     </p>
+  );
+}
+
+function AppPageCarousel() {
+  return (
+    <div className="absolute" style={{ left: px(4), top: px(8512), width: px(1912), height: px(940) }}>
+      <CarouselSwiper slides={appGalleryCards} width={1912} height={940} />
+    </div>
   );
 }
 
@@ -1114,6 +1593,8 @@ function BSystemSpecTable() {
             fontSize: px(text.size),
             fontStyle: "normal",
             fontWeight: text.weight ?? 305,
+            fontSynthesis: "none",
+            fontVariationSettings: `"wght" ${text.weight ?? 305}`,
             lineHeight: "normal",
             color: text.color ?? "#ffffff",
             opacity: text.opacity
@@ -1152,11 +1633,12 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   return (
     <main ref={containerRef} className="min-h-screen bg-black">
       {frames.map((frame, index) => (
-        <section key={`${slug}-${index}`} className="mx-auto w-full max-w-[1920px] overflow-hidden bg-[#070709]">
+        <section key={`${slug}-${index}`} className="mx-auto w-full max-w-[1920px] overflow-hidden" style={{ background: frame.background ?? "#070709" }}>
           <div
             className="relative w-full"
             style={{
-              height: px(frame.height * scale)
+              height: px(frame.height * scale),
+              background: frame.background ?? "#070709"
             }}
           >
             <div
@@ -1164,13 +1646,27 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
               style={{
                 width: px(1920),
                 height: px(frame.height),
+                background: frame.background ?? "#070709",
                 transform: `scale(${scale})`
               }}
             >
-              {frame.rects?.map((rect) => <RectLayerView key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`} rect={rect} />)}
-              {frame.hero ? <Hero hero={frame.hero} images={frame.images} /> : frame.images?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
-              {frame.texts?.map((text) => <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} />)}
-              {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
+              {frame.fullImageSrc ? (
+                <ImageLayerView image={{ src: frame.fullImageSrc, x: 0, y: 0, w: 1920, h: frame.height }} />
+              ) : (
+                <>
+                  {frame.rects?.map((rect) => <RectLayerView key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`} rect={rect} />)}
+                  {frame.hero ? (
+                    <Hero hero={frame.hero} images={frame.images} />
+                  ) : (
+                    frame.images
+                      ?.filter((image) => !(slug === "app-design" && index === 1 && appGalleryImageSources.has(image.src)))
+                      .map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)
+                  )}
+                  {frame.texts?.map((text) => <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} />)}
+                  {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
+                  {slug === "app-design" && index === 1 ? <AppPageCarousel /> : null}
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -1178,4 +1674,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     </main>
   );
 }
+
+
+
 

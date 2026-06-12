@@ -445,7 +445,7 @@ const bSystemFrames: Frame[] = [
       { src: `${S}/Ellipse 1056.png`, x: 896, y: 3098, w: 74, h: 74 },
       { src: `${S}/Ellipse 1057.png`, x: 84, y: 3249, w: 74, h: 74 },
       { src: `${S}/Ellipse 1058.png`, x: 1085, y: 3249, w: 74, h: 74 },
-      { src: `${S}/group-1940698317.png`, x: 1146, y: 4752, w: 569, h: 441 },
+      { src: `/assets/b-system-objective.png`, x: 1146, y: 4752, w: 569, h: 441 },
       { src: `${S}/Arrow 2.png`, x: 1766, y: 4712, w: 35, h: 496 },
       { src: `${S}/4214_1.png`, x: 1783, y: 4267, w: 59, h: 65 },
       { src: `${S}/image_1.png`, x: 133, y: 5653, w: 1648, h: 674 },
@@ -1393,6 +1393,7 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
     return (
       <svg
         className="absolute overflow-visible"
+        data-motion-layer="selection"
         width={rect.w}
         height={rect.h}
         viewBox={`0 0 ${rect.w} ${rect.h}`}

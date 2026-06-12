@@ -340,9 +340,9 @@ img {
 }
 
 [data-motion-start="true"] {
-  --motion-duration: 1080ms;
-  --motion-distance: 26px;
-  --motion-blur: 16px;
+  --motion-duration: 900ms;
+  --motion-distance: 18px;
+  --motion-blur: 0;
 }
 
 [data-motion-visible="true"] {
@@ -353,7 +353,7 @@ img {
 
 [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="text"],
 [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="shape"] {
-  animation: portfolio-layer-in 960ms var(--motion-ease) both;
+  animation: portfolio-layer-in 860ms var(--motion-ease) both;
   animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 80ms);
 }
 
@@ -363,7 +363,7 @@ img {
 
 [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="text"] {
   animation-name: portfolio-start-text-in;
-  animation-duration: 1100ms;
+  animation-duration: 980ms;
 }
 
 [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="image"] {
@@ -372,17 +372,28 @@ img {
 }
 
 [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="shape"] {
-  animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 40ms);
+  animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 20ms);
+}
+
+[data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="selection"] {
+  animation: portfolio-selection-in 760ms var(--motion-ease) both;
+  animation-delay: 40ms;
+}
+
+[data-motion-start="true"][data-motion-visible="true"] .motion-title-shine {
+  animation-delay: 180ms;
 }
 
 @keyframes portfolio-layer-in {
   from {
-    transform: translate3d(0, 28px, 0) scale(0.985);
-    filter: blur(12px) saturate(0.88);
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale(0.99);
+    filter: none;
   }
   to {
+    opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0) saturate(1);
+    filter: none;
   }
 }
 
@@ -408,13 +419,26 @@ img {
 @keyframes portfolio-start-text-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 34px, 0) scale(0.982);
-    filter: blur(14px) saturate(0.86);
+    transform: translate3d(0, 30px, 0) scale(0.985);
+    filter: none;
   }
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0) saturate(1);
+    filter: none;
+  }
+}
+
+@keyframes portfolio-selection-in {
+  from {
+    opacity: 0;
+    stroke-dashoffset: 84;
+    transform: translate3d(0, 14px, 0) scale(0.996);
+  }
+  to {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

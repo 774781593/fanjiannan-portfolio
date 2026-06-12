@@ -1386,7 +1386,22 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
   );
 }
 
-function RectLayerView({ rect }: { rect: RectLayer }) {
+function isSelectionHandle(rect: RectLayer) {
+  return (
+    rect.kind === undefined &&
+    rect.color === "#ffffff" &&
+    rect.w > 18 &&
+    rect.w < 24 &&
+    rect.h > 18 &&
+    rect.h < 24 &&
+    rect.x >= 260 &&
+    rect.x <= 1660 &&
+    rect.y >= 260 &&
+    rect.y <= 740
+  );
+}
+
+function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; selectionHandle?: boolean }) {
   const seamBleed = 0;
 
   if (rect.kind === "source-arrow") {
@@ -1513,7 +1528,7 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
   return (
     <div
       className="absolute"
-      data-motion-layer="shape"
+      data-motion-layer={selectionHandle ? "selection" : "shape"}
       style={{
         left: px(rect.x),
         top: px(rect.y),
@@ -1704,7 +1719,13 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 <ImageLayerView image={{ src: frame.fullImageSrc, x: 0, y: 0, w: 1920, h: frame.height, eager: index === 0 }} />
               ) : (
                 <>
-                  {frame.rects?.map((rect) => <RectLayerView key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`} rect={rect} />)}
+                  {frame.rects?.map((rect) => (
+                    <RectLayerView
+                      key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
+                      rect={rect}
+                      selectionHandle={index === 0 && isSelectionHandle(rect)}
+                    />
+                  ))}
                   {frame.hero ? (
                     <Hero hero={frame.hero} images={frame.images} />
                   ) : (

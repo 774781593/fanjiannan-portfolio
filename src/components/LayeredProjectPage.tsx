@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { CarouselSwiper } from "./CarouselSwiper";
+import { PortfolioMotion } from "./PortfolioMotion";
 
 type ImageLayer = {
   src: string;
@@ -244,6 +246,15 @@ const appFrames: Frame[] = [
       descBX: 912,
       descBY: 785
     },
+    rects: [
+      { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 }
+    ],
     images: [moveArrow]
   },
   {
@@ -345,6 +356,13 @@ const bSystemFrames: Frame[] = [
       descBY: 785
     },
     rects: [
+      { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
       { x: 133, y: 1680, w: 135, h: 48, radius: 12, color: "rgba(217,217,217,0.3)", z: 2 },
       { x: 283, y: 1680, w: 135, h: 48, radius: 12, color: "rgba(217,217,217,0.3)", z: 2 },
       { x: 133, y: 1741, w: 135, h: 48, radius: 12, color: "rgba(217,217,217,0.3)", z: 2 },
@@ -758,10 +776,17 @@ const webFrames: Frame[] = [
       descBY: 785
     },
     rects: [
+      { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
+      { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 271, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 938.611, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
+      { x: 1638.621, y: 714.821, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
       { x: 321, y: 3086, w: 658, h: 792, radius: 24, color: "#086adb" },
-      { x: 1027, y: 3398, w: 573, h: 160, radiusCss: "24px 0 0 24px", color: "#333333" },
+      { x: 1027, y: 3398, w: 573, h: 160, radiusCss: "24px 24px 0 0", color: "#333333" },
       { x: 1027, y: 3558, w: 573, h: 160, color: "#666666" },
-      { x: 1027, y: 3718, w: 573, h: 160, radiusCss: "0 24px 24px 0", color: "#ffffff" }
+      { x: 1027, y: 3718, w: 573, h: 160, radiusCss: "0 0 24px 24px", color: "#ffffff" }
     ],
     images: [
       { src: `${S}/4214_1.png`, x: 1670, y: 752, w: 59, h: 65 },
@@ -1218,7 +1243,8 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
     <>
       {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
       <p
-        className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+        className="motion-title-shine absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+        data-motion-layer="text"
         style={{
           left: px(hero.titleX),
           top: px(hero.titleY),
@@ -1241,12 +1267,14 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
         <>
           <p
             className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+            data-motion-layer="text"
             style={{ left: px(hero.descAX), top: px(hero.descAY), fontSize: px(24), fontWeight: hero.descAWeight ?? 520, lineHeight: px(24.01), color: "#ffffff" }}
           >
             {hero.descA}
           </p>
           <p
             className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
+            data-motion-layer="text"
             style={{ left: px(hero.descBX), top: px(hero.descBY), fontSize: px(24), fontWeight: hero.descBWeight ?? 330, lineHeight: px(24.01), color: "rgba(255,255,255,0.8)" }}
           >
             {hero.descB}
@@ -1263,6 +1291,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
     return (
       <div
         className="absolute overflow-hidden"
+        data-motion-layer="image"
         style={{
           left: px(image.x),
           top: px(image.y),
@@ -1298,6 +1327,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
     return (
       <div
         className="absolute overflow-hidden"
+        data-motion-layer="image"
         style={{
           left: px(image.x),
           top: px(image.y),
@@ -1331,6 +1361,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
       loading="eager"
       decoding="async"
       className={image.cover ? "absolute h-full w-full object-cover" : "absolute max-w-none object-fill"}
+      data-motion-layer="image"
       style={{
         left: px(image.x),
         top: px(image.y),
@@ -1455,6 +1486,7 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
     return (
       <div
         className="absolute"
+        data-motion-layer="shape"
         style={{
           left: px(rect.x),
           top: px(rect.y),
@@ -1472,6 +1504,7 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
   return (
     <div
       className="absolute"
+      data-motion-layer="shape"
       style={{
         left: px(rect.x),
         top: px(rect.y),
@@ -1498,6 +1531,7 @@ function TextLayerView({ text }: { text: TextLayer }) {
   return (
     <p
       className={`absolute m-0 font-['MiSans'] ${whitespaceClass}`}
+      data-motion-layer="text"
       style={{
         left: px(text.x),
         top: px(text.y),
@@ -1632,8 +1666,15 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
 
   return (
     <main ref={containerRef} className="min-h-screen bg-black">
+      <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => (
-        <section key={`${slug}-${index}`} className="mx-auto w-full max-w-[1920px] overflow-hidden" style={{ background: frame.background ?? "#070709" }}>
+        <section
+          key={`${slug}-${index}`}
+          className="mx-auto w-full max-w-[1920px] overflow-hidden"
+          data-motion-reveal
+          data-motion-start={index === 0 ? "true" : undefined}
+          style={{ background: frame.background ?? "#070709", "--motion-delay": index === 0 ? "0ms" : `${Math.min(index * 90, 240)}ms` } as CSSProperties}
+        >
           <div
             className="relative w-full"
             style={{
@@ -1671,6 +1712,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
           </div>
         </section>
       ))}
+      </PortfolioMotion>
     </main>
   );
 }

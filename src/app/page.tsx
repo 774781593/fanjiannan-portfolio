@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { PortfolioMotion } from "@/components/PortfolioMotion";
+import { ResponsiveStage } from "@/components/ResponsiveStage";
 
 const S = "/assets/slices";
 const F = "/assets/figma-dev/home";
@@ -194,12 +196,13 @@ const homeText = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-black">
-      <div
-        className="relative mx-auto h-[3240px] w-[1920px] origin-top text-white max-[1920px]:left-1/2 max-[1920px]:-translate-x-1/2"
-        style={{ fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" }}
-      >
-        <div className="absolute left-0 top-0 h-[3240px] w-[1920px] overflow-hidden bg-[#030304]">
+    <main className="home-main min-h-screen overflow-x-hidden bg-black">
+      <ResponsiveStage designWidth={1920} designHeight={4320} className="home-stage-shell">
+        <PortfolioMotion
+          className="relative h-[4320px] w-[1920px] text-white"
+          style={{ fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" } as CSSProperties}
+        >
+        <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden bg-[#030304]">
           <img
             src={`${F}/img41.png`}
             alt=""
@@ -244,16 +247,16 @@ export default function Home() {
             生成
           </p>
 
-          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[#030304]" />
-          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[#030304]" />
+          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[#030304]" data-motion-reveal />
+          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[#030304]" data-motion-reveal />
 
-          <h1 className="absolute left-[158px] top-[1385px] m-0 whitespace-nowrap" style={homeText.aboutTitle}>
+          <h1 className="motion-title-shine absolute left-[158px] top-[1385px] m-0 whitespace-nowrap" style={homeText.aboutTitle} data-motion-reveal>
             范健男
           </h1>
-          <p className="absolute left-[158px] top-[1511px] m-0 w-[602.1px]" style={homeText.aboutRole}>
+          <p className="absolute left-[158px] top-[1511px] m-0 w-[602.1px]" style={homeText.aboutRole} data-motion-reveal>
             UI / UX Designer
           </p>
-          <div className="absolute left-[163px] top-[1628px] w-[888px]" style={homeText.aboutBody}>
+          <div className="absolute left-[163px] top-[1628px] w-[888px]" style={homeText.aboutBody} data-motion-reveal>
             <p className="m-0">专注方向：</p>
             <ul className="m-0 list-disc pl-[48px]">
               <li className="m-0">3年互联网产品B端设计经验</li>
@@ -269,7 +272,11 @@ export default function Home() {
           </div>
           <img src={`${S}/Vector 2.svg`} alt="" className="absolute left-[957px] top-[1604px] h-[59.6px] w-[44.551px] max-w-none" />
 
-          <div className="absolute left-[1157px] top-[1186px]">
+          <div
+            className="absolute left-[1157px] top-[1186px] h-[867px] w-[617px]"
+            data-motion-reveal
+            style={{ "--motion-delay": "120ms" } as CSSProperties}
+          >
             <div className="absolute left-[13px] top-[13px] h-[766px] w-[516px] border-2 border-dashed border-white" />
             <div className="absolute left-0 top-0 size-[25px] bg-white" />
             <div className="absolute left-[516px] top-0 size-[25px] bg-white" />
@@ -278,9 +285,9 @@ export default function Home() {
             <div className="absolute left-0 top-[766px] size-[25px] bg-white" />
             <div className="absolute left-[516px] top-[766px] size-[25px] bg-white" />
             <img src={`${S}/4214_1.png`} alt="" className="absolute left-[548px] top-[791px] h-[76px] w-[69px] max-w-none" />
-          </div>
-          <div className="absolute left-[1170px] top-[1257px] h-[707px] w-[516px] overflow-hidden opacity-90">
-            <img src={`${S}/图层_1_拷贝_1.png`} alt="范健男肖像" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
+            <div className="absolute left-[13px] top-[71px] h-[707px] w-[516px] overflow-hidden opacity-90">
+              <img src={`${S}/图层_1_拷贝_1.png`} alt="范健男肖像" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
+            </div>
           </div>
           <div className="absolute left-[1419px] top-[1897px] flex h-[159.969px] w-[290.187px] items-center justify-center">
             <div className="-rotate-[15deg]">
@@ -292,7 +299,7 @@ export default function Home() {
             </div>
           </div>
 
-          <h2 className="absolute left-[139px] top-[2317px] m-0 whitespace-nowrap uppercase">
+          <h2 className="motion-title-shine absolute left-[139px] top-[2317px] m-0 whitespace-nowrap uppercase" data-motion-reveal>
             <span style={homeText.contentsTitle}>目录</span>
             <span style={homeText.contentsSub}>/CONTENTS</span>
           </h2>
@@ -306,16 +313,18 @@ export default function Home() {
           <div className="absolute left-[1749px] top-[3000px] size-[25px] bg-white" />
           <img src={`${S}/4214_1.png`} alt="" className="absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" />
 
-          {projects.map((project) => (
-            <Link key={project.number} href={project.href} className="contents text-white">
+          {projects.map((project, index) => (
+            <Link key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms` } as CSSProperties}>
               <span
-                className="absolute whitespace-nowrap uppercase"
+                className="motion-home-project__number absolute whitespace-nowrap uppercase"
+                data-motion-reveal
                 style={{ ...homeText.projectNumber, left: px(project.x), top: px(project.y) }}
               >
                 {project.number}
               </span>
               <span
-                className="absolute whitespace-nowrap uppercase"
+                className="motion-home-project__label absolute whitespace-nowrap uppercase"
+                data-motion-reveal
                 style={{ ...homeText.projectLabel, left: px(project.labelX), top: px(project.labelY) }}
               >
                 {project.label}
@@ -323,13 +332,76 @@ export default function Home() {
               <img
                 src={project.img}
                 alt=""
-                className="absolute max-w-none object-cover"
+                className="motion-home-project__image absolute max-w-none object-cover"
+                data-motion-reveal
                 style={{ left: px(project.imgX), top: px(project.imgY), width: px(project.imgW), height: px(project.imgH) }}
               />
             </Link>
           ))}
+
+          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-white" data-motion-reveal>
+            <div className="absolute left-px top-0 h-[1080px] w-[1920px] bg-[#070709]" />
+            <div className="absolute left-[281.232px] top-[285.947px] h-[439.958px] w-[1368.474px] border-2 border-dashed border-white" />
+            <div className="absolute left-[271px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <div className="absolute left-[938.611px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <div className="absolute left-[1638.621px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <div className="absolute left-[271px] top-[714.821px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <div className="absolute left-[938.611px] top-[714.821px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <div className="absolute left-[1638.621px] top-[714.821px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
+            <img
+              src={`${S}/4214_1.png`}
+              alt=""
+              className="absolute left-[1670.168px] top-[752.337px] h-[64.8px] w-[58.832px] max-w-none"
+            />
+            <img
+              src={`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`}
+              alt=""
+              className="absolute left-[324px] top-[170px] h-[87px] w-[262px] max-w-none object-cover"
+            />
+            <div className="absolute left-[292px] top-[243px] flex h-[63.444px] w-[51.07px] items-center justify-center">
+              <div className="flex-none" style={{ transform: "rotate(-165deg)" }}>
+                <img src={`${S}/Vector 2.svg`} alt="" className="block h-[55.5px] w-[38px] max-w-none" />
+              </div>
+            </div>
+            <div className="absolute left-[314.449px] top-[654.513px] flex h-[130.035px] w-[130.035px] items-center justify-center">
+              <div className="flex-none" style={{ transform: "rotate(45deg)" }}>
+                <img src={`${S}/图层_1.png`} alt="" className="block h-[91.949px] w-[91.949px] max-w-none object-cover" />
+              </div>
+            </div>
+            <div className="absolute left-[1427.001px] top-[221px] flex h-[134.902px] w-[135.192px] items-center justify-center">
+              <div className="flex-none" style={{ transform: "rotate(-39.106deg)" }}>
+                <img src={`${S}/图层_4.png`} alt="" className="block h-[95px] w-[97px] max-w-none object-cover" />
+              </div>
+            </div>
+            <h2
+              className="absolute left-[499px] top-[399px] m-0 h-[199px] w-[900px] whitespace-nowrap bg-clip-text text-transparent"
+              style={{
+                fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+                fontSize: "150px",
+                fontWeight: 520,
+                fontVariationSettings: "\"wght\" 520",
+                lineHeight: "100.055%",
+                backgroundImage: "linear-gradient(90deg, #ffffff 0%, #7b7b7b 32.2115%, #ffffff 66.8269%, #7b7b7b 100%)"
+              }}
+            >
+              感谢您的观看
+            </h2>
+            <p
+              className="absolute left-[664px] top-[785px] m-0 h-[42px] w-[522px] whitespace-nowrap text-center text-white"
+              style={{
+                fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif",
+                fontSize: "32px",
+                fontWeight: 520,
+                fontVariationSettings: "\"wght\" 520",
+                lineHeight: "100.055%"
+              }}
+            >
+              如果你喜欢我的<span className="text-[#84eb19]">作品集</span>，请与我联系!
+            </p>
+          </section>
         </div>
-      </div>
+        </PortfolioMotion>
+      </ResponsiveStage>
     </main>
   );
 }

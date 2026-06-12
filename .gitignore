@@ -21,3 +21,5 @@ preview-server.err
 __MACOSX/
 **/__MACOSX/
 **/.DS_Store
+
+.vercel

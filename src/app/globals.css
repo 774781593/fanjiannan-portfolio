@@ -62,10 +62,23 @@ img {
   background: rgba(109, 225, 30, 0.28);
 }
 
+.home-main {
+  padding-block: clamp(72px, 7vw, 112px) clamp(40px, 6vw, 96px);
+}
+
+.home-stage-shell,
+.project-page {
+  width: min(calc(100% - clamp(32px, 7vw, 120px)), 1440px);
+  margin-inline: auto;
+}
+
 .home-stage-shell {
   position: relative;
-  width: 100%;
   overflow: hidden;
+}
+
+.project-page {
+  padding-block: clamp(72px, 7vw, 112px) clamp(40px, 6vw, 96px);
 }
 
 .site-nav {
@@ -712,7 +725,16 @@ a.motion-home-project:focus-visible .motion-home-project__label {
 
 @media (max-width: 720px) {
   .home-main {
-    padding-top: 54px;
+    padding-block: 54px 28px;
+  }
+
+  .home-stage-shell,
+  .project-page {
+    width: calc(100% - 16px);
+  }
+
+  .project-page {
+    padding-block: 54px 28px;
   }
 
   .portfolio-motion::before,

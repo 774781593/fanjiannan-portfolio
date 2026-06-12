@@ -1689,7 +1689,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   }
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-black">
+    <main ref={containerRef} className="project-page min-h-screen bg-black">
       <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => (
         <section

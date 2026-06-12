@@ -1695,6 +1695,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
         <section
           key={`${slug}-${index}`}
           className="mx-auto w-full max-w-[1920px] overflow-hidden"
+          data-project-hero={index === 0 ? "true" : undefined}
           data-motion-reveal
           data-motion-start={index === 0 ? "true" : undefined}
           style={{ background: frame.background ?? "#070709", "--motion-delay": index === 0 ? "0ms" : `${Math.min(index * 90, 240)}ms` } as CSSProperties}

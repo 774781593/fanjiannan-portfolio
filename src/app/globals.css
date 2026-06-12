@@ -399,11 +399,13 @@ img {
 
 @keyframes portfolio-image-in {
   from {
-    opacity: 1;
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.994);
     filter: none;
   }
   to {
     opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
     filter: none;
   }
 }
@@ -444,12 +446,34 @@ img {
 
 @keyframes portfolio-start-image-in {
   from {
-    opacity: 1;
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.992);
     filter: none;
   }
   to {
     opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
     filter: none;
+  }
+}
+
+@media (min-width: 721px) {
+  [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="image"] {
+    animation: portfolio-image-in 780ms var(--motion-ease) both;
+    animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 90ms);
+  }
+
+  [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="image"] {
+    animation: portfolio-start-image-in 980ms var(--motion-ease) both;
+    animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 140ms);
+  }
+
+  [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="shape"] {
+    animation-duration: 760ms;
+  }
+
+  [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="text"] {
+    animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 170ms);
   }
 }
 

@@ -1427,6 +1427,7 @@ function RectLayerView({ rect }: { rect: RectLayer }) {
     return (
       <svg
         className="absolute overflow-visible"
+        data-motion-layer="selection"
         width={rect.w}
         height={rect.h}
         viewBox={`0 0 ${rect.w} ${rect.h}`}

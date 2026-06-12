@@ -127,6 +127,9 @@ export function CarouselSwiper({ slides, width, height, className }: CarouselSwi
               <img
                 src={slide.src}
                 alt={slide.alt}
+                loading={isActive ? "eager" : "lazy"}
+                fetchPriority={isActive ? "high" : "auto"}
+                decoding="async"
                 draggable={false}
                 className="h-full w-full select-none object-cover"
                 style={{

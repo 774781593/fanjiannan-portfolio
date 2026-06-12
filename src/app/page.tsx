@@ -206,6 +206,9 @@ export default function Home() {
           <img
             src={`${F}/img41.png`}
             alt=""
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="pointer-events-none absolute left-[-184px] top-[-87px] h-[1288.125px] w-[2288.211px] max-w-none object-cover"
           />
 
@@ -224,11 +227,16 @@ export default function Home() {
           <img
             src={`${S}/UI设计师_UI_Desgin.png`}
             alt="UI设计师/UI Desgin"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="absolute left-[259.69px] top-[277.97px] h-[67px] w-[435px] max-w-none object-contain"
           />
           <img
             src={`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[1292.57px] top-[534.4px] h-[161.016px] w-[484.382px] max-w-none object-cover"
           />
 
@@ -236,6 +244,8 @@ export default function Home() {
           <img
             src={`${S}/欢迎观看范健男的作品集.png`}
             alt="欢迎观看范健男的作品集"
+            loading="lazy"
+            decoding="async"
             className="absolute left-[460px] top-[838.06px] h-[40px] w-[278px] max-w-none object-contain"
           />
           <div className="absolute left-[1179.27px] top-[834.96px] h-[40.552px] w-[125.234px] bg-[#3f3e3f]" />
@@ -267,10 +277,10 @@ export default function Home() {
 
           <div className="absolute left-[823px] top-[1534px] flex h-[98.697px] w-[189.442px] items-center justify-center">
             <div className="rotate-[9.18deg]">
-              <img src={`${S}/图层_1_1.png`} alt="About me" className="h-[70.81px] w-[180.456px] max-w-none object-cover" />
+              <img src={`${S}/图层_1_1.png`} alt="About me" loading="lazy" decoding="async" className="h-[70.81px] w-[180.456px] max-w-none object-cover" />
             </div>
           </div>
-          <img src={`${S}/Vector 2.svg`} alt="" className="absolute left-[957px] top-[1604px] h-[59.6px] w-[44.551px] max-w-none" />
+          <img src={`${S}/Vector 2.svg`} alt="" loading="lazy" decoding="async" className="absolute left-[957px] top-[1604px] h-[59.6px] w-[44.551px] max-w-none" />
 
           <div
             className="absolute left-[1157px] top-[1186px] h-[867px] w-[617px]"
@@ -284,9 +294,9 @@ export default function Home() {
             <div className="absolute left-[516px] top-[383px] size-[25px] bg-white" />
             <div className="absolute left-0 top-[766px] size-[25px] bg-white" />
             <div className="absolute left-[516px] top-[766px] size-[25px] bg-white" />
-            <img src={`${S}/4214_1.png`} alt="" className="absolute left-[548px] top-[791px] h-[76px] w-[69px] max-w-none" />
+            <img src={`${S}/4214_1.png`} alt="" loading="lazy" decoding="async" className="absolute left-[548px] top-[791px] h-[76px] w-[69px] max-w-none" />
             <div className="absolute left-[13px] top-[71px] h-[707px] w-[516px] overflow-hidden opacity-90">
-              <img src={`${S}/图层_1_拷贝_1.png`} alt="范健男肖像" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
+              <img src={`${S}/图层_1_拷贝_1.png`} alt="范健男肖像" loading="lazy" decoding="async" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
             </div>
           </div>
           <div className="absolute left-[1419px] top-[1897px] flex h-[159.969px] w-[290.187px] items-center justify-center">
@@ -294,6 +304,8 @@ export default function Home() {
               <img
                 src={`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="h-[91.698px] w-[275.853px] max-w-none object-cover"
               />
             </div>
@@ -311,7 +323,7 @@ export default function Home() {
           <div className="absolute left-[145px] top-[3000px] size-[25px] bg-white" />
           <div className="absolute left-[928px] top-[3000px] h-[25px] w-[43px] bg-white" />
           <div className="absolute left-[1749px] top-[3000px] size-[25px] bg-white" />
-          <img src={`${S}/4214_1.png`} alt="" className="absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" />
+          <img src={`${S}/4214_1.png`} alt="" loading="lazy" decoding="async" className="absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" />
 
           {projects.map((project, index) => (
             <Link key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms` } as CSSProperties}>
@@ -332,6 +344,8 @@ export default function Home() {
               <img
                 src={project.img}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="motion-home-project__image absolute max-w-none object-cover"
                 data-motion-reveal
                 style={{ left: px(project.imgX), top: px(project.imgY), width: px(project.imgW), height: px(project.imgH) }}
@@ -351,26 +365,30 @@ export default function Home() {
             <img
               src={`${S}/4214_1.png`}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute left-[1670.168px] top-[752.337px] h-[64.8px] w-[58.832px] max-w-none"
             />
             <img
               src={`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute left-[324px] top-[170px] h-[87px] w-[262px] max-w-none object-cover"
             />
             <div className="absolute left-[292px] top-[243px] flex h-[63.444px] w-[51.07px] items-center justify-center">
               <div className="flex-none" style={{ transform: "rotate(-165deg)" }}>
-                <img src={`${S}/Vector 2.svg`} alt="" className="block h-[55.5px] w-[38px] max-w-none" />
+                <img src={`${S}/Vector 2.svg`} alt="" loading="lazy" decoding="async" className="block h-[55.5px] w-[38px] max-w-none" />
               </div>
             </div>
             <div className="absolute left-[314.449px] top-[654.513px] flex h-[130.035px] w-[130.035px] items-center justify-center">
               <div className="flex-none" style={{ transform: "rotate(45deg)" }}>
-                <img src={`${S}/图层_1.png`} alt="" className="block h-[91.949px] w-[91.949px] max-w-none object-cover" />
+                <img src={`${S}/图层_1.png`} alt="" loading="lazy" decoding="async" className="block h-[91.949px] w-[91.949px] max-w-none object-cover" />
               </div>
             </div>
             <div className="absolute left-[1427.001px] top-[221px] flex h-[134.902px] w-[135.192px] items-center justify-center">
               <div className="flex-none" style={{ transform: "rotate(-39.106deg)" }}>
-                <img src={`${S}/图层_4.png`} alt="" className="block h-[95px] w-[97px] max-w-none object-cover" />
+                <img src={`${S}/图层_4.png`} alt="" loading="lazy" decoding="async" className="block h-[95px] w-[97px] max-w-none object-cover" />
               </div>
             </div>
             <h2

@@ -32,7 +32,7 @@ export function ImageReveal({
         alt={alt}
         width={1600}
         height={1000}
-        priority={priority}
+        {...(priority ? { priority: true } : { loading: "lazy" as const })}
         className={imageClassName}
       />
     </motion.div>

@@ -42,7 +42,7 @@ export function AppDesignDetail() {
             alt={section.alt}
             width={section.width}
             height={section.height}
-            priority={index === 0}
+            {...(index === 0 ? { priority: true } : { loading: "lazy" as const })}
             quality={100}
             sizes="100vw"
             className="h-auto w-full select-none"

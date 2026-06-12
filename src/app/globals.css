@@ -3,54 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-ExtraLight.ttf") format("truetype");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PingFang SC";
-  src: url("/assets/fonts/PingFangSC/PingFang-Heavy.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Druk Wide";
   src: url("/assets/fonts/Druk/Druk-Wide-Bold.otf") format("opentype");
   font-weight: 100 900;

@@ -700,10 +700,10 @@ const bSystemFrames: Frame[] = [
     height: 6479,
     images: [
       { src: `${S}/Macbook_1.png`, x: 0, y: 0, w: 1922, h: 1255 },
-      { src: `${S}/Frame_1940698324.png`, x: -20, y: 1550, w: 969, h: 476 },
+      { src: `${S}/Frame_1940698324.webp`, x: -20, y: 1550, w: 969, h: 476 },
       { src: `${S}/图片5_1.png`, x: 136, y: 2747, w: 1648, h: 819 },
       { src: `${S}/图片4_1.png`, x: 136, y: 3911, w: 1648, h: 805 },
-      { src: `${S}/Mask group.png`, x: 137, y: 5017, w: 1646, h: 1306 }
+      { src: `${S}/Mask group.webp`, x: 137, y: 5017, w: 1646, h: 1306 }
     ],
     texts: [
       { text: "登录页", x: 138, y: 48, size: 36, weight: 380 },
@@ -1174,8 +1174,8 @@ const graphicFrames: Frame[] = [
     images: [
       { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
       { src: `${S}/5555_1.png`, x: 1095, y: 1114, w: 195, h: 133 },
-      { src: `${S}/Desktop_-_5_1.png`, x: 210, y: 1369, w: 1500, h: 844 },
-      { src: `${S}/Desktop_-_3_1.png`, x: 210, y: 2450, w: 1500, h: 843 },
+      { src: `${S}/Desktop_-_5_1.webp`, x: 210, y: 1369, w: 1500, h: 844 },
+      { src: `${S}/Desktop_-_3_1.webp`, x: 210, y: 2450, w: 1500, h: 843 },
       { src: `${S}/中文版_1.png`, x: 210, y: 3519, w: 1500, h: 844 },
       { src: `${S}/图层_10_1.png`, x: 235, y: 4516, w: 617, h: 864 },
       { src: `${S}/fanbaba_A_picture_of_a_traditional_Chinese_festival_a_little_bo_c_upscayl_4x_realesrgan-x4plus_1_1.png`, x: 227, y: 5575, w: 617, h: 957 },

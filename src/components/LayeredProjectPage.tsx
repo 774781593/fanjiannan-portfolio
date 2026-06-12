@@ -11,6 +11,7 @@ type ImageLayer = {
   y: number;
   w: number;
   h: number;
+  eager?: boolean;
   z?: number;
   rotate?: number;
   opacity?: number;
@@ -1241,7 +1242,7 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
 
   return (
     <>
-      {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
+      {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: true }} />)}
       <p
         className="motion-title-shine absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
         data-motion-layer="text"
@@ -1281,12 +1282,15 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
           </p>
         </>
       )}
-      {heroBodyImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)}
+      {heroBodyImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: image.y < 2400 }} />)}
     </>
   );
 }
 
 function ImageLayerView({ image }: { image: ImageLayer }) {
+  const loading = image.eager ? "eager" : "lazy";
+  const fetchPriority = image.eager ? "high" : "auto";
+
   if (image.imageX !== undefined && image.imageY !== undefined && image.imageW !== undefined && image.imageH !== undefined) {
     return (
       <div
@@ -1309,7 +1313,8 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         <img
           src={image.src}
           alt=""
-          loading="eager"
+          loading={loading}
+          fetchPriority={fetchPriority}
           decoding="async"
           className="absolute max-w-none object-fill"
           style={{
@@ -1345,7 +1350,8 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         <img
           src={image.src}
           alt=""
-          loading="eager"
+          loading={loading}
+          fetchPriority={fetchPriority}
           decoding="async"
           className="absolute left-0 max-w-none object-fill"
           style={{ top: image.crop.top, width: "100%", height: image.crop.height }}
@@ -1358,7 +1364,8 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
     <img
       src={image.src}
       alt=""
-      loading="eager"
+      loading={loading}
+      fetchPriority={fetchPriority}
       decoding="async"
       className={image.cover ? "absolute h-full w-full object-cover" : "absolute max-w-none object-fill"}
       data-motion-layer="image"
@@ -1692,7 +1699,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
               }}
             >
               {frame.fullImageSrc ? (
-                <ImageLayerView image={{ src: frame.fullImageSrc, x: 0, y: 0, w: 1920, h: frame.height }} />
+                <ImageLayerView image={{ src: frame.fullImageSrc, x: 0, y: 0, w: 1920, h: frame.height, eager: index === 0 }} />
               ) : (
                 <>
                   {frame.rects?.map((rect) => <RectLayerView key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`} rect={rect} />)}
@@ -1701,7 +1708,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                   ) : (
                     frame.images
                       ?.filter((image) => !(slug === "app-design" && index === 1 && appGalleryImageSources.has(image.src)))
-                      .map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={image} />)
+                      .map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: index === 0 && image.y < 2400 }} />)
                   )}
                   {frame.texts?.map((text) => <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} />)}
                   {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}

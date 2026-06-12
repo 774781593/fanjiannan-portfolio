@@ -299,7 +299,7 @@ img {
   mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 28%, transparent 62%);
   opacity: 0.42;
   transform: translateZ(0);
-  animation: ambient-grid-drift 18s linear infinite;
+  animation: none;
 }
 
 .portfolio-spotlight {
@@ -309,39 +309,34 @@ img {
   pointer-events: none;
   background:
     radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--motion-glow), transparent 24vw),
-    radial-gradient(circle at calc(var(--pointer-x) + 18%) calc(var(--pointer-y) + 8%), var(--motion-blue-glow), transparent 26vw),
-    conic-gradient(from 180deg at var(--pointer-x) var(--pointer-y), transparent, rgba(255, 255, 255, 0.045), transparent 28%);
+    radial-gradient(circle at calc(var(--pointer-x) + 18%) calc(var(--pointer-y) + 8%), var(--motion-blue-glow), transparent 26vw);
   mix-blend-mode: screen;
-  opacity: 0.68;
+  opacity: 0.42;
   transform: translateZ(0);
   transition: opacity var(--motion-fast) ease;
 }
 
 .portfolio-motion[data-motion-ready="false"] > :not(.portfolio-spotlight) {
-  opacity: 0;
-  transform: translate3d(0, 24px, 0) scale(0.988);
-  filter: blur(16px) saturate(0.82);
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .portfolio-motion[data-motion-ready="true"] > :not(.portfolio-spotlight) {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-  filter: blur(0);
-  transition:
-    opacity 1080ms var(--motion-ease),
-    transform 1080ms var(--motion-ease),
-    filter 1080ms var(--motion-ease);
+  transform: none;
+  filter: none;
+  transition: none;
 }
 
 [data-motion-reveal] {
   opacity: 0;
-  transform: translate3d(0, var(--motion-distance), 0) scale(0.992);
-  filter: blur(var(--motion-blur)) saturate(0.92);
+  transform: translate3d(0, 18px, 0);
+  filter: none;
   transition:
     opacity var(--motion-duration) var(--motion-ease) calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms)),
-    transform var(--motion-duration) var(--motion-ease) calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms)),
-    filter var(--motion-duration) var(--motion-ease) calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
-  will-change: opacity, transform, filter;
+    transform var(--motion-duration) var(--motion-ease) calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms));
+  will-change: opacity, transform;
 }
 
 [data-motion-start="true"] {
@@ -352,8 +347,8 @@ img {
 
 [data-motion-visible="true"] {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-  filter: blur(0) saturate(1);
+  transform: translate3d(0, 0, 0);
+  filter: none;
 }
 
 [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="text"],
@@ -363,8 +358,7 @@ img {
 }
 
 [data-motion-reveal][data-motion-visible="true"] [data-motion-layer="image"] {
-  animation: portfolio-image-in 960ms var(--motion-ease) both;
-  animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-child-delay, 0ms) + 80ms);
+  animation: none;
 }
 
 [data-motion-start="true"][data-motion-visible="true"] [data-motion-layer="text"] {
@@ -394,17 +388,17 @@ img {
 
 @keyframes portfolio-image-in {
   from {
-    opacity: 0;
-    filter: blur(10px) saturate(0.9) brightness(0.94);
+    opacity: 1;
+    filter: none;
   }
   to {
     opacity: 1;
-    filter: blur(0) saturate(1) brightness(1);
+    filter: none;
   }
 }
 
 [data-motion-layer="image"] {
-  transition: filter 620ms var(--motion-ease), opacity 620ms var(--motion-ease);
+  transition: none;
 }
 
 [data-motion-reveal]:hover [data-motion-layer="image"] {
@@ -426,12 +420,12 @@ img {
 
 @keyframes portfolio-start-image-in {
   from {
-    opacity: 0;
-    filter: blur(16px) saturate(0.9) brightness(0.92);
+    opacity: 1;
+    filter: none;
   }
   to {
     opacity: 1;
-    filter: blur(0) saturate(1) brightness(1);
+    filter: none;
   }
 }
 
@@ -622,6 +616,30 @@ a.motion-home-project:focus-visible .motion-home-project__label {
 @media (max-width: 720px) {
   .home-main {
     padding-top: 54px;
+  }
+
+  .portfolio-motion::before,
+  .portfolio-spotlight {
+    display: none;
+  }
+
+  .portfolio-motion[data-motion-ready] > :not(.portfolio-spotlight),
+  .portfolio-motion[data-motion-ready="false"] > :not(.portfolio-spotlight),
+  [data-motion-reveal],
+  [data-motion-visible="true"],
+  [data-motion-layer="image"],
+  [data-motion-layer="text"],
+  [data-motion-layer="shape"] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .motion-title-shine::after {
+    display: none;
   }
 }
 

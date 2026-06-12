@@ -79,6 +79,10 @@ img {
 
 .project-page {
   padding-block: clamp(72px, 7vw, 112px) clamp(40px, 6vw, 96px);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(135, 248, 20, 0.08), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(54, 141, 255, 0.08), transparent 30%),
+    #030303;
 }
 
 .site-nav {
@@ -329,6 +333,25 @@ img {
   transition: opacity var(--motion-fast) ease;
 }
 
+.project-page .portfolio-motion::before {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.22) 0 1px, transparent 1.6px),
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(135, 248, 20, 0.08), transparent 30vw);
+  background-size: 180px 180px, 72px 72px, 72px 72px, 100% 100%;
+  mask-image: radial-gradient(circle at var(--pointer-x) var(--pointer-y), #000 0 24%, transparent 66%);
+  opacity: 0.34;
+  animation: ambient-grid-drift 28s linear infinite;
+}
+
+.project-page .portfolio-spotlight {
+  opacity: 0.3;
+  background:
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(135, 248, 20, 0.12), transparent 22vw),
+    radial-gradient(circle at calc(var(--pointer-x) + 20%) calc(var(--pointer-y) + 10%), rgba(54, 141, 255, 0.1), transparent 24vw);
+}
+
 .portfolio-motion[data-motion-ready="false"] > :not(.portfolio-spotlight) {
   opacity: 1;
   transform: none;
@@ -427,8 +450,19 @@ img {
   transition: none;
 }
 
+.project-page [data-motion-layer="image"] {
+  transition:
+    filter 620ms var(--motion-ease),
+    box-shadow 620ms var(--motion-ease);
+}
+
 [data-motion-reveal]:hover [data-motion-layer="image"] {
   filter: brightness(1.035) contrast(1.02) saturate(1.04);
+}
+
+.project-page [data-motion-reveal]:hover [data-motion-layer="image"] {
+  filter: brightness(1.045) contrast(1.025) saturate(1.05);
+  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.22), 0 0 34px rgba(135, 248, 20, 0.08);
 }
 
 @keyframes portfolio-start-text-in {
@@ -471,6 +505,10 @@ img {
 }
 
 @media (min-width: 721px) {
+  .project-page [data-motion-reveal] {
+    transition-duration: 980ms;
+  }
+
   .portfolio-motion[data-motion-ready="true"] [data-project-hero="true"] {
     opacity: 1;
     transform: translate3d(0, 0, 0);

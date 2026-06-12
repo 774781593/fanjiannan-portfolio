@@ -11,8 +11,7 @@ const navItems = [
   { href: "/projects/app-design", label: "APP" },
   { href: "/projects/dashboard", label: "大屏" },
   { href: "/projects/c4d-practice", label: "C4D" },
-  { href: "/projects/graphic", label: "平面" },
-  { href: "/#thanks", label: "感谢页" }
+  { href: "/projects/graphic", label: "平面" }
 ];
 
 export function SiteNav() {

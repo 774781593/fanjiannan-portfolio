@@ -339,8 +339,8 @@ export default function Home() {
             </Link>
           ))}
 
-          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-white" data-motion-reveal>
-            <div className="absolute left-px top-0 h-[1080px] w-[1920px] bg-[#070709]" />
+          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-[#070709]" data-motion-reveal>
+            <div className="absolute left-0 top-0 h-[1080px] w-[1920px] bg-[#070709]" />
             <div className="absolute left-[281.232px] top-[285.947px] h-[439.958px] w-[1368.474px] border-2 border-dashed border-white" />
             <div className="absolute left-[271px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
             <div className="absolute left-[938.611px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />

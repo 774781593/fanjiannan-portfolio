@@ -1143,7 +1143,7 @@ const graphicFrames: Frame[] = [
       { x: 0, y: 1080, w: 1920, h: 1193, color: "#e7f2ff" },
       { x: 0, y: 2273, w: 1920, h: 1080, color: "#575757" },
       { x: 0, y: 3353, w: 1920, h: 1080, color: "#fbfbfb" },
-      { x: 1, y: 0, w: 1920, h: 1080, color: "#070709" },
+      { x: 0, y: 0, w: 1920, h: 1080, color: "#070709" },
       { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
       { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
       { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },

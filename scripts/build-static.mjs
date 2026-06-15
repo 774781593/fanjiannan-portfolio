@@ -4,6 +4,15 @@ const nextCommand = process.platform === "win32" ? "node_modules\\.bin\\next.cmd
 const gitVersion = spawnSync("git", ["rev-parse", "--short=12", "HEAD"], {
   encoding: "utf8"
 }).stdout.trim();
+
+const optimizeResult = spawnSync(process.execPath, ["scripts/optimize-images.mjs"], {
+  stdio: "inherit"
+});
+
+if (optimizeResult.status !== 0) {
+  process.exit(optimizeResult.status ?? 1);
+}
+
 const result = spawnSync(nextCommand, ["build"], {
   env: {
     ...process.env,

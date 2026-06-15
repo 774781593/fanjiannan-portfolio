@@ -846,8 +846,6 @@ const webFrames: Frame[] = [
     images: [
       { src: `/assets/figma-dev/web-xinxin-bg-bottom.png`, x: -2020, y: 8087, w: 3968, h: 9803 },
       { src: `/assets/figma-dev/web-xinxin-bg-main.png`, x: -2020, y: 0, w: 3968, h: 9803 },
-      { src: `${S}/图层_9.png`, x: 1212, y: 8672, w: 884, h: 815 },
-      { src: `${S}/图层_9_拷贝.png`, x: -213, y: 7680, w: 623, h: 575 },
       { src: `${S}/图层_8.png`, x: -620, y: -344, w: 2896, h: 1827 },
       { src: `${S}/图层_7.png`, x: 708, y: 533.943, w: 504.338, h: 85.115 },
       { src: `${S}/创_芯引领 智慧生活.png`, x: 410, y: 1012, w: 209, h: 116 },

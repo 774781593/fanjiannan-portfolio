@@ -1,3 +1,5 @@
+import { assetUrl } from "@/lib/assets";
+
 type FigmaImage = {
   src: string;
   width: number;
@@ -18,7 +20,7 @@ export function FigmaImageStack({ images, title }: FigmaImageStackProps) {
           className="mx-auto w-full max-w-[1920px] bg-black"
         >
           <img
-            src={image.src}
+            src={assetUrl(image.src)}
             alt={`${title} ${index + 1}`}
             width={image.width}
             height={image.height}

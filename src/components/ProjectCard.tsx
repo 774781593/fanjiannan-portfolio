@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Project } from "@/data/projects";
 import { TiltCard } from "@/components/TiltCard";
+import { assetUrl } from "@/lib/assets";
 
 type ProjectCardProps = {
   project: Project;
@@ -23,7 +24,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         <TiltCard className="group relative overflow-hidden rounded-[18px] border border-line bg-panel shadow-soft">
           <div className="relative aspect-[1.22] overflow-hidden bg-black">
             <Image
-              src={project.cover}
+              src={assetUrl(project.cover)}
               alt={project.title}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"

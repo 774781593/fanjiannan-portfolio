@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { assetUrl } from "@/lib/assets";
 import { imageReveal } from "@/lib/motion";
 
 type ImageRevealProps = {
@@ -28,7 +29,7 @@ export function ImageReveal({
       variants={imageReveal}
     >
       <Image
-        src={src}
+        src={assetUrl(src)}
         alt={alt}
         width={1600}
         height={1000}

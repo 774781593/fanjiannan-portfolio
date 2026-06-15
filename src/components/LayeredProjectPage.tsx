@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { CarouselSwiper } from "./CarouselSwiper";
 import { PortfolioMotion } from "./PortfolioMotion";
+import { assetUrl } from "@/lib/assets";
 
 type ImageLayer = {
   src: string;
@@ -1309,7 +1310,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         }}
       >
         <img
-          src={image.src}
+          src={assetUrl(image.src)}
           alt=""
           loading={loading}
           fetchPriority={fetchPriority}
@@ -1346,7 +1347,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
         }}
       >
         <img
-          src={image.src}
+          src={assetUrl(image.src)}
           alt=""
           loading={loading}
           fetchPriority={fetchPriority}
@@ -1360,7 +1361,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
 
   return (
     <img
-      src={image.src}
+      src={assetUrl(image.src)}
       alt=""
       loading={loading}
       fetchPriority={fetchPriority}
@@ -1745,7 +1746,6 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     </main>
   );
 }
-
 
 
 

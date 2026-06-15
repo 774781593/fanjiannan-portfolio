@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { assetUrl } from "@/lib/assets";
 import { motion } from "framer-motion";
 
 type CropSection = {
@@ -38,7 +39,7 @@ export function AppDesignDetail() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: index === 0 ? 0 : 0.04 }}
         >
           <Image
-            src={section.src}
+            src={assetUrl(section.src)}
             alt={section.alt}
             width={section.width}
             height={section.height}

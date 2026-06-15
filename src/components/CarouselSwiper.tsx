@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { assetUrl } from "@/lib/assets";
 
 type Slide = {
   src: string;
@@ -125,7 +126,7 @@ export function CarouselSwiper({ slides, width, height, className }: CarouselSwi
               }}
             >
               <img
-                src={slide.src}
+                src={assetUrl(slide.src)}
                 alt={slide.alt}
                 loading={isActive ? "eager" : "lazy"}
                 fetchPriority={isActive ? "high" : "auto"}

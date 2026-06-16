@@ -3,8 +3,8 @@ import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "A motion-led portfolio site restored from Figma."
+  title: "FanJiannan Portfolio",
+  description: "FanJiannan UI/UX portfolio and design works."
 };
 
 export const viewport: Viewport = {
@@ -20,6 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <link rel="preload" href="/assets/fonts/Druk/Druk-Wide-Bold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+      </head>
       <body>
         <SiteNav />
         {children}

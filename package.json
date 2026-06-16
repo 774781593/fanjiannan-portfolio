@@ -8,6 +8,7 @@
     "build:static": "node scripts/build-static.mjs",
     "build:cloudflare": "node scripts/build-static.mjs",
     "build:edgeone": "node scripts/build-static.mjs",
+    "deploy:cloudflare": "powershell -ExecutionPolicy Bypass -File scripts/deploy-cloudflare.ps1",
     "start": "next start",
     "lint": "next lint"
   },

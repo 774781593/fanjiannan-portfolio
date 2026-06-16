@@ -85,6 +85,7 @@ Useful commands:
 ```bash
 npm run build
 npm run build:cloudflare
+npm run deploy:cloudflare
 npm run dev
 npm run start
 ```
@@ -232,6 +233,12 @@ Source branch:
 git add <changed files>
 git commit -m "Message"
 git push origin master
+```
+
+One-command deploy helper:
+
+```bash
+npm run deploy:cloudflare
 ```
 
 Static build:

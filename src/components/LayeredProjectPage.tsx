@@ -21,6 +21,7 @@ type ImageLayer = {
   border?: string;
   borderWidth?: number;
   shadow?: string;
+  motionDisabled?: boolean;
   imageX?: number;
   imageY?: number;
   imageW?: number;
@@ -287,7 +288,7 @@ const appFrames: Frame[] = [
       { x: 553, y: 7544, w: 247, h: 247, radius: 24, color: "transparent", border: "rgba(255,255,255,0.2)", borderWidth: 2 }
     ],
     images: [
-      { src: `${S}/3213_4.png`, x: 0, y: 0, w: 1920, h: 2003 },
+      { src: `${S}/3213_4.png`, x: 0, y: 0, w: 1920, h: 2003, motionDisabled: true },
       { src: `${S}/资源_1_2.png`, x: 748, y: 249, w: 423, h: 93 },
       { src: `${S}/资源_1_2.png`, x: 1289, y: 2140, w: 423, h: 93 },
       { src: `${S}/1_310053792.png`, x: 1010, y: 2313, w: 665, h: 1030 },
@@ -1315,7 +1316,7 @@ function Hero({
 function ImageLayerView({ image, motion }: { image: ImageLayer; motion?: MotionContext }) {
   const loading = image.eager ? "eager" : "lazy";
   const fetchPriority = image.eager ? "high" : "auto";
-  const motionLayer = motion?.disabled ? undefined : "image";
+  const motionLayer = motion?.disabled || image.motionDisabled ? undefined : "image";
 
   if (image.imageX !== undefined && image.imageY !== undefined && image.imageW !== undefined && image.imageH !== undefined) {
     return (

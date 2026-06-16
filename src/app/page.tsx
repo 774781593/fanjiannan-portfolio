@@ -276,12 +276,24 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="absolute left-[823px] top-[1534px] flex h-[98.697px] w-[189.442px] items-center justify-center">
+          <div
+            className="absolute left-[823px] top-[1534px] flex h-[98.697px] w-[189.442px] items-center justify-center"
+            data-motion-reveal
+            style={{ "--motion-delay": "80ms" } as CSSProperties}
+          >
             <div className="rotate-[9.18deg]">
               <img src={assetUrl(`${S}/图层_1_1.png`)} alt="About me" loading="lazy" decoding="async" className="h-[70.81px] w-[180.456px] max-w-none object-cover" />
             </div>
           </div>
-          <img src={assetUrl(`${S}/Vector 2.svg`)} alt="" loading="lazy" decoding="async" className="absolute left-[957px] top-[1604px] h-[59.6px] w-[44.551px] max-w-none" />
+          <img
+            src={assetUrl(`${S}/Vector 2.svg`)}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute left-[957px] top-[1604px] h-[59.6px] w-[44.551px] max-w-none"
+            data-motion-reveal
+            style={{ "--motion-delay": "110ms" } as CSSProperties}
+          />
 
           <div
             className="absolute left-[1157px] top-[1186px] h-[867px] w-[617px]"
@@ -300,7 +312,11 @@ export default function Home() {
               <img src={assetUrl(`${S}/图层_1_拷贝_1.png`)} alt="范健男肖像" loading="lazy" decoding="async" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
             </div>
           </div>
-          <div className="absolute left-[1419px] top-[1897px] flex h-[159.969px] w-[290.187px] items-center justify-center">
+          <div
+            className="absolute left-[1419px] top-[1897px] flex h-[159.969px] w-[290.187px] items-center justify-center"
+            data-motion-reveal
+            style={{ "--motion-delay": "160ms" } as CSSProperties}
+          >
             <div className="-rotate-[15deg]">
               <img
                 src={assetUrl(`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`)}

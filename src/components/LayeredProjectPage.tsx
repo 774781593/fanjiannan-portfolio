@@ -97,6 +97,10 @@ type Frame = {
   };
 };
 
+type MotionContext = {
+  disabled?: boolean;
+};
+
 const S = "/assets/slices";
 
 const px = (value: number) => `${value}px`;
@@ -1235,16 +1239,32 @@ const framesBySlug: Record<string, Frame[]> = {
   graphic: graphicFrames
 };
 
-function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: ImageLayer[] }) {
+const staticAfterHeroSlugs = new Set(["dashboard", "c4d-practice", "graphic"]);
+
+function shouldDisableLayerMotion(slug: string, index: number, y: number) {
+  return index === 0 && staticAfterHeroSlugs.has(slug) && y >= 1080;
+}
+
+function Hero({
+  hero,
+  images,
+  motion,
+  disableBodyMotion = false
+}: {
+  hero: NonNullable<Frame["hero"]>;
+  images?: ImageLayer[];
+  motion?: MotionContext;
+  disableBodyMotion?: boolean;
+}) {
   const heroOverlayImages = images?.filter((image) => image.y < 1000);
   const heroBodyImages = images?.filter((image) => image.y >= 1000);
 
   return (
     <>
-      {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: true }} />)}
+      {heroOverlayImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: true }} motion={motion} />)}
       <p
         className="motion-title-shine absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-        data-motion-layer="text"
+        data-motion-layer={motion?.disabled ? undefined : "text"}
         style={{
           left: px(hero.titleX),
           top: px(hero.titleY),
@@ -1262,39 +1282,46 @@ function Hero({ hero, images }: { hero: NonNullable<Frame["hero"]>; images?: Ima
         {hero.title}
       </p>
       {hero.subtitle ? (
-        <TextLayerView text={hero.subtitle} />
+        <TextLayerView text={hero.subtitle} motion={motion} />
       ) : (
         <>
           <p
             className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-            data-motion-layer="text"
+            data-motion-layer={motion?.disabled ? undefined : "text"}
             style={{ left: px(hero.descAX), top: px(hero.descAY), fontSize: px(24), fontWeight: hero.descAWeight ?? 520, lineHeight: px(24.01), color: "#ffffff" }}
           >
             {hero.descA}
           </p>
           <p
             className="absolute m-0 whitespace-nowrap font-['MiSans'] leading-none"
-            data-motion-layer="text"
+            data-motion-layer={motion?.disabled ? undefined : "text"}
             style={{ left: px(hero.descBX), top: px(hero.descBY), fontSize: px(24), fontWeight: hero.descBWeight ?? 330, lineHeight: px(24.01), color: "rgba(255,255,255,0.8)" }}
           >
             {hero.descB}
           </p>
         </>
       )}
-      {heroBodyImages?.map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: image.y < 2400 }} />)}
+      {heroBodyImages?.map((image) => (
+        <ImageLayerView
+          key={`${image.src}-${image.x}-${image.y}`}
+          image={{ ...image, eager: image.y < 2400 }}
+          motion={{ disabled: disableBodyMotion || motion?.disabled }}
+        />
+      ))}
     </>
   );
 }
 
-function ImageLayerView({ image }: { image: ImageLayer }) {
+function ImageLayerView({ image, motion }: { image: ImageLayer; motion?: MotionContext }) {
   const loading = image.eager ? "eager" : "lazy";
   const fetchPriority = image.eager ? "high" : "auto";
+  const motionLayer = motion?.disabled ? undefined : "image";
 
   if (image.imageX !== undefined && image.imageY !== undefined && image.imageW !== undefined && image.imageH !== undefined) {
     return (
       <div
         className="absolute overflow-hidden"
-        data-motion-layer="image"
+        data-motion-layer={motionLayer}
         style={{
           left: px(image.x),
           top: px(image.y),
@@ -1331,7 +1358,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
     return (
       <div
         className="absolute overflow-hidden"
-        data-motion-layer="image"
+        data-motion-layer={motionLayer}
         style={{
           left: px(image.x),
           top: px(image.y),
@@ -1367,7 +1394,7 @@ function ImageLayerView({ image }: { image: ImageLayer }) {
       fetchPriority={fetchPriority}
       decoding="async"
       className={image.cover ? "absolute h-full w-full object-cover" : "absolute max-w-none object-fill"}
-      data-motion-layer="image"
+      data-motion-layer={motionLayer}
       style={{
         left: px(image.x),
         top: px(image.y),
@@ -1400,14 +1427,15 @@ function isSelectionHandle(rect: RectLayer) {
   );
 }
 
-function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; selectionHandle?: boolean }) {
+function RectLayerView({ rect, selectionHandle = false, motion }: { rect: RectLayer; selectionHandle?: boolean; motion?: MotionContext }) {
   const seamBleed = 0;
+  const motionLayer = (layer: "image" | "text" | "shape" | "selection") => (motion?.disabled ? undefined : layer);
 
   if (rect.kind === "source-arrow") {
     return (
       <svg
         className="absolute overflow-visible"
-        data-motion-layer="selection"
+        data-motion-layer={motionLayer("selection")}
         width={rect.w}
         height={rect.h}
         viewBox={`0 0 ${rect.w} ${rect.h}`}
@@ -1441,7 +1469,7 @@ function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; sel
     return (
       <svg
         className="absolute overflow-visible"
-        data-motion-layer="selection"
+        data-motion-layer={motionLayer("selection")}
         width={rect.w}
         height={rect.h}
         viewBox={`0 0 ${rect.w} ${rect.h}`}
@@ -1509,7 +1537,7 @@ function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; sel
     return (
       <div
         className="absolute"
-        data-motion-layer="shape"
+        data-motion-layer={motionLayer("shape")}
         style={{
           left: px(rect.x),
           top: px(rect.y),
@@ -1527,7 +1555,7 @@ function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; sel
   return (
     <div
       className="absolute"
-      data-motion-layer={selectionHandle ? "selection" : "shape"}
+      data-motion-layer={motionLayer(selectionHandle ? "selection" : "shape")}
       style={{
         left: px(rect.x),
         top: px(rect.y),
@@ -1545,7 +1573,7 @@ function RectLayerView({ rect, selectionHandle = false }: { rect: RectLayer; sel
   );
 }
 
-function TextLayerView({ text }: { text: TextLayer }) {
+function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionContext }) {
   const preserveLineBreaks = text.width || text.text.includes("\n");
   const whitespaceClass = text.wrap === false ? "whitespace-pre" : preserveLineBreaks ? "whitespace-pre-wrap" : "whitespace-nowrap";
   const fontFamily = text.family === "Helvetica" ? "Helvetica, Arial, sans-serif" : text.family ?? "MiSans";
@@ -1554,7 +1582,7 @@ function TextLayerView({ text }: { text: TextLayer }) {
   return (
     <p
       className={`absolute m-0 font-['MiSans'] ${whitespaceClass}`}
-      data-motion-layer="text"
+      data-motion-layer={motion?.disabled ? undefined : "text"}
       style={{
         left: px(text.x),
         top: px(text.y),
@@ -1724,16 +1752,25 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                       key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
                       rect={rect}
                       selectionHandle={index === 0 && isSelectionHandle(rect)}
+                      motion={{ disabled: shouldDisableLayerMotion(slug, index, rect.y) }}
                     />
                   ))}
                   {frame.hero ? (
-                    <Hero hero={frame.hero} images={frame.images} />
+                    <Hero hero={frame.hero} images={frame.images} disableBodyMotion={staticAfterHeroSlugs.has(slug) && index === 0} />
                   ) : (
                     frame.images
                       ?.filter((image) => !(slug === "app-design" && index === 1 && appGalleryImageSources.has(image.src)))
-                      .map((image) => <ImageLayerView key={`${image.src}-${image.x}-${image.y}`} image={{ ...image, eager: index === 0 && image.y < 2400 }} />)
+                      .map((image) => (
+                        <ImageLayerView
+                          key={`${image.src}-${image.x}-${image.y}`}
+                          image={{ ...image, eager: index === 0 && image.y < 2400 }}
+                          motion={{ disabled: shouldDisableLayerMotion(slug, index, image.y) }}
+                        />
+                      ))
                   )}
-                  {frame.texts?.map((text) => <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} />)}
+                  {frame.texts?.map((text) => (
+                    <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: shouldDisableLayerMotion(slug, index, text.y) }} />
+                  ))}
                   {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
                   {slug === "app-design" && index === 1 ? <AppPageCarousel /> : null}
                 </>

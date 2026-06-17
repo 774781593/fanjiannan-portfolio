@@ -197,7 +197,7 @@ const homeText = {
 
 export default function Home() {
   return (
-    <main className="home-main min-h-screen overflow-x-hidden bg-black">
+    <main className="home-main min-h-screen overflow-x-hidden">
       <ResponsiveStage designWidth={1920} designHeight={4320} className="home-stage-shell">
         <PortfolioMotion
           className="relative h-[4320px] w-[1920px] text-white"

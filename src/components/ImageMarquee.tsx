@@ -13,7 +13,7 @@ type MarqueeImage = {
 
 type ImageMarqueeProps = {
   images: readonly MarqueeImage[];
-  width: number;
+  width: number | string;
   height: number;
   speed?: string;
   className?: string;

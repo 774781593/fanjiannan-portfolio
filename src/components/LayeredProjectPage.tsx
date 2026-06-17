@@ -1631,10 +1631,20 @@ function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionConte
   );
 }
 
-function AppPageCarousel() {
+function AppPageCarousel({ scale }: { scale: number }) {
+  const scaledImages = appGalleryCards.map((image) => ({
+    ...image,
+    width: image.width * scale,
+    height: image.height * scale,
+    radius: image.radius ? image.radius * scale : undefined
+  }));
+
   return (
-    <div className="absolute" style={{ left: px(-220), top: px(8512), width: px(2360), height: px(940) }}>
-      <ImageMarquee images={appGalleryCards} width={2360} height={940} speed="18s" />
+    <div
+      className="absolute"
+      style={{ left: "calc(50% - 50vw)", top: px(8512 * scale), width: "100vw", height: px(940 * scale), zIndex: 90 }}
+    >
+      <ImageMarquee images={scaledImages} width="100%" height={940 * scale} speed="18s" />
     </div>
   );
 }
@@ -1729,7 +1739,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
         return (
         <section
           key={`${slug}-${index}`}
-          className="mx-auto w-full max-w-[1920px] overflow-hidden"
+          className={`mx-auto w-full max-w-[1920px] ${slug === "app-design" && index === 1 ? "overflow-visible" : "overflow-hidden"}`}
           data-project-hero={index === 0 ? "true" : undefined}
           data-motion-reveal={frameMotionDisabled ? undefined : true}
           data-motion-start={!frameMotionDisabled && index === 0 ? "true" : undefined}
@@ -1780,10 +1790,10 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                     <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, text.y) }} />
                   ))}
                   {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
-                  {slug === "app-design" && index === 1 ? <AppPageCarousel /> : null}
                 </>
               )}
             </div>
+            {slug === "app-design" && index === 1 ? <AppPageCarousel scale={scale} /> : null}
           </div>
         </section>
         );

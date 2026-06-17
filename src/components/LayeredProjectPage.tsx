@@ -1632,19 +1632,20 @@ function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionConte
 }
 
 function AppPageCarousel({ scale }: { scale: number }) {
+  const marqueeScale = scale * 0.7;
   const scaledImages = appGalleryCards.map((image) => ({
     ...image,
-    width: image.width * scale,
-    height: image.height * scale,
-    radius: image.radius ? image.radius * scale : undefined
+    width: image.width * marqueeScale,
+    height: image.height * marqueeScale,
+    radius: image.radius ? image.radius * marqueeScale : undefined
   }));
 
   return (
     <div
       className="absolute"
-      style={{ left: "calc(50% - 50vw)", top: px(8512 * scale), width: "100vw", height: px(940 * scale), zIndex: 90 }}
+      style={{ left: "calc(50% - 50vw)", top: px(8559 * scale), width: "100vw", height: px(846 * scale), zIndex: 90 }}
     >
-      <ImageMarquee images={scaledImages} width="100%" height={940 * scale} speed="18s" />
+      <ImageMarquee images={scaledImages} width="100%" height={846 * scale} speed="18s" />
     </div>
   );
 }

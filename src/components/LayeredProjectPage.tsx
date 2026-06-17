@@ -471,7 +471,7 @@ const bSystemFrames: Frame[] = [
       { src: `/assets/b-system-objective.png`, x: 1146, y: 4752, w: 569, h: 441 },
       { src: `${S}/Arrow 2.png`, x: 1766, y: 4712, w: 35, h: 496 },
       { src: `${S}/4214_1.png`, x: 1783, y: 4267, w: 59, h: 65 },
-      { src: `${S}/image_1.png`, x: 133, y: 5653, w: 1648, h: 674 },
+      { src: `${S}/energy-management-editable-vector.svg`, x: 133, y: 5653, w: 1648, h: 674 },
       { src: `${S}/Group 1940698322.png`, x: 135, y: 8138, w: 1311, h: 940 }
     ],
     texts: [

@@ -1246,6 +1246,10 @@ function shouldDisableLayerMotion(slug: string, index: number, y: number) {
   return index === 0 && staticAfterHeroSlugs.has(slug) && y >= 1080;
 }
 
+function shouldDisableFrameMotion(slug: string, index: number) {
+  return slug === "app-design" && index === 1;
+}
+
 function Hero({
   hero,
   images,
@@ -1719,13 +1723,16 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   return (
     <main ref={containerRef} className="project-page min-h-screen bg-black">
       <PortfolioMotion className="min-h-screen">
-      {frames.map((frame, index) => (
+      {frames.map((frame, index) => {
+        const frameMotionDisabled = shouldDisableFrameMotion(slug, index);
+
+        return (
         <section
           key={`${slug}-${index}`}
           className="mx-auto w-full max-w-[1920px] overflow-hidden"
           data-project-hero={index === 0 ? "true" : undefined}
-          data-motion-reveal
-          data-motion-start={index === 0 ? "true" : undefined}
+          data-motion-reveal={frameMotionDisabled ? undefined : true}
+          data-motion-start={!frameMotionDisabled && index === 0 ? "true" : undefined}
           style={{ background: frame.background ?? "#070709", "--motion-delay": index === 0 ? "0ms" : `${Math.min(index * 90, 240)}ms` } as CSSProperties}
         >
           <div
@@ -1753,7 +1760,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                       key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
                       rect={rect}
                       selectionHandle={index === 0 && isSelectionHandle(rect)}
-                      motion={{ disabled: shouldDisableLayerMotion(slug, index, rect.y) }}
+                      motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, rect.y) }}
                     />
                   ))}
                   {frame.hero ? (
@@ -1765,12 +1772,12 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                         <ImageLayerView
                           key={`${image.src}-${image.x}-${image.y}`}
                           image={{ ...image, eager: index === 0 && image.y < 2400 }}
-                          motion={{ disabled: shouldDisableLayerMotion(slug, index, image.y) }}
+                          motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, image.y) }}
                         />
                       ))
                   )}
                   {frame.texts?.map((text) => (
-                    <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: shouldDisableLayerMotion(slug, index, text.y) }} />
+                    <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, text.y) }} />
                   ))}
                   {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
                   {slug === "app-design" && index === 1 ? <AppPageCarousel /> : null}
@@ -1779,7 +1786,8 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
             </div>
           </div>
         </section>
-      ))}
+        );
+      })}
       </PortfolioMotion>
     </main>
   );

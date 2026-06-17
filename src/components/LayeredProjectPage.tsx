@@ -1645,7 +1645,7 @@ function AppPageCarousel({ scale }: { scale: number }) {
       className="absolute"
       style={{ left: "calc(50% - 50vw)", top: px(8559 * scale), width: "100vw", height: px(846 * scale), zIndex: 90 }}
     >
-      <ImageMarquee images={scaledImages} width="100%" height={846 * scale} speed="18s" />
+      <ImageMarquee images={scaledImages} width="100%" height={846 * scale} speed="28s" />
     </div>
   );
 }

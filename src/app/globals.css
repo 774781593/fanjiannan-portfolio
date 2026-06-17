@@ -804,7 +804,6 @@ a.motion-home-project:focus-visible .motion-home-project__label {
 
 .b-needs-marquee__text {
   display: block;
-  overflow: hidden;
   color: rgba(255, 255, 255, 0.9);
   font-family: "MiSans", sans-serif;
   font-size: 32px;
@@ -812,7 +811,7 @@ a.motion-home-project:focus-visible .motion-home-project__label {
   font-synthesis: none;
   font-variation-settings: "wght" 380;
   line-height: 1.2;
-  text-overflow: ellipsis;
+  overflow: visible;
   white-space: nowrap;
 }
 

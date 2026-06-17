@@ -255,17 +255,17 @@ const bSystemNeedAvatarSources = new Set([
 
 const bSystemNeedRows: BSystemNeedCard[][] = [
   [
-    { avatar: `${S}/Ellipse 1053.png`, text: "希望能够统一管理企业电、水、气等能源数据，避免数据分散难统计", width: 940 },
-    { avatar: `${S}/Ellipse 1054.png`, text: "希望能够通过大屏驾驶舱统一查看整体运行情况", width: 820 }
+    { avatar: `${S}/Ellipse 1053.png`, text: "希望能够统一管理企业电、水、气等能源数据，避免数据分散难统计", width: 1240 },
+    { avatar: `${S}/Ellipse 1054.png`, text: "希望能够通过大屏驾驶舱统一查看整体运行情况", width: 1040 }
   ],
   [
-    { avatar: `${S}/Ellipse 1055.png`, text: "希望实时查看设备运行状态，及时发现异常问题", width: 884 },
-    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 760 },
-    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 760 }
+    { avatar: `${S}/Ellipse 1057.png`, text: "希望实时查看设备运行状态，及时发现异常问题", width: 960 },
+    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 1040 },
+    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 1040 }
   ],
   [
-    { avatar: `${S}/Ellipse 1057.png`, text: "希望系统操作更加高效流畅，提升日常运维体验", width: 760 },
-    { avatar: `${S}/Ellipse 1058.png`, text: "希望数据展示更加直观，方便快速查看重点信息", width: 820 }
+    { avatar: `${S}/Ellipse 1057.png`, text: "希望系统操作更加高效流畅，提升日常运维体验", width: 1000 },
+    { avatar: `${S}/Ellipse 1058.png`, text: "希望数据展示更加直观，方便快速查看重点信息", width: 1040 }
   ]
 ];
 

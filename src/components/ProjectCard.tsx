@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Project } from "@/data/projects";
@@ -20,7 +20,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       viewport={{ once: true, margin: "-12% 0px" }}
       transition={{ duration: 0.75, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Link href={`/projects/${project.slug}`} className="block">
+      <a href={`/projects/${project.slug}`} className="block">
         <TiltCard className="group relative overflow-hidden rounded-[18px] border border-line bg-panel shadow-soft">
           <div className="relative aspect-[1.22] overflow-hidden bg-black">
             <Image
@@ -41,7 +41,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <p className="mt-3 max-w-md text-sm leading-6 text-muted">{project.summary}</p>
           </div>
         </TiltCard>
-      </Link>
+      </a>
     </motion.article>
   );
 }

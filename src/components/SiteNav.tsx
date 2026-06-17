@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -31,9 +31,9 @@ export function SiteNav() {
   return (
     <>
       <nav className="site-nav" aria-label="作品集导航" data-menu-open={menuOpen ? "true" : "false"}>
-        <Link className="site-nav__brand" href="/" aria-label="返回首页" prefetch={false}>
+        <a className="site-nav__brand" href="/" aria-label="返回首页">
           FanJiannan
-        </Link>
+        </a>
         <button
           className="site-nav__menu-button"
           type="button"
@@ -50,16 +50,15 @@ export function SiteNav() {
             const active = item.href === "/" ? pathname === "/" : pathname === item.href;
 
             return (
-              <Link
+              <a
                 key={item.href}
                 className="site-nav__link"
                 data-active={active ? "true" : "false"}
                 href={item.href}
-                prefetch={false}
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}
-              </Link>
+              </a>
             );
           })}
         </div>

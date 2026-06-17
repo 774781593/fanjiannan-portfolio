@@ -1,4 +1,4 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages */
 import type { CSSProperties } from "react";
 import { PortfolioMotion } from "@/components/PortfolioMotion";
 import { ResponsiveStage } from "@/components/ResponsiveStage";
@@ -343,7 +343,7 @@ export default function Home() {
           <img src={assetUrl(`${S}/4214_1.png`)} alt="" loading="lazy" decoding="async" className="absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" />
 
           {projects.map((project, index) => (
-            <Link key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms` } as CSSProperties}>
+            <a key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms` } as CSSProperties}>
               <span
                 className="motion-home-project__number absolute whitespace-nowrap uppercase"
                 data-motion-reveal
@@ -367,7 +367,7 @@ export default function Home() {
                 data-motion-reveal
                 style={{ left: px(project.imgX), top: px(project.imgY), width: px(project.imgW), height: px(project.imgH) }}
               />
-            </Link>
+            </a>
           ))}
 
           <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-[#070709]" data-motion-reveal>

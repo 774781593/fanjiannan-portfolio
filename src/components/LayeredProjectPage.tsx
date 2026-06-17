@@ -1633,8 +1633,8 @@ function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionConte
 
 function AppPageCarousel() {
   return (
-    <div className="absolute" style={{ left: px(4), top: px(8512), width: px(1912), height: px(940) }}>
-      <ImageMarquee images={appGalleryCards} width={1912} height={940} speed="18s" />
+    <div className="absolute" style={{ left: px(-220), top: px(8512), width: px(2360), height: px(940) }}>
+      <ImageMarquee images={appGalleryCards} width={2360} height={940} speed="18s" />
     </div>
   );
 }

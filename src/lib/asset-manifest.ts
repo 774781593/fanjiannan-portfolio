@@ -42,7 +42,6 @@ export const optimizedAssetMap: Record<string, string> = {
   "/assets/slices/Ellipse 1056.png": "/assets-optimized/slices/Ellipse 1056.webp",
   "/assets/slices/Ellipse 1057.png": "/assets-optimized/slices/Ellipse 1057.webp",
   "/assets/slices/Ellipse 1058.png": "/assets-optimized/slices/Ellipse 1058.webp",
-  "/assets/slices/fanbaba_A_picture_of_a_traditional_Chinese_festival_a_little_bo_c_upscayl_4x_realesrgan-x4plus_1_1.png": "/assets-optimized/slices/fanbaba_A_picture_of_a_traditional_Chinese_festival_a_little_bo_c_upscayl_4x_realesrgan-x4plus_1_1.webp",
   "/assets/slices/FireShot_Capture_011_-_青岛信芯微电子科技股份有限公司-信芯微官网_-_www.hi-image.cn.png": "/assets-optimized/slices/FireShot_Capture_011_-_青岛信芯微电子科技股份有限公司-信芯微官网_-_www.hi-image.cn.webp",
   "/assets/slices/FireShot_Capture_012_-_关于信芯微_-_信芯微电子科技有限公司_-_www.hi-image.cn.png": "/assets-optimized/slices/FireShot_Capture_012_-_关于信芯微_-_信芯微电子科技有限公司_-_www.hi-image.cn.webp",
   "/assets/slices/FireShot_Capture_014_-_行业新闻_-_信芯微电子科技有限公司_-_www.hi-image.cn.png": "/assets-optimized/slices/FireShot_Capture_014_-_行业新闻_-_信芯微电子科技有限公司_-_www.hi-image.cn.webp",

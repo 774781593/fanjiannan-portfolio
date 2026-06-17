@@ -440,7 +440,7 @@ const bSystemFrames: Frame[] = [
     images: [
       { src: `${S}/4214_1.png`, x: 1670.168, y: 752.337, w: 58.832, h: 64.8 },
       { src: `${S}/5555_1.png`, x: 599, y: 1301, w: 198, h: 135, z: 3 },
-      { src: `${S}/图片扩图_1.png`, x: -55, y: 1022, w: 2340, h: 1132 },
+      { src: `${S}/图片扩图_1.png`, x: -180, y: 1022, w: 2465, h: 1132 },
       { src: `${S}/Ellipse 1051.png`, x: 1413, y: 2643, w: 115, h: 115, z: 13, radius: 999, border: "#81c478", borderWidth: 7 },
       { src: `${S}/Ellipse 1050.png`, x: 1465, y: 2643, w: 115, h: 115, z: 12, radius: 999, border: "#3bbca6", borderWidth: 7 },
       { src: `${S}/Ellipse 1049.png`, x: 1517, y: 2643, w: 115, h: 115, z: 11, radius: 999, border: "#7d78c4", borderWidth: 7 },

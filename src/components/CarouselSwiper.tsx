@@ -24,19 +24,49 @@ const dragThreshold = 90;
 const dragVelocity = 500;
 const sideOffset = 1160;
 const slideTop = 0;
+const autoplayMs = 3200;
 
 export function CarouselSwiper({ slides, width, height, className }: CarouselSwiperProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<number | null>(null);
+  const autoplayRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
       if (timerRef.current) {
         window.clearTimeout(timerRef.current);
       }
+      if (autoplayRef.current) {
+        window.clearInterval(autoplayRef.current);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (slides.length < 2 || isPaused) return;
+
+    autoplayRef.current = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slides.length);
+      setIsTransitioning(true);
+
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+      }
+
+      timerRef.current = window.setTimeout(() => {
+        setIsTransitioning(false);
+      }, transitionMs);
+    }, autoplayMs);
+
+    return () => {
+      if (autoplayRef.current) {
+        window.clearInterval(autoplayRef.current);
+        autoplayRef.current = null;
+      }
+    };
+  }, [isPaused, slides.length]);
 
   const startTransition = (nextIndex: number) => {
     if (slides.length < 2 || isTransitioning) return;
@@ -57,6 +87,8 @@ export function CarouselSwiper({ slides, width, height, className }: CarouselSwi
   const goPrev = () => startTransition((activeIndex - 1 + slides.length) % slides.length);
 
   const handleDragEnd = (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+    setIsPaused(false);
+
     if (info.offset.x <= -dragThreshold || info.velocity.x <= -dragVelocity) {
       goNext();
       return;
@@ -78,6 +110,8 @@ export function CarouselSwiper({ slides, width, height, className }: CarouselSwi
     <div
       className={`relative overflow-hidden ${className ?? ""}`}
       style={{ width, height }}
+      onPointerEnter={() => setIsPaused(true)}
+      onPointerLeave={() => setIsPaused(false)}
     >
       <motion.div
         aria-hidden="true"
@@ -98,6 +132,7 @@ export function CarouselSwiper({ slides, width, height, className }: CarouselSwi
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
         dragMomentum={false}
+        onDragStart={() => setIsPaused(true)}
         onDragEnd={handleDragEnd}
       >
         {slides.map((slide, index) => {

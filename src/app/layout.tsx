@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SiteNav } from "@/components/SiteNav";
+import { SiteBackdrop } from "@/components/SiteBackdrop";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
         <link rel="preload" href="/assets/fonts/Druk/Druk-Wide-Bold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
       </head>
       <body>
+        <SiteBackdrop />
         <SiteNav />
         {children}
       </body>

@@ -32,6 +32,7 @@ export const optimizedAssetMap: Record<string, string> = {
   "/assets/slices/Desktop_-_3_1.png": "/assets-optimized/slices/Desktop_-_3_1.webp",
   "/assets/slices/Desktop_-_5_1.png": "/assets-optimized/slices/Desktop_-_5_1.webp",
   "/assets/slices/Dim_Light_MacBook_Mockup_1.png": "/assets-optimized/slices/Dim_Light_MacBook_Mockup_1.webp",
+  "/assets/slices/duanwu-sothis-2026.png": "/assets-optimized/slices/duanwu-sothis-2026.webp",
   "/assets/slices/Ellipse 1049.png": "/assets-optimized/slices/Ellipse 1049.webp",
   "/assets/slices/Ellipse 1050.png": "/assets-optimized/slices/Ellipse 1050.webp",
   "/assets/slices/Ellipse 1051.png": "/assets-optimized/slices/Ellipse 1051.webp",

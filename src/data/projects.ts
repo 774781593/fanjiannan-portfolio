@@ -94,7 +94,7 @@ export const projects: Project[] = [
     eyebrow: "GRAPHIC",
     year: "2026",
     summary: "节日海报、品牌物料与视觉实验。",
-    cover: "/assets/slices/fanbaba_A_picture_of_a_traditional_Chinese_festival_a_little_bo_c_upscayl_4x_realesrgan-x4plus_1_1.png",
+    cover: "/assets/slices/duanwu-sothis-2026.png",
     gallery: [
       "/assets/slices/画板_1_3.png",
       "/assets/slices/图层_10_1.png",

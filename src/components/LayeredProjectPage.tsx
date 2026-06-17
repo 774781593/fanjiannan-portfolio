@@ -32,6 +32,12 @@ type ImageLayer = {
   };
 };
 
+type BSystemNeedCard = {
+  avatar: string;
+  text: string;
+  width: number;
+};
+
 type TextLayer = {
   text: string;
   parts?: Array<{ text: string; color?: string; weight?: number }>;
@@ -238,6 +244,30 @@ const appGalleryCards = [
 ] as const;
 
 const appGalleryImageSources = new Set<string>(appGalleryCards.map((card) => card.src));
+const bSystemNeedAvatarSources = new Set([
+  `${S}/Ellipse 1053.png`,
+  `${S}/Ellipse 1054.png`,
+  `${S}/Ellipse 1055.png`,
+  `${S}/Ellipse 1056.png`,
+  `${S}/Ellipse 1057.png`,
+  `${S}/Ellipse 1058.png`
+]);
+
+const bSystemNeedRows: BSystemNeedCard[][] = [
+  [
+    { avatar: `${S}/Ellipse 1053.png`, text: "希望能够统一管理企业电、水、气等能源数据，避免数据分散难统计", width: 940 },
+    { avatar: `${S}/Ellipse 1054.png`, text: "希望能够通过大屏驾驶舱统一查看整体运行情况", width: 820 }
+  ],
+  [
+    { avatar: `${S}/Ellipse 1055.png`, text: "希望实时查看设备运行状态，及时发现异常问题", width: 884 },
+    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 760 },
+    { avatar: `${S}/Ellipse 1056.png`, text: "希望系统能够自动进行异常告警，减少人工巡检压力", width: 760 }
+  ],
+  [
+    { avatar: `${S}/Ellipse 1057.png`, text: "希望系统操作更加高效流畅，提升日常运维体验", width: 760 },
+    { avatar: `${S}/Ellipse 1058.png`, text: "希望数据展示更加直观，方便快速查看重点信息", width: 820 }
+  ]
+];
 
 const appFrames: Frame[] = [
   {
@@ -1250,6 +1280,18 @@ function shouldDisableFrameMotion(slug: string, index: number) {
   return slug === "app-design" && index === 1;
 }
 
+function isBSystemNeedRect(rect: RectLayer) {
+  return rect.y >= 2920 && rect.y <= 3222 && rect.h === 127 && rect.radius === 24;
+}
+
+function isBSystemNeedAvatar(image: ImageLayer) {
+  return bSystemNeedAvatarSources.has(image.src);
+}
+
+function isBSystemNeedText(text: TextLayer) {
+  return text.y === 2965 || text.y === 3116 || text.y === 3267;
+}
+
 function Hero({
   hero,
   images,
@@ -1631,6 +1673,40 @@ function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionConte
   );
 }
 
+function BSystemNeedsMarquee() {
+  return (
+    <div className="b-needs-marquee" aria-label="目标人群需求滚动展示">
+      {bSystemNeedRows.map((row, rowIndex) => {
+        const loopCards = [...row, ...row];
+
+        return (
+          <div
+            key={`b-need-row-${rowIndex}`}
+            className="b-needs-marquee__row"
+            style={
+              {
+                "--needs-speed": rowIndex === 1 ? "30s" : "34s",
+                "--needs-offset": rowIndex === 0 ? "312px" : rowIndex === 1 ? "-128px" : "138px"
+              } as CSSProperties
+            }
+          >
+            <div className="b-needs-marquee__track">
+              {loopCards.map((card, index) => (
+                <div className="b-needs-marquee__card" style={{ width: px(card.width) }} key={`${card.text}-${rowIndex}-${index}`}>
+                  <span className="b-needs-marquee__avatar">
+                    <img src={assetUrl(card.avatar)} alt="" loading={index < row.length ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} decoding="async" draggable={false} />
+                  </span>
+                  <span className="b-needs-marquee__text">{card.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function AppPageCarousel({ scale }: { scale: number }) {
   const marqueeScale = scale * 0.7;
   const scaledImages = appGalleryCards.map((image) => ({
@@ -1766,19 +1842,22 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 <ImageLayerView image={{ src: frame.fullImageSrc, x: 0, y: 0, w: 1920, h: frame.height, eager: index === 0 }} />
               ) : (
                 <>
-                  {frame.rects?.map((rect) => (
-                    <RectLayerView
-                      key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
-                      rect={rect}
-                      selectionHandle={index === 0 && isSelectionHandle(rect)}
-                      motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, rect.y) }}
-                    />
-                  ))}
+                  {frame.rects
+                    ?.filter((rect) => !(slug === "b-system" && index === 0 && isBSystemNeedRect(rect)))
+                    .map((rect) => (
+                      <RectLayerView
+                        key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
+                        rect={rect}
+                        selectionHandle={index === 0 && isSelectionHandle(rect)}
+                        motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, rect.y) }}
+                      />
+                    ))}
                   {frame.hero ? (
                     <Hero hero={frame.hero} images={frame.images} disableBodyMotion={staticAfterHeroSlugs.has(slug) && index === 0} />
                   ) : (
                     frame.images
                       ?.filter((image) => !(slug === "app-design" && index === 1 && appGalleryImageSources.has(image.src)))
+                      .filter((image) => !(slug === "b-system" && index === 0 && isBSystemNeedAvatar(image)))
                       .map((image) => (
                         <ImageLayerView
                           key={`${image.src}-${image.x}-${image.y}`}
@@ -1787,10 +1866,13 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                         />
                       ))
                   )}
-                  {frame.texts?.map((text) => (
-                    <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, text.y) }} />
-                  ))}
+                  {frame.texts
+                    ?.filter((text) => !(slug === "b-system" && index === 0 && isBSystemNeedText(text)))
+                    .map((text) => (
+                      <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, text.y) }} />
+                    ))}
                   {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
+                  {slug === "b-system" && index === 0 ? <BSystemNeedsMarquee /> : null}
                 </>
               )}
             </div>

@@ -720,6 +720,112 @@ a.motion-home-project:focus-visible .motion-home-project__label {
   }
 }
 
+.b-needs-marquee {
+  position: absolute;
+  left: 0;
+  top: 2920px;
+  z-index: 18;
+  width: 1920px;
+  height: 430px;
+  overflow: hidden;
+}
+
+.b-needs-marquee::before,
+.b-needs-marquee::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 2;
+  width: 170px;
+  pointer-events: none;
+}
+
+.b-needs-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, #070709 0%, rgba(7, 7, 9, 0.76) 34%, transparent 100%);
+}
+
+.b-needs-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, #070709 0%, rgba(7, 7, 9, 0.76) 34%, transparent 100%);
+}
+
+.b-needs-marquee__row {
+  --needs-speed: 32s;
+  --needs-offset: 0px;
+  position: relative;
+  height: 127px;
+  margin-bottom: 24px;
+}
+
+.b-needs-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: 24px;
+  animation: b-needs-marquee-scroll var(--needs-speed) linear infinite;
+  will-change: transform;
+}
+
+.b-needs-marquee:hover .b-needs-marquee__track {
+  animation-play-state: paused;
+}
+
+.b-needs-marquee__card {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 127px;
+  gap: 42px;
+  padding: 0 46px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.055));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.b-needs-marquee__avatar {
+  display: block;
+  flex: 0 0 74px;
+  width: 74px;
+  height: 74px;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.b-needs-marquee__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.b-needs-marquee__text {
+  display: block;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "MiSans", sans-serif;
+  font-size: 32px;
+  font-weight: 380;
+  font-synthesis: none;
+  font-variation-settings: "wght" 380;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes b-needs-marquee-scroll {
+  from {
+    transform: translate3d(var(--needs-offset), 0, 0);
+  }
+
+  to {
+    transform: translate3d(calc(var(--needs-offset) - 50% - 12px), 0, 0);
+  }
+}
+
 .container-grid {
   width: min(100% - 40px, 1440px);
   margin-inline: auto;

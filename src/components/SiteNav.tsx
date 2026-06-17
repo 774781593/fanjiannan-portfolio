@@ -31,7 +31,7 @@ export function SiteNav() {
   return (
     <>
       <nav className="site-nav" aria-label="作品集导航" data-menu-open={menuOpen ? "true" : "false"}>
-        <Link className="site-nav__brand" href="/" aria-label="返回首页">
+        <Link className="site-nav__brand" href="/" aria-label="返回首页" prefetch={false}>
           FanJiannan
         </Link>
         <button
@@ -55,6 +55,7 @@ export function SiteNav() {
                 className="site-nav__link"
                 data-active={active ? "true" : "false"}
                 href={item.href}
+                prefetch={false}
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}

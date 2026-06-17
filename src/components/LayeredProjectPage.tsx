@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { CarouselSwiper } from "./CarouselSwiper";
+import { ImageMarquee } from "./ImageMarquee";
 import { PortfolioMotion } from "./PortfolioMotion";
 import { assetUrl } from "@/lib/assets";
 
@@ -1634,7 +1634,7 @@ function TextLayerView({ text, motion }: { text: TextLayer; motion?: MotionConte
 function AppPageCarousel() {
   return (
     <div className="absolute" style={{ left: px(4), top: px(8512), width: px(1912), height: px(940) }}>
-      <CarouselSwiper slides={appGalleryCards} width={1912} height={940} />
+      <ImageMarquee images={appGalleryCards} width={1912} height={940} speed="18s" />
     </div>
   );
 }

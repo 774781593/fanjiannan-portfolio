@@ -201,6 +201,7 @@ export default function Home() {
       <ResponsiveStage designWidth={1920} designHeight={4320} className="home-stage-shell">
         <PortfolioMotion
           className="relative h-[4320px] w-[1920px] text-white"
+          revealMode="late"
           style={{ fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" } as CSSProperties}
         >
         <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden">

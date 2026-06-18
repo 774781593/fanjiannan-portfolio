@@ -8,10 +8,12 @@ type PortfolioMotionProps = {
   className?: string;
   style?: CSSProperties;
   spotlight?: boolean;
+  revealMode?: "normal" | "late";
 };
 
 const reduceMotionQuery = "(prefers-reduced-motion: reduce)";
 const motionViewportAmount = 0.22;
+const lateMotionViewportAmount = 0.16;
 
 function prefersReducedMotion() {
   if (typeof window === "undefined") return true;
@@ -24,7 +26,7 @@ function revealNode(node: HTMLElement, observer?: IntersectionObserver) {
   observer?.unobserve(node);
 }
 
-export function PortfolioMotion({ children, className, style, spotlight = true }: PortfolioMotionProps) {
+export function PortfolioMotion({ children, className, style, spotlight = true, revealMode = "normal" }: PortfolioMotionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const [reduced, setReduced] = useState(true);
@@ -52,6 +54,7 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
       return;
     }
 
+    const viewportAmount = revealMode === "late" ? lateMotionViewportAmount : motionViewportAmount;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,11 +63,12 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
           }
         });
       },
-      { rootMargin: "0px 0px -4% 0px", threshold: motionViewportAmount }
+      { rootMargin: revealMode === "late" ? "0px 0px -18% 0px" : "0px 0px -4% 0px", threshold: viewportAmount }
     );
 
     revealNodes.forEach((node, index) => {
-      node.style.setProperty("--motion-sequence-delay", `${Math.min(index * 70, 280)}ms`);
+      const sequenceDelay = revealMode === "late" ? Math.min(index * 28, 120) : Math.min(index * 70, 280);
+      node.style.setProperty("--motion-sequence-delay", `${sequenceDelay}ms`);
 
       Array.from(node.querySelectorAll<HTMLElement>("[data-motion-layer]")).forEach((layer, layerIndex) => {
         layer.style.setProperty("--motion-child-delay", `${Math.min(layerIndex * 42, 260)}ms`);
@@ -81,8 +85,11 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
         const rect = node.getBoundingClientRect();
         const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
         const visibleRatio = Math.max(0, visibleHeight) / Math.max(1, Math.min(rect.height, viewportHeight));
-        const nearViewport = rect.top < viewportHeight * 1.12 && rect.bottom > viewportHeight * -0.12;
-        if (visibleRatio >= motionViewportAmount || nearViewport) {
+        const nearViewport =
+          revealMode === "late"
+            ? rect.top < viewportHeight * 0.9 && rect.bottom > viewportHeight * -0.06
+            : rect.top < viewportHeight * 1.12 && rect.bottom > viewportHeight * -0.12;
+        if (visibleRatio >= viewportAmount || nearViewport) {
           node.setAttribute("data-motion-fallback", "true");
           revealNode(node, observer);
         }
@@ -109,7 +116,7 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
       window.removeEventListener("resize", scheduleFallback);
       observer.disconnect();
     };
-  }, [ready, reduced]);
+  }, [ready, reduced, revealMode]);
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (!spotlight || reduced) return;

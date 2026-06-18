@@ -1803,7 +1803,7 @@ function BSystemSpecTable() {
 export function LayeredProjectPage({ slug }: { slug: string }) {
   const frames = framesBySlug[slug];
   const containerRef = useRef<HTMLElement>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     const node = containerRef.current;
@@ -1823,8 +1823,11 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     return null;
   }
 
+  const scaleReady = scale !== null;
+  const stageScale = scale ?? 1;
+
   return (
-    <main ref={containerRef} className="project-page min-h-screen" data-scale-ready="true">
+    <main ref={containerRef} className="project-page min-h-screen" data-scale-ready={scaleReady ? "true" : "false"}>
       <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => {
         const frameMotionDisabled = shouldDisableFrameMotion(slug, index);
@@ -1841,7 +1844,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
           <div
             className="relative w-full"
             style={{
-              height: px(frame.height * scale),
+              height: scaleReady ? px(frame.height * stageScale) : 0,
               background: frameCanvasBackground(frame.background)
             }}
           >
@@ -1851,7 +1854,8 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 width: px(1920),
                 height: px(frame.height),
                 background: frameCanvasBackground(frame.background),
-                transform: `scale(${scale})`
+                transform: `scale(${stageScale})`,
+                visibility: scaleReady ? "visible" : "hidden"
               }}
             >
               {frame.fullImageSrc ? (
@@ -1892,7 +1896,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 </>
               )}
             </div>
-            {slug === "app-design" && index === 1 ? <AppPageCarousel scale={scale} /> : null}
+            {slug === "app-design" && index === 1 && scaleReady ? <AppPageCarousel scale={stageScale} /> : null}
           </div>
         </section>
         );

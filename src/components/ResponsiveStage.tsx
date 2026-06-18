@@ -12,7 +12,7 @@ type ResponsiveStageProps = {
 
 export function ResponsiveStage({ children, designWidth, designHeight, className }: ResponsiveStageProps) {
   const shellRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     const node = shellRef.current;
@@ -28,16 +28,18 @@ export function ResponsiveStage({ children, designWidth, designHeight, className
     return () => observer.disconnect();
   }, [designWidth]);
 
-  const stageHeight = designHeight * scale;
+  const stageScale = scale ?? 1;
+  const stageHeight = scale === null ? 0 : designHeight * stageScale;
 
   return (
-    <div ref={shellRef} className={className} data-scale-ready="true" style={{ height: stageHeight }}>
+    <div ref={shellRef} className={className} data-scale-ready={scale === null ? "false" : "true"} style={{ height: stageHeight }}>
       <div
         style={{
           width: designWidth,
           height: designHeight,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left"
+          transform: `scale(${stageScale})`,
+          transformOrigin: "top left",
+          visibility: scale === null ? "hidden" : "visible"
         }}
       >
         {children}

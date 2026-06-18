@@ -1105,6 +1105,32 @@ a.motion-home-project:focus-visible .motion-home-project__label {
   user-select: none;
 }
 
+.app-image-marquee::before,
+.app-image-marquee::after {
+  width: clamp(96px, 9vw, 170px);
+}
+
+.app-image-marquee::before {
+  background: linear-gradient(90deg, #090a0f 0%, rgba(9, 10, 15, 0.76) 34%, transparent 100%);
+}
+
+.app-image-marquee::after {
+  background: linear-gradient(270deg, #090a0f 0%, rgba(9, 10, 15, 0.76) 34%, transparent 100%);
+}
+
+.app-image-marquee .image-marquee__track {
+  height: 100%;
+  align-items: center;
+}
+
+.app-image-marquee .image-marquee__card {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.055));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
 .b-needs-marquee__text {
   display: block;
   color: rgba(255, 255, 255, 0.9);

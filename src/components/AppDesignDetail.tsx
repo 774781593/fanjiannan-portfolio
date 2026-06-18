@@ -35,7 +35,7 @@ export function AppDesignDetail() {
           className="mx-auto w-full max-w-[1920px] overflow-hidden bg-black"
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
+          viewport={{ once: true, margin: "0px 0px -4% 0px", amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: index === 0 ? 0 : 0.04 }}
         >
           <Image

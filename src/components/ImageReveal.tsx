@@ -25,7 +25,7 @@ export function ImageReveal({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px" }}
+      viewport={{ once: true, margin: "0px 0px -4% 0px", amount: 0.2 }}
       variants={imageReveal}
     >
       <Image

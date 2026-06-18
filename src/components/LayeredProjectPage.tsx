@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { ImageMarquee } from "./ImageMarquee";
 import { PortfolioMotion } from "./PortfolioMotion";
@@ -1706,7 +1706,7 @@ function AppPageCarousel({ scale }: { scale: number }) {
   return (
     <div
       className="absolute"
-      style={{ left: "calc(50% - 50vw)", top: px(8559 * scale), width: "100vw", height: px(846 * scale), zIndex: 90 }}
+      style={{ left: "calc(50% - 50dvw)", top: px(8559 * scale), width: "100dvw", height: px(846 * scale), zIndex: 90 }}
     >
       <ImageMarquee images={scaledImages} width="100%" height={846 * scale} speed="28s" />
     </div>
@@ -1774,9 +1774,9 @@ function BSystemSpecTable() {
 export function LayeredProjectPage({ slug }: { slug: string }) {
   const frames = framesBySlug[slug];
   const containerRef = useRef<HTMLElement>(null);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = containerRef.current;
     if (!node) return;
 
@@ -1795,7 +1795,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   }
 
   return (
-    <main ref={containerRef} className="project-page min-h-screen">
+    <main ref={containerRef} className="project-page min-h-screen" data-scale-ready={scale > 0 ? "true" : "false"}>
       <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => {
         const frameMotionDisabled = shouldDisableFrameMotion(slug, index);
@@ -1812,7 +1812,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
           <div
             className="relative w-full"
             style={{
-              height: px(frame.height * scale),
+              height: px(scale > 0 ? frame.height * scale : 0),
               background: frame.background ?? "#070709"
             }}
           >
@@ -1822,7 +1822,8 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 width: px(1920),
                 height: px(frame.height),
                 background: frame.background ?? "#070709",
-                transform: `scale(${scale})`
+                transform: `scale(${scale})`,
+                visibility: scale > 0 ? "visible" : "hidden"
               }}
             >
               {frame.fullImageSrc ? (
@@ -1863,7 +1864,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 </>
               )}
             </div>
-            {slug === "app-design" && index === 1 ? <AppPageCarousel scale={scale} /> : null}
+            {slug === "app-design" && index === 1 && scale > 0 ? <AppPageCarousel scale={scale} /> : null}
           </div>
         </section>
         );

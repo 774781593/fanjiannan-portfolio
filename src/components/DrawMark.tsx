@@ -12,7 +12,7 @@ export function DrawMark() {
         strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }}
         whileInView={{ pathLength: 1, opacity: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 1.3, ease: "easeInOut" }}
       />
     </svg>

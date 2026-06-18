@@ -17,6 +17,12 @@ function prefersReducedMotion() {
   return window.matchMedia(reduceMotionQuery).matches;
 }
 
+function revealNode(node: HTMLElement, observer?: IntersectionObserver) {
+  node.setAttribute("data-motion-visible", "true");
+  node.removeAttribute("data-motion-fallback");
+  observer?.unobserve(node);
+}
+
 export function PortfolioMotion({ children, className, style, spotlight = true }: PortfolioMotionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
@@ -40,16 +46,20 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
     if (!root || prefersReducedMotion()) return;
 
     const revealNodes = Array.from(root.querySelectorAll<HTMLElement>("[data-motion-reveal]"));
+    if (!("IntersectionObserver" in window)) {
+      revealNodes.forEach((node) => revealNode(node));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.setAttribute("data-motion-visible", "true");
-            observer.unobserve(entry.target);
+            revealNode(entry.target as HTMLElement, observer);
           }
         });
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 }
+      { rootMargin: "0px 0px -4% 0px", threshold: 0.03 }
     );
 
     revealNodes.forEach((node, index) => {
@@ -61,7 +71,24 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
 
       observer.observe(node);
     });
-    return () => observer.disconnect();
+
+    const fallback = window.setTimeout(() => {
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      revealNodes.forEach((node) => {
+        if (node.dataset.motionVisible === "true") return;
+        const rect = node.getBoundingClientRect();
+        const nearViewport = rect.top < viewportHeight * 1.15 && rect.bottom > viewportHeight * -0.15;
+        if (nearViewport) {
+          node.setAttribute("data-motion-fallback", "true");
+          revealNode(node, observer);
+        }
+      });
+    }, 900);
+
+    return () => {
+      window.clearTimeout(fallback);
+      observer.disconnect();
+    };
   }, [ready, reduced]);
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {

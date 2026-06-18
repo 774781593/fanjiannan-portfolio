@@ -61,7 +61,7 @@ body {
   text-rendering: geometricPrecision;
 }
 
-body > :not(.site-backdrop):not(.site-nav):not(.back-to-top) {
+body > :not(.site-backdrop):not(.site-aurora-overlay):not(.site-nav):not(.back-to-top) {
   position: relative;
   z-index: 1;
 }
@@ -118,6 +118,22 @@ img {
   mix-blend-mode: screen;
 }
 
+.site-aurora-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.42;
+  background:
+    radial-gradient(ellipse 34% 56% at 18% 26%, rgba(115, 228, 34, 0.12), transparent 68%),
+    radial-gradient(ellipse 38% 58% at 82% 28%, rgba(54, 141, 255, 0.105), transparent 70%),
+    radial-gradient(ellipse 52% 38% at 50% 96%, rgba(135, 248, 20, 0.07), transparent 72%);
+  background-size: 122% 122%;
+  mix-blend-mode: screen;
+  transform: translate3d(0, 0, 0);
+  animation: site-aurora-overlay-flow 16s ease-in-out infinite alternate;
+}
+
 @keyframes site-aurora-flow {
   0% {
     background-position: 0% 0%;
@@ -135,6 +151,23 @@ img {
   }
 }
 
+@keyframes site-aurora-overlay-flow {
+  0% {
+    background-position: 0% 0%;
+    transform: translate3d(-0.6%, -0.4%, 0) scale(1.005);
+  }
+
+  50% {
+    background-position: 42% 24%;
+    transform: translate3d(0.7%, 0.35%, 0) scale(1.018);
+  }
+
+  100% {
+    background-position: 86% 48%;
+    transform: translate3d(1.2%, 0.7%, 0) scale(1.01);
+  }
+}
+
 @media (max-width: 1920px) and (min-width: 721px) {
   .site-backdrop__aurora {
     opacity: 0.95;
@@ -145,6 +178,14 @@ img {
       radial-gradient(ellipse 34% 50% at 74% 34%, rgba(54, 141, 255, 0.105), transparent 70%),
       radial-gradient(ellipse 52% 56% at 50% 104%, rgba(135, 248, 20, 0.095), transparent 68%),
       radial-gradient(ellipse 38% 58% at 92% 92%, rgba(255, 255, 255, 0.055), transparent 70%);
+  }
+
+  .site-aurora-overlay {
+    opacity: 0.5;
+    background:
+      radial-gradient(ellipse 40% 62% at 18% 28%, rgba(115, 228, 34, 0.15), transparent 68%),
+      radial-gradient(ellipse 42% 62% at 82% 30%, rgba(54, 141, 255, 0.13), transparent 70%),
+      radial-gradient(ellipse 54% 40% at 50% 96%, rgba(135, 248, 20, 0.085), transparent 72%);
   }
 }
 
@@ -171,13 +212,27 @@ img {
     rgba(3, 3, 3, 0.68);
 }
 
+@media (max-height: 900px) and (min-width: 721px) {
+  .home-main,
+  .project-page {
+    padding-block: 64px 40px;
+  }
+}
+
+@media (max-height: 780px) and (min-width: 721px) {
+  .home-main,
+  .project-page {
+    padding-block: 54px 28px;
+  }
+}
+
 .site-nav {
   position: fixed;
   top: max(18px, env(safe-area-inset-top));
   left: 50%;
   z-index: 80;
   display: flex;
-  width: min(calc(100vw - 32px), 1120px);
+  width: min(calc(100dvw - 32px), 1120px);
   height: 48px;
   align-items: center;
   justify-content: space-between;
@@ -1102,6 +1157,15 @@ a.motion-home-project:focus-visible .motion-home-project__label {
     animation: none;
     background-position: 50% 50%;
     transform: none;
+  }
+
+  .site-aurora-overlay {
+    opacity: 0.46;
+    animation-name: site-aurora-overlay-flow !important;
+    animation-duration: 24s !important;
+    animation-timing-function: ease-in-out !important;
+    animation-iteration-count: infinite !important;
+    animation-direction: alternate !important;
   }
 
   .site-nav__link:hover,

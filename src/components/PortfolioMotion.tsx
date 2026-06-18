@@ -72,7 +72,8 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
       observer.observe(node);
     });
 
-    const fallback = window.setTimeout(() => {
+    let fallbackFrame = 0;
+    const revealNearViewport = () => {
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       revealNodes.forEach((node) => {
         if (node.dataset.motionVisible === "true") return;
@@ -83,10 +84,25 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
           revealNode(node, observer);
         }
       });
-    }, 900);
+    };
+
+    const scheduleFallback = () => {
+      if (fallbackFrame) return;
+      fallbackFrame = window.requestAnimationFrame(() => {
+        fallbackFrame = 0;
+        revealNearViewport();
+      });
+    };
+
+    const fallback = window.setTimeout(revealNearViewport, 700);
+    window.addEventListener("scroll", scheduleFallback, { passive: true });
+    window.addEventListener("resize", scheduleFallback);
 
     return () => {
       window.clearTimeout(fallback);
+      if (fallbackFrame) window.cancelAnimationFrame(fallbackFrame);
+      window.removeEventListener("scroll", scheduleFallback);
+      window.removeEventListener("resize", scheduleFallback);
       observer.disconnect();
     };
   }, [ready, reduced]);

@@ -108,6 +108,12 @@ type MotionContext = {
   disabled?: boolean;
 };
 
+type ViewportWindow = {
+  enabled: boolean;
+  start: number;
+  end: number;
+};
+
 const S = "/assets/slices";
 
 const px = (value: number) => `${value}px`;
@@ -1307,6 +1313,17 @@ function shouldDisableFrameMotion(slug: string, index: number) {
   return slug === "app-design" && index === 1;
 }
 
+function layerInViewportWindow(window: ViewportWindow, y: number, height: number) {
+  if (!window.enabled) return true;
+  return y + height >= window.start && y <= window.end;
+}
+
+function textLayerHeight(text: TextLayer) {
+  if (text.height) return text.height;
+  const lineHeight = text.lineHeight ?? text.size * 1.2;
+  return lineHeight * Math.max(1, text.text.split("\n").length);
+}
+
 function isBSystemNeedRect(rect: RectLayer) {
   return rect.y >= 2920 && rect.y <= 3222 && rect.h === 127 && rect.radius === 24;
 }
@@ -1323,15 +1340,18 @@ function Hero({
   hero,
   images,
   motion,
-  disableBodyMotion = false
+  disableBodyMotion = false,
+  viewportWindow
 }: {
   hero: NonNullable<Frame["hero"]>;
   images?: ImageLayer[];
   motion?: MotionContext;
   disableBodyMotion?: boolean;
+  viewportWindow?: ViewportWindow;
 }) {
+  const activeWindow = viewportWindow ?? { enabled: false, start: Number.NEGATIVE_INFINITY, end: Number.POSITIVE_INFINITY };
   const heroOverlayImages = images?.filter((image) => image.y < 1000);
-  const heroBodyImages = images?.filter((image) => image.y >= 1000);
+  const heroBodyImages = images?.filter((image) => image.y >= 1000).filter((image) => layerInViewportWindow(activeWindow, image.y, image.h));
 
   return (
     <>
@@ -1815,6 +1835,11 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   const frames = framesBySlug[slug];
   const containerRef = useRef<HTMLElement>(null);
   const [scale, setScale] = useState<number | null>(null);
+  const [viewportWindow, setViewportWindow] = useState<ViewportWindow>({
+    enabled: slug === "b-system",
+    start: slug === "b-system" ? -1200 : Number.NEGATIVE_INFINITY,
+    end: slug === "b-system" ? 3600 : Number.POSITIVE_INFINITY
+  });
 
   useLayoutEffect(() => {
     const node = containerRef.current;
@@ -1830,6 +1855,59 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const node = containerRef.current;
+    if (!node || scale === null || slug !== "b-system") return;
+
+    let frame = 0;
+
+    const updateWindow = () => {
+      frame = 0;
+      const mobile = window.matchMedia("(max-width: 720px)").matches;
+      if (!mobile) {
+        setViewportWindow({
+          enabled: false,
+          start: Number.NEGATIVE_INFINITY,
+          end: Number.POSITIVE_INFINITY
+        });
+        return;
+      }
+
+      const rect = node.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const stageTop = window.scrollY + rect.top;
+      const viewportTop = window.scrollY;
+      const overscan = 2400;
+      const start = (viewportTop - stageTop) / scale - overscan;
+      const end = (viewportTop + viewportHeight - stageTop) / scale + overscan;
+
+      setViewportWindow((current) => {
+        if (current.enabled && Math.abs(current.start - start) < 160 && Math.abs(current.end - end) < 160) {
+          return current;
+        }
+
+        return { enabled: true, start, end };
+      });
+    };
+
+    const scheduleWindow = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateWindow);
+    };
+
+    updateWindow();
+    window.addEventListener("scroll", scheduleWindow, { passive: true });
+    window.addEventListener("resize", scheduleWindow);
+    window.addEventListener("orientationchange", scheduleWindow);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleWindow);
+      window.removeEventListener("resize", scheduleWindow);
+      window.removeEventListener("orientationchange", scheduleWindow);
+    };
+  }, [scale, slug]);
+
   if (!frames) {
     return null;
   }
@@ -1842,6 +1920,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
       <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => {
         const frameMotionDisabled = shouldDisableFrameMotion(slug, index);
+        const activeViewportWindow = slug === "b-system" && index === 0 ? viewportWindow : { enabled: false, start: Number.NEGATIVE_INFINITY, end: Number.POSITIVE_INFINITY };
 
         return (
         <section
@@ -1875,6 +1954,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 <>
                   {frame.rects
                     ?.filter((rect) => !(slug === "b-system" && index === 0 && isBSystemNeedRect(rect)))
+                    .filter((rect) => layerInViewportWindow(activeViewportWindow, rect.y, rect.h))
                     .map((rect) => (
                       <RectLayerView
                         key={`${rect.x}-${rect.y}-${rect.w}-${rect.h}`}
@@ -1884,11 +1964,12 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                       />
                     ))}
                   {frame.hero ? (
-                    <Hero hero={frame.hero} images={frame.images} disableBodyMotion={staticAfterHeroSlugs.has(slug) && index === 0} />
+                    <Hero hero={frame.hero} images={frame.images} disableBodyMotion={staticAfterHeroSlugs.has(slug) && index === 0} viewportWindow={activeViewportWindow} />
                   ) : (
                     frame.images
                       ?.filter((image) => !(slug === "app-design" && index === 1 && appGalleryImageSources.has(image.src)))
                       .filter((image) => !(slug === "b-system" && index === 0 && isBSystemNeedAvatar(image)))
+                      .filter((image) => layerInViewportWindow(activeViewportWindow, image.y, image.h))
                       .map((image) => (
                         <ImageLayerView
                           key={`${image.src}-${image.x}-${image.y}`}
@@ -1899,11 +1980,12 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                   )}
                   {frame.texts
                     ?.filter((text) => !(slug === "b-system" && index === 0 && isBSystemNeedText(text)))
+                    .filter((text) => layerInViewportWindow(activeViewportWindow, text.y, textLayerHeight(text)))
                     .map((text) => (
                       <TextLayerView key={`${text.text}-${text.x}-${text.y}`} text={text} motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, text.y) }} />
                     ))}
-                  {slug === "b-system" && index === 0 ? <BSystemSpecTable /> : null}
-                  {slug === "b-system" && index === 0 ? <BSystemNeedsMarquee /> : null}
+                  {slug === "b-system" && index === 0 && layerInViewportWindow(activeViewportWindow, 6720, 624) ? <BSystemSpecTable /> : null}
+                  {slug === "b-system" && index === 0 && layerInViewportWindow(activeViewportWindow, 2920, 430) ? <BSystemNeedsMarquee /> : null}
                 </>
               )}
             </div>

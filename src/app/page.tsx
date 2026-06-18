@@ -203,7 +203,7 @@ export default function Home() {
           className="relative h-[4320px] w-[1920px] text-white"
           style={{ fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" } as CSSProperties}
         >
-        <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden bg-[#030304]">
+        <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden bg-[rgba(3,3,4,0.68)]">
           <img
             src={assetUrl(`${F}/img41.png`)}
             alt=""
@@ -258,8 +258,8 @@ export default function Home() {
             生成
           </p>
 
-          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[#030304]" data-motion-reveal />
-          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[#030304]" data-motion-reveal />
+          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[rgba(3,3,4,0.68)]" data-motion-reveal />
+          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[rgba(3,3,4,0.68)]" data-motion-reveal />
 
           <h1 className="motion-title-shine absolute left-[158px] top-[1385px] m-0 whitespace-nowrap" style={homeText.aboutTitle} data-motion-reveal>
             范健男
@@ -370,8 +370,8 @@ export default function Home() {
             </a>
           ))}
 
-          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-[#070709]" data-motion-reveal>
-            <div className="absolute left-0 top-0 h-[1080px] w-[1920px] bg-[#070709]" />
+          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-[rgba(7,7,9,0.68)]" data-motion-reveal>
+            <div className="absolute left-0 top-0 h-[1080px] w-[1920px] bg-[rgba(7,7,9,0.68)]" />
             <div className="absolute left-[281.232px] top-[285.947px] h-[439.958px] w-[1368.474px] border-2 border-dashed border-white" />
             <div className="absolute left-[271px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
             <div className="absolute left-[938.611px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />

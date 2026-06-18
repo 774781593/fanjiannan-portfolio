@@ -344,6 +344,16 @@ export default function Home() {
           {projects.map((project, index) => (
             <a key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms`, "--contents-index": index } as CSSProperties}>
               <span
+                className="motion-home-project__hitbox absolute"
+                style={{
+                  left: px(project.x - 52),
+                  top: px(project.y - 40),
+                  width: px(500),
+                  height: px(220)
+                }}
+                aria-hidden="true"
+              />
+              <span
                 className="motion-home-project__number absolute whitespace-nowrap uppercase"
                 data-motion-reveal
                 style={{ ...homeText.projectNumber, left: px(project.x), top: px(project.y) }}

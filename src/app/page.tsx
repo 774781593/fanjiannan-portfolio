@@ -203,7 +203,7 @@ export default function Home() {
           className="relative h-[4320px] w-[1920px] text-white"
           style={{ fontFamily: "MiSans, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif" } as CSSProperties}
         >
-        <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden bg-[rgba(3,3,4,0.68)]">
+        <div className="absolute left-0 top-0 h-[4320px] w-[1920px] overflow-hidden">
           <img
             src={assetUrl(`${F}/img41.png`)}
             alt=""
@@ -256,8 +256,8 @@ export default function Home() {
             生成
           </p>
 
-          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px] bg-[rgba(3,3,4,0.68)]" data-motion-reveal />
-          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px] bg-[rgba(3,3,4,0.68)]" data-motion-reveal />
+          <section className="absolute left-0 top-[1080px] h-[1080px] w-[1920px]" data-motion-reveal />
+          <section className="absolute left-0 top-[2160px] h-[1080px] w-[1920px]" data-motion-reveal />
 
           <h1 className="motion-title-shine absolute left-[158px] top-[1385px] m-0 whitespace-nowrap" style={homeText.aboutTitle} data-motion-reveal>
             范健男
@@ -296,17 +296,17 @@ export default function Home() {
           <div
             className="absolute left-[1157px] top-[1186px] h-[867px] w-[617px]"
             data-motion-reveal
-            style={{ "--motion-delay": "120ms" } as CSSProperties}
+            style={{ "--motion-delay": "0ms" } as CSSProperties}
           >
-            <div className="absolute left-[13px] top-[13px] h-[766px] w-[516px] border-2 border-dashed border-white" />
-            <div className="absolute left-0 top-0 size-[25px] bg-white" />
-            <div className="absolute left-[516px] top-0 size-[25px] bg-white" />
-            <div className="absolute left-0 top-[383px] size-[25px] bg-white" />
-            <div className="absolute left-[516px] top-[383px] size-[25px] bg-white" />
-            <div className="absolute left-0 top-[766px] size-[25px] bg-white" />
-            <div className="absolute left-[516px] top-[766px] size-[25px] bg-white" />
-            <img src={assetUrl(`${S}/4214_1.png`)} alt="" loading="lazy" decoding="async" className="absolute left-[548px] top-[791px] h-[76px] w-[69px] max-w-none" />
-            <div className="absolute left-[13px] top-[71px] h-[707px] w-[516px] overflow-hidden opacity-90">
+            <div className="absolute left-[13px] top-[13px] h-[766px] w-[516px] border-2 border-dashed border-white" data-motion-layer="selection" />
+            <div className="absolute left-0 top-0 size-[25px] bg-white" data-motion-layer="selection" />
+            <div className="absolute left-[516px] top-0 size-[25px] bg-white" data-motion-layer="selection" />
+            <div className="absolute left-0 top-[383px] size-[25px] bg-white" data-motion-layer="selection" />
+            <div className="absolute left-[516px] top-[383px] size-[25px] bg-white" data-motion-layer="selection" />
+            <div className="absolute left-0 top-[766px] size-[25px] bg-white" data-motion-layer="selection" />
+            <div className="absolute left-[516px] top-[766px] size-[25px] bg-white" data-motion-layer="selection" />
+            <img src={assetUrl(`${S}/4214_1.png`)} alt="" loading="lazy" decoding="async" className="absolute left-[548px] top-[791px] h-[76px] w-[69px] max-w-none" data-motion-layer="image" />
+            <div className="absolute left-[13px] top-[71px] h-[707px] w-[516px] overflow-hidden opacity-90" data-motion-layer="image">
               <img src={assetUrl(`${S}/图层_1_拷贝_1.png`)} alt="范健男肖像" loading="lazy" decoding="async" className="absolute left-[-21.827px] top-[-0.212px] h-[707.424px] w-[559.654px] max-w-none" />
             </div>
           </div>
@@ -368,8 +368,7 @@ export default function Home() {
             </a>
           ))}
 
-          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden bg-[rgba(7,7,9,0.68)]" data-motion-reveal>
-            <div className="absolute left-0 top-0 h-[1080px] w-[1920px] bg-[rgba(7,7,9,0.68)]" />
+          <section id="thanks" className="absolute left-0 top-[3240px] h-[1080px] w-[1920px] overflow-hidden" data-motion-reveal>
             <div className="absolute left-[281.232px] top-[285.947px] h-[439.958px] w-[1368.474px] border-2 border-dashed border-white" />
             <div className="absolute left-[271px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />
             <div className="absolute left-[938.611px] top-[274.863px] h-[21.316px] w-[21.316px] bg-[#87f814]" />

@@ -122,6 +122,17 @@ function frameCanvasBackground(background?: string) {
   return background ?? darkCanvasBackground;
 }
 
+function projectFrameBackground(slug: string, background?: string) {
+  if (slug === "b-system") {
+    const value = (background ?? "#070709").toLowerCase();
+    if (value === "#070709" || value === "#090a0f" || value === "#030304" || value === "#000000") {
+      return "transparent";
+    }
+  }
+
+  return frameCanvasBackground(background);
+}
+
 function rectCanvasBackground(rect: RectLayer) {
   const value = rect.color?.toLowerCase();
   const isFullCanvasBand = rect.x === 0 && rect.w >= 1920;
@@ -1839,13 +1850,13 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
           data-project-hero={index === 0 ? "true" : undefined}
           data-motion-reveal={frameMotionDisabled ? undefined : true}
           data-motion-start={!frameMotionDisabled && index === 0 ? "true" : undefined}
-          style={{ background: frameCanvasBackground(frame.background), "--motion-delay": index === 0 ? "0ms" : `${Math.min(index * 90, 240)}ms` } as CSSProperties}
+          style={{ background: projectFrameBackground(slug, frame.background), "--motion-delay": index === 0 ? "0ms" : `${Math.min(index * 90, 240)}ms` } as CSSProperties}
         >
           <div
             className="relative w-full"
             style={{
               height: scaleReady ? px(frame.height * stageScale) : 0,
-              background: frameCanvasBackground(frame.background)
+              background: projectFrameBackground(slug, frame.background)
             }}
           >
             <div
@@ -1853,7 +1864,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
               style={{
                 width: px(1920),
                 height: px(frame.height),
-                background: frameCanvasBackground(frame.background),
+                background: projectFrameBackground(slug, frame.background),
                 transform: `scale(${stageScale})`,
                 visibility: scaleReady ? "visible" : "hidden"
               }}

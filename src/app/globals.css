@@ -912,6 +912,79 @@ img {
   will-change: transform, filter;
 }
 
+.motion-contents-title[data-motion-reveal] {
+  transform: translate3d(0, 28px, 0);
+}
+
+.motion-contents-frame[data-motion-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scaleX(0.96);
+  transform-origin: center;
+  clip-path: inset(0 50% 0 50%);
+}
+
+.motion-contents-frame[data-motion-visible="true"] {
+  animation: contents-frame-open 920ms var(--motion-ease) both;
+}
+
+.motion-contents-handle[data-motion-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.42);
+}
+
+.motion-contents-handle[data-motion-visible="true"] {
+  animation: contents-handle-pop 540ms var(--motion-ease) both;
+  animation-delay: calc(var(--motion-delay, 0ms) + var(--motion-sequence-delay, 0ms) + var(--contents-delay, 0ms));
+}
+
+.motion-contents-cursor[data-motion-reveal] {
+  opacity: 0;
+  transform: translate3d(-22px, 18px, 0) rotate(-8deg) scale(0.92);
+}
+
+.motion-contents-cursor[data-motion-visible="true"] {
+  animation: contents-cursor-in 760ms var(--motion-ease) both;
+}
+
+.motion-home-project__number[data-motion-reveal],
+.motion-home-project__label[data-motion-reveal],
+.motion-home-project__image[data-motion-reveal] {
+  clip-path: inset(0 0 100% 0);
+}
+
+.motion-home-project__number[data-motion-visible="true"],
+.motion-home-project__label[data-motion-visible="true"],
+.motion-home-project__image[data-motion-visible="true"] {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.motion-home-project__number[data-motion-reveal] {
+  transform: translate3d(-18px, 34px, 0);
+}
+
+.motion-home-project__label[data-motion-reveal] {
+  transform: translate3d(28px, 30px, 0);
+}
+
+.motion-home-project__image[data-motion-reveal] {
+  transform: translate3d(18px, 28px, 0) scale(1.035);
+  clip-path: inset(0 42% 0 42%);
+}
+
+.motion-home-project__number[data-motion-visible="true"] {
+  animation: contents-number-in 740ms var(--motion-ease) backwards;
+}
+
+.motion-home-project__label[data-motion-visible="true"] {
+  animation: contents-label-in 780ms var(--motion-ease) backwards;
+}
+
+.motion-home-project__image[data-motion-visible="true"] {
+  animation: contents-image-in 920ms var(--motion-ease) backwards;
+}
+
 .motion-home-project:hover .motion-home-project__number {
   transform: translate3d(-4px, -8px, 0);
   text-shadow: 0 0 24px rgba(134, 223, 42, 0.24);
@@ -930,6 +1003,96 @@ img {
 a.motion-home-project:focus-visible .motion-home-project__label {
   outline: 2px solid rgba(134, 223, 42, 0.8);
   outline-offset: 8px;
+}
+
+@keyframes contents-frame-open {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scaleX(0.96);
+    clip-path: inset(0 50% 0 50%);
+  }
+
+  44% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleX(1);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes contents-handle-pop {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.42);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes contents-cursor-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(-22px, 18px, 0) rotate(-8deg) scale(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes contents-number-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(-18px, 34px, 0);
+    clip-path: inset(0 0 100% 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes contents-label-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(28px, 30px, 0);
+    clip-path: inset(0 0 100% 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes contents-image-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(18px, 28px, 0) scale(1.035);
+    clip-path: inset(0 42% 0 42%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 .image-marquee {

@@ -327,22 +327,22 @@ export default function Home() {
             </div>
           </div>
 
-          <h2 className="motion-title-shine absolute left-[139px] top-[2317px] m-0 whitespace-nowrap uppercase" data-motion-reveal>
+          <h2 className="motion-title-shine motion-contents-title absolute left-[139px] top-[2317px] m-0 whitespace-nowrap uppercase" data-motion-reveal>
             <span style={homeText.contentsTitle}>目录</span>
             <span style={homeText.contentsSub}>/CONTENTS</span>
           </h2>
 
-          <div className="absolute left-[157px] top-[2497px] h-[516px] w-[1605px] border-2 border-dashed border-white" />
-          <div className="absolute left-[145px] top-[2484px] size-[25px] bg-white" />
-          <div className="absolute left-[928px] top-[2484px] h-[25px] w-[43px] bg-white" />
-          <div className="absolute left-[1749px] top-[2484px] size-[25px] bg-white" />
-          <div className="absolute left-[145px] top-[3000px] size-[25px] bg-white" />
-          <div className="absolute left-[928px] top-[3000px] h-[25px] w-[43px] bg-white" />
-          <div className="absolute left-[1749px] top-[3000px] size-[25px] bg-white" />
-          <img src={assetUrl(`${S}/4214_1.png`)} alt="" loading="lazy" decoding="async" className="absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" />
+          <div className="motion-contents-frame absolute left-[157px] top-[2497px] h-[516px] w-[1605px] border-2 border-dashed border-white" data-motion-reveal />
+          <div className="motion-contents-handle absolute left-[145px] top-[2484px] size-[25px] bg-white" data-motion-reveal style={{ "--contents-delay": "0ms" } as CSSProperties} />
+          <div className="motion-contents-handle absolute left-[928px] top-[2484px] h-[25px] w-[43px] bg-white" data-motion-reveal style={{ "--contents-delay": "42ms" } as CSSProperties} />
+          <div className="motion-contents-handle absolute left-[1749px] top-[2484px] size-[25px] bg-white" data-motion-reveal style={{ "--contents-delay": "84ms" } as CSSProperties} />
+          <div className="motion-contents-handle absolute left-[145px] top-[3000px] size-[25px] bg-white" data-motion-reveal style={{ "--contents-delay": "126ms" } as CSSProperties} />
+          <div className="motion-contents-handle absolute left-[928px] top-[3000px] h-[25px] w-[43px] bg-white" data-motion-reveal style={{ "--contents-delay": "168ms" } as CSSProperties} />
+          <div className="motion-contents-handle absolute left-[1749px] top-[3000px] size-[25px] bg-white" data-motion-reveal style={{ "--contents-delay": "210ms" } as CSSProperties} />
+          <img src={assetUrl(`${S}/4214_1.png`)} alt="" loading="lazy" decoding="async" className="motion-contents-cursor absolute left-[1786px] top-[3044px] h-[76px] w-[69px] max-w-none" data-motion-reveal />
 
           {projects.map((project, index) => (
-            <a key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms` } as CSSProperties}>
+            <a key={project.number} href={project.href} className="contents text-white motion-home-project" style={{ "--motion-delay": `${index * 70}ms`, "--contents-index": index } as CSSProperties}>
               <span
                 className="motion-home-project__number absolute whitespace-nowrap uppercase"
                 data-motion-reveal

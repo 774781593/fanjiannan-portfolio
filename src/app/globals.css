@@ -747,21 +747,6 @@ img {
   transition: none;
 }
 
-.project-page [data-motion-layer="image"] {
-  transition:
-    filter 620ms var(--motion-ease),
-    box-shadow 620ms var(--motion-ease);
-}
-
-[data-motion-reveal]:hover [data-motion-layer="image"] {
-  filter: brightness(1.035) contrast(1.02) saturate(1.04);
-}
-
-.project-page [data-motion-reveal]:hover [data-motion-layer="image"] {
-  filter: brightness(1.045) contrast(1.025) saturate(1.05);
-  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.22), 0 0 34px rgba(135, 248, 20, 0.08);
-}
-
 @keyframes portfolio-start-text-in {
   from {
     opacity: 0;

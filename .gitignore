@@ -7,8 +7,11 @@ out/
 
 .chrome-*/
 .edge-profile/
+.deploy-static/
 
 next-dev*.log
+dev-*.log
+prod-*.log
 preview-*.png
 next-start.out
 next-start.err

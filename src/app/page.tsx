@@ -225,14 +225,12 @@ export default function Home() {
           </p>
 
           <div className="absolute left-[242.99px] top-[272.01px] h-[72.755px] w-[363.776px] bg-[#050405]" />
-          <img
-            src={assetUrl(`${S}/UI设计师_UI_Desgin.png`)}
-            alt="UI设计师/UI Desgin"
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            className="absolute left-[259.69px] top-[277.97px] h-[67px] w-[435px] max-w-none object-contain"
-          />
+          <p
+            className="absolute left-[259.69px] top-[277.97px] m-0 flex h-[67px] w-[435px] items-center whitespace-nowrap text-[48px] font-bold leading-none text-white"
+            style={{ fontFamily: "MiSans, Arial, sans-serif" }}
+          >
+            UI设计师/UI Design
+          </p>
           <img
             src={assetUrl(`${S}/jimeng-2025-09-28-2879-把右下角绿色的字抠出来放到黑背景上面_1.png`)}
             alt=""

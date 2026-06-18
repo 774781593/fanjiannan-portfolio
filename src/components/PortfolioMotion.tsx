@@ -11,6 +11,7 @@ type PortfolioMotionProps = {
 };
 
 const reduceMotionQuery = "(prefers-reduced-motion: reduce)";
+const motionViewportAmount = 0.22;
 
 function prefersReducedMotion() {
   if (typeof window === "undefined") return true;
@@ -59,7 +60,7 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
           }
         });
       },
-      { rootMargin: "0px 0px -4% 0px", threshold: 0.03 }
+      { rootMargin: "0px 0px -4% 0px", threshold: motionViewportAmount }
     );
 
     revealNodes.forEach((node, index) => {
@@ -78,8 +79,10 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
       revealNodes.forEach((node) => {
         if (node.dataset.motionVisible === "true") return;
         const rect = node.getBoundingClientRect();
-        const nearViewport = rect.top < viewportHeight * 1.15 && rect.bottom > viewportHeight * -0.15;
-        if (nearViewport) {
+        const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+        const visibleRatio = Math.max(0, visibleHeight) / Math.max(1, Math.min(rect.height, viewportHeight));
+        const nearViewport = rect.top < viewportHeight * 1.12 && rect.bottom > viewportHeight * -0.12;
+        if (visibleRatio >= motionViewportAmount || nearViewport) {
           node.setAttribute("data-motion-fallback", "true");
           revealNode(node, observer);
         }
@@ -94,6 +97,7 @@ export function PortfolioMotion({ children, className, style, spotlight = true }
       });
     };
 
+    scheduleFallback();
     const fallback = window.setTimeout(revealNearViewport, 700);
     window.addEventListener("scroll", scheduleFallback, { passive: true });
     window.addEventListener("resize", scheduleFallback);

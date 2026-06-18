@@ -1179,12 +1179,24 @@ const c4dFrames: Frame[] = [
 const graphicFrames: Frame[] = [
   {
     height: 9833,
-    background: "#ffffff",
+    background: "#070709",
+    hero: {
+      title: "平面设计",
+      titleX: 660,
+      titleY: 399,
+      titleW: 600,
+      titleH: 199,
+      descA: "2.5d流程图",
+      descAX: 621,
+      descAY: 785,
+      descB: "使流程清晰化",
+      descBX: 1062,
+      descBY: 785
+    },
     rects: [
       { x: 0, y: 1080, w: 1920, h: 1193, color: "#e7f2ff" },
       { x: 0, y: 2273, w: 1920, h: 1080, color: "#575757" },
       { x: 0, y: 3353, w: 1920, h: 1080, color: "#fbfbfb" },
-      { x: 0, y: 0, w: 1920, h: 1080, color: "#070709" },
       { x: 281.232, y: 285.947, w: 1368.474, h: 439.958, kind: "selection-box", color: "#ffffff", z: 2 },
       { x: 271, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
       { x: 938.611, y: 274.863, w: 21.316, h: 21.316, color: "#ffffff", z: 2 },
@@ -1226,10 +1238,7 @@ const graphicFrames: Frame[] = [
       { src: `${S}/image_2.png`, x: 168, y: 8877, w: 735, h: 813 }
     ],
     texts: [
-      { text: "平面设计", x: 660, y: 399, width: 600, height: 199, size: 150, weight: 520, color: "#86df2a", family: "MiSans" },
-      { text: "2.5d流程图", x: 621, y: 785, size: 24, weight: 520, family: "MiSans" },
       { text: "海报设计", x: 652, y: 834, size: 24, weight: 520, family: "MiSans" },
-      { text: "使流程清晰化", x: 1062, y: 785, size: 24, weight: 330, color: "rgba(255,255,255,0.8)", family: "MiSans" },
       { text: "通过AIGC生成节日海报", x: 1062, y: 834, size: 24, weight: 330, color: "rgba(255,255,255,0.8)", family: "MiSans" },
       { text: "2.5D流程图展示", x: 788, y: 1131, size: 48, weight: 380, color: "#000000", family: "MiSans" },
       { text: "大米加工工厂2.5D图", x: 740, y: 1246, size: 48, weight: 380, color: "#0078b8", family: "MiSans" },
@@ -1794,7 +1803,7 @@ function BSystemSpecTable() {
 export function LayeredProjectPage({ slug }: { slug: string }) {
   const frames = framesBySlug[slug];
   const containerRef = useRef<HTMLElement>(null);
-  const [scale, setScale] = useState(0);
+  const [scale, setScale] = useState(1);
 
   useLayoutEffect(() => {
     const node = containerRef.current;
@@ -1815,7 +1824,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   }
 
   return (
-    <main ref={containerRef} className="project-page min-h-screen" data-scale-ready={scale > 0 ? "true" : "false"}>
+    <main ref={containerRef} className="project-page min-h-screen" data-scale-ready="true">
       <PortfolioMotion className="min-h-screen">
       {frames.map((frame, index) => {
         const frameMotionDisabled = shouldDisableFrameMotion(slug, index);
@@ -1832,7 +1841,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
           <div
             className="relative w-full"
             style={{
-              height: px(scale > 0 ? frame.height * scale : 0),
+              height: px(frame.height * scale),
               background: frameCanvasBackground(frame.background)
             }}
           >
@@ -1842,8 +1851,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 width: px(1920),
                 height: px(frame.height),
                 background: frameCanvasBackground(frame.background),
-                transform: `scale(${scale})`,
-                visibility: scale > 0 ? "visible" : "hidden"
+                transform: `scale(${scale})`
               }}
             >
               {frame.fullImageSrc ? (
@@ -1884,7 +1892,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                 </>
               )}
             </div>
-            {slug === "app-design" && index === 1 && scale > 0 ? <AppPageCarousel scale={scale} /> : null}
+            {slug === "app-design" && index === 1 ? <AppPageCarousel scale={scale} /> : null}
           </div>
         </section>
         );

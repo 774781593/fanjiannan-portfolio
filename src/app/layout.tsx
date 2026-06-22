@@ -23,6 +23,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <head>
         <link rel="preload" href="/assets/fonts/Druk/Druk-Wide-Bold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+        <link rel="preload" href="/assets/fonts/MiSans/MiSansVF-subset.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>
         <SiteBackdrop />

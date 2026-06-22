@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: "MiSans";
-  src: url("/assets/fonts/MiSans/MiSansVF.ttf") format("truetype");
+  src: url("/assets/fonts/MiSans/MiSansVF-subset.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

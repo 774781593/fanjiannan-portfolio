@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "node scripts/subset-fonts.mjs",
     "dev": "next dev",
     "build": "next build",
+    "prebuild:static": "node scripts/subset-fonts.mjs",
     "build:static": "node scripts/build-static.mjs",
+    "prebuild:cloudflare": "node scripts/subset-fonts.mjs",
     "build:cloudflare": "node scripts/build-static.mjs",
+    "prebuild:edgeone": "node scripts/subset-fonts.mjs",
     "build:edgeone": "node scripts/build-static.mjs",
     "deploy:cloudflare": "powershell -ExecutionPolicy Bypass -File scripts/deploy-cloudflare.ps1",
+    "font:subset": "node scripts/subset-fonts.mjs",
     "start": "next start",
     "lint": "next lint"
   },
@@ -27,6 +32,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.4.39",
+    "subset-font": "^2.5.0",
     "tailwindcss": "^3.4.4"
   }
 }

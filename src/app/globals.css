@@ -52,6 +52,7 @@
 
 html {
   width: 100%;
+  max-width: 100%;
   scroll-behavior: smooth;
   background: var(--background);
   -webkit-text-size-adjust: 100%;
@@ -61,6 +62,7 @@ html {
 body {
   position: relative;
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0;
@@ -1330,6 +1332,18 @@ a.motion-home-project:focus-visible .motion-home-project__label {
 .handle-br { right: -10px; bottom: -10px; }
 
 @media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+    touch-action: pan-y;
+  }
+
+  img,
+  a,
+  button {
+    touch-action: manipulation;
+  }
+
   .site-nav {
     top: max(8px, env(safe-area-inset-top));
     width: calc(100dvw - 16px);
@@ -1431,10 +1445,13 @@ a.motion-home-project:focus-visible .motion-home-project__label {
   .home-stage-shell,
   .project-page {
     width: calc(100% - 16px);
+    max-width: calc(100dvw - 16px);
+    overflow-x: clip;
   }
 
   .project-page {
     padding-block: 0 28px;
+    contain: paint;
   }
 
   .portfolio-motion::before,
@@ -1455,6 +1472,16 @@ a.motion-home-project:focus-visible .motion-home-project__label {
     animation: none !important;
     transition: none !important;
     will-change: auto !important;
+  }
+
+  .motion-contents-frame,
+  .motion-contents-handle,
+  .motion-contents-cursor,
+  .motion-home-project__number,
+  .motion-home-project__label,
+  .motion-home-project__image {
+    clip-path: inset(0 0 0 0) !important;
+    opacity: 1 !important;
   }
 
   .motion-title-shine::after {

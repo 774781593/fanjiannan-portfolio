@@ -117,8 +117,7 @@ img {
     linear-gradient(180deg, #030403 0%, #050608 44%, #020203 100%);
 }
 
-.site-backdrop__aurora,
-.site-backdrop__noise {
+.site-backdrop__aurora {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -135,15 +134,6 @@ img {
   filter: blur(2px) saturate(108%);
   transform: translate3d(0, 0, 0);
   animation: site-aurora-flow 14s ease-in-out infinite alternate;
-}
-
-.site-backdrop__noise {
-  opacity: 0.12;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.9) 0 0.7px, transparent 0.8px),
-    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.5) 0 0.6px, transparent 0.7px),
-    linear-gradient(115deg, transparent 0 48%, rgba(255, 255, 255, 0.08) 49%, transparent 51%);
-  background-size: 9px 9px, 13px 13px, 180px 180px;
 }
 
 .site-aurora-overlay {
@@ -1319,13 +1309,6 @@ a.motion-home-project:focus-visible .motion-home-project__label {
   border-color: rgba(245, 245, 242, 0.18);
 }
 
-.noise-bg {
-  background:
-    radial-gradient(circle at 52% 12%, rgba(255, 255, 255, 0.16), transparent 18%),
-    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.09), transparent 34%),
-    #030303;
-}
-
 .figma-dash {
   border: 2px dashed rgba(245, 245, 242, 0.72);
 }
@@ -1439,10 +1422,6 @@ a.motion-home-project:focus-visible .motion-home-project__label {
     background-position: 50% 50%;
     filter: blur(1px) saturate(112%);
     transform: none;
-  }
-
-  .site-backdrop__noise {
-    opacity: 0.075;
   }
 
   .home-main {

@@ -1874,15 +1874,17 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
       }
 
       const rect = node.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const visualViewport = window.visualViewport;
+      const viewportHeight = visualViewport?.height ?? window.innerHeight ?? document.documentElement.clientHeight;
       const stageTop = window.scrollY + rect.top;
-      const viewportTop = window.scrollY;
-      const overscan = 2400;
+      const viewportTop = visualViewport?.pageTop ?? window.scrollY;
+      const viewportScale = visualViewport?.scale ?? 1;
+      const overscan = Math.max(620, 1080 / viewportScale);
       const start = (viewportTop - stageTop) / scale - overscan;
       const end = (viewportTop + viewportHeight - stageTop) / scale + overscan;
 
       setViewportWindow((current) => {
-        if (current.enabled && Math.abs(current.start - start) < 160 && Math.abs(current.end - end) < 160) {
+        if (current.enabled && Math.abs(current.start - start) < 96 && Math.abs(current.end - end) < 96) {
           return current;
         }
 
@@ -1899,12 +1901,16 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     window.addEventListener("scroll", scheduleWindow, { passive: true });
     window.addEventListener("resize", scheduleWindow);
     window.addEventListener("orientationchange", scheduleWindow);
+    window.visualViewport?.addEventListener("resize", scheduleWindow);
+    window.visualViewport?.addEventListener("scroll", scheduleWindow, { passive: true });
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", scheduleWindow);
       window.removeEventListener("resize", scheduleWindow);
       window.removeEventListener("orientationchange", scheduleWindow);
+      window.visualViewport?.removeEventListener("resize", scheduleWindow);
+      window.visualViewport?.removeEventListener("scroll", scheduleWindow);
     };
   }, [scale, slug]);
 

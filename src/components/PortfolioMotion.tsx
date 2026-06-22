@@ -142,21 +142,3 @@ export function PortfolioMotion({ children, className, style, spotlight = true, 
   );
 }
 
-type MotionRevealProps = {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-  style?: CSSProperties;
-};
-
-export function MotionReveal({ children, className, delay = 0, style }: MotionRevealProps) {
-  return (
-    <div
-      className={className}
-      data-motion-reveal
-      style={{ ...style, "--motion-delay": `${delay}ms` } as CSSProperties}
-    >
-      {children}
-    </div>
-  );
-}

@@ -575,8 +575,8 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
   const [scale, setScale] = useState<number | null>(null);
   const [viewportWindow, setViewportWindow] = useState<ViewportWindow>({
     enabled: slug === "b-system",
-    start: slug === "b-system" ? -1200 : Number.NEGATIVE_INFINITY,
-    end: slug === "b-system" ? 3600 : Number.POSITIVE_INFINITY
+    start: slug === "b-system" ? -640 : Number.NEGATIVE_INFINITY,
+    end: slug === "b-system" ? 2400 : Number.POSITIVE_INFINITY
   });
 
   useLayoutEffect(() => {
@@ -598,8 +598,10 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
     if (!node || scale === null || slug !== "b-system") return;
 
     let frame = 0;
+    let zoomSettleTimer = 0;
+    let viewportZooming = false;
 
-    const updateWindow = () => {
+    const updateWindow = (force = false) => {
       frame = 0;
       const mobile = window.matchMedia("(max-width: 720px)").matches;
       if (!mobile) {
@@ -617,7 +619,9 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
       const stageTop = window.scrollY + rect.top;
       const viewportTop = visualViewport?.pageTop ?? window.scrollY;
       const viewportScale = visualViewport?.scale ?? 1;
-      const overscan = Math.max(620, 1080 / viewportScale);
+      if (!force && viewportZooming && viewportScale > 1.03) return;
+
+      const overscan = viewportScale > 1.03 ? 520 : 840;
       const start = (viewportTop - stageTop) / scale - overscan;
       const end = (viewportTop + viewportHeight - stageTop) / scale + overscan;
 
@@ -630,25 +634,50 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
       });
     };
 
-    const scheduleWindow = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateWindow);
+    const scheduleWindow = (force = false) => {
+      if (frame) {
+        if (!force) return;
+        window.cancelAnimationFrame(frame);
+      }
+      frame = window.requestAnimationFrame(() => updateWindow(force));
     };
 
+    const scheduleViewportWindow = () => {
+      const viewportScale = window.visualViewport?.scale ?? 1;
+      if (viewportScale > 1.03) {
+        viewportZooming = true;
+        if (zoomSettleTimer) window.clearTimeout(zoomSettleTimer);
+        zoomSettleTimer = window.setTimeout(() => {
+          viewportZooming = false;
+          scheduleWindow(true);
+        }, 260);
+        return;
+      }
+
+      viewportZooming = false;
+      if (zoomSettleTimer) {
+        window.clearTimeout(zoomSettleTimer);
+        zoomSettleTimer = 0;
+      }
+      scheduleWindow();
+    };
+    const scheduleDocumentWindow = () => scheduleWindow();
+
     updateWindow();
-    window.addEventListener("scroll", scheduleWindow, { passive: true });
-    window.addEventListener("resize", scheduleWindow);
-    window.addEventListener("orientationchange", scheduleWindow);
-    window.visualViewport?.addEventListener("resize", scheduleWindow);
-    window.visualViewport?.addEventListener("scroll", scheduleWindow, { passive: true });
+    window.addEventListener("scroll", scheduleDocumentWindow, { passive: true });
+    window.addEventListener("resize", scheduleDocumentWindow);
+    window.addEventListener("orientationchange", scheduleDocumentWindow);
+    window.visualViewport?.addEventListener("resize", scheduleViewportWindow);
+    window.visualViewport?.addEventListener("scroll", scheduleViewportWindow, { passive: true });
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", scheduleWindow);
-      window.removeEventListener("resize", scheduleWindow);
-      window.removeEventListener("orientationchange", scheduleWindow);
-      window.visualViewport?.removeEventListener("resize", scheduleWindow);
-      window.visualViewport?.removeEventListener("scroll", scheduleWindow);
+      if (zoomSettleTimer) window.clearTimeout(zoomSettleTimer);
+      window.removeEventListener("scroll", scheduleDocumentWindow);
+      window.removeEventListener("resize", scheduleDocumentWindow);
+      window.removeEventListener("orientationchange", scheduleDocumentWindow);
+      window.visualViewport?.removeEventListener("resize", scheduleViewportWindow);
+      window.visualViewport?.removeEventListener("scroll", scheduleViewportWindow);
     };
   }, [scale, slug]);
 
@@ -717,7 +746,7 @@ export function LayeredProjectPage({ slug }: { slug: string }) {
                       .map((image) => (
                         <ImageLayerView
                           key={`${image.src}-${image.x}-${image.y}`}
-                          image={{ ...image, eager: index === 0 && image.y < 2400 }}
+                          image={{ ...image, eager: index === 0 && image.y < (slug === "b-system" ? 1200 : 2400) }}
                           motion={{ disabled: frameMotionDisabled || shouldDisableLayerMotion(slug, index, image.y) }}
                         />
                       ))

@@ -240,35 +240,42 @@ img {
     --aurora-cool-blue: 0.12;
     --aurora-cool-violet: 0.085;
     --aurora-center-shade: 0.3;
-    --aurora-opacity: 0.64;
+    --aurora-opacity: 0.78;
     --spotlight-size: clamp(104px, 8vw, 150px);
     --spotlight-cool-size: clamp(124px, 9.5vw, 180px);
   }
 
   .site-backdrop__aurora {
-    opacity: 0.7;
+    opacity: 0.76;
     background:
-      radial-gradient(ellipse 24% 74% at -16% 24%, rgba(115, 228, 34, 0.13), transparent 68%),
-      radial-gradient(ellipse 30% 60% at 112% 20%, rgba(54, 141, 255, 0.13), transparent 68%),
-      radial-gradient(ellipse 28% 46% at 96% 88%, rgba(142, 92, 255, 0.075), transparent 70%),
+      radial-gradient(ellipse 20% 74% at 0% 24%, rgba(115, 228, 34, 0.155), transparent 68%),
+      radial-gradient(ellipse 26% 60% at 100% 20%, rgba(54, 141, 255, 0.15), transparent 68%),
+      radial-gradient(ellipse 26% 46% at 96% 88%, rgba(142, 92, 255, 0.09), transparent 70%),
       radial-gradient(ellipse 54% 62% at 50% 52%, rgba(0, 0, 0, 0.44), transparent 70%);
   }
 
   .site-aurora-overlay {
-    opacity: 0.2;
+    opacity: 0.26;
     background:
-      radial-gradient(ellipse 20% 46% at 102% 22%, rgba(74, 124, 255, 0.145), transparent 72%),
-      radial-gradient(ellipse 18% 38% at 98% 86%, rgba(142, 92, 255, 0.105), transparent 74%);
+      radial-gradient(ellipse 22% 46% at 98% 22%, rgba(74, 124, 255, 0.16), transparent 72%),
+      radial-gradient(ellipse 20% 38% at 96% 86%, rgba(142, 92, 255, 0.12), transparent 74%);
   }
 
   body::after {
+    z-index: 4;
     opacity: var(--aurora-opacity);
     background:
-      radial-gradient(ellipse 15% 72% at -4% 30%, rgba(115, 228, 34, var(--aurora-edge-green)), transparent 72%),
-      radial-gradient(ellipse 10% 50% at 2% 72%, rgba(135, 248, 20, var(--aurora-edge-lime)), transparent 76%),
-      radial-gradient(ellipse 22% 44% at 102% 16%, rgba(74, 124, 255, var(--aurora-cool-blue)), transparent 72%),
-      radial-gradient(ellipse 20% 42% at 99% 86%, rgba(142, 92, 255, var(--aurora-cool-violet)), transparent 74%),
+      radial-gradient(ellipse 18% 76% at 2% 34%, rgba(115, 228, 34, var(--aurora-edge-green)), transparent 72%),
+      radial-gradient(ellipse 14% 54% at 8% 70%, rgba(135, 248, 20, var(--aurora-edge-lime)), transparent 76%),
+      radial-gradient(ellipse 24% 48% at 92% 18%, rgba(74, 124, 255, var(--aurora-cool-blue)), transparent 72%),
+      radial-gradient(ellipse 22% 46% at 90% 86%, rgba(142, 92, 255, var(--aurora-cool-violet)), transparent 74%),
       radial-gradient(ellipse 60% 70% at 50% 48%, rgba(0, 0, 0, var(--aurora-center-shade)), transparent 64%);
+  }
+}
+
+@media (min-width: 1921px) {
+  body::after {
+    z-index: 2;
   }
 }
 
@@ -310,8 +317,8 @@ img {
 @media (max-height: 900px) and (min-width: 721px) {
   :root {
     --motion-distance: 28px;
-    --aurora-opacity: 0.56;
-    --aurora-blur: 6px;
+    --aurora-opacity: 0.64;
+    --aurora-blur: 5px;
     --spotlight-size: clamp(96px, 7vw, 132px);
     --spotlight-cool-size: clamp(112px, 8.5vw, 160px);
   }
@@ -324,12 +331,12 @@ img {
 
 @media (max-height: 850px) and (min-width: 721px) {
   .site-backdrop__aurora {
-    opacity: 0.58;
-    filter: blur(1px) saturate(104%);
+    opacity: 0.72;
+    filter: blur(1px) saturate(108%);
   }
 
   .site-aurora-overlay {
-    opacity: 0.14;
+    opacity: 0.24;
   }
 
   body::after {
@@ -341,12 +348,12 @@ img {
   :root {
     --page-gutter: clamp(16px, 3.4vw, 56px);
     --motion-distance: 22px;
-    --aurora-opacity: 0.5;
-    --aurora-edge-green: 0.13;
-    --aurora-edge-lime: 0.06;
-    --aurora-cool-blue: 0.11;
-    --aurora-cool-violet: 0.08;
-    --aurora-center-shade: 0.34;
+    --aurora-opacity: 0.72;
+    --aurora-edge-green: 0.15;
+    --aurora-edge-lime: 0.075;
+    --aurora-cool-blue: 0.13;
+    --aurora-cool-violet: 0.1;
+    --aurora-center-shade: 0.32;
     --ambient-grid-size: 56px;
   }
 

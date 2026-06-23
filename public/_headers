@@ -1,10 +1,27 @@
 /*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Robots-Tag: noindex, nofollow
+
+/
   Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate
-  Pragma: no-cache
-  Expires: 0
+
+/index.html
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate
+
+/projects/*
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/favicon.ico
+  Cache-Control: public, max-age=86400
 
 /assets/*
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=31536000, immutable
 
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable

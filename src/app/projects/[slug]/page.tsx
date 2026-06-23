@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LayeredProjectPage } from "@/components/LayeredProjectPage";
-import { getProject, projects } from "@/data/projects";
-import { getProjectSeo } from "@/data/projectSeo";
+import { getProjectSeo, projectSeo } from "@/data/projectSeo";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+  return projectSeo.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
@@ -55,19 +54,18 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
   const seo = getProjectSeo(slug);
 
-  if (!project) {
+  if (!seo) {
     notFound();
   }
 
   return (
     <>
       <h1 className="sr-only">
-        {seo ? `${seo.title} - ${seo.category}` : "FanJiannan Portfolio Project"}
+        {`${seo.title} - ${seo.category}`}
       </h1>
-      <LayeredProjectPage slug={project.slug} />
+      <LayeredProjectPage slug={seo.slug} />
     </>
   );
 }
